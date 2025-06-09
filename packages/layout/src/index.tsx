@@ -13,12 +13,12 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 
-import "@xyflow/react/dist/style.css";
 import nodeTypes from "./components/NodeTypes";
 
 import { useMount } from "ahooks";
 
 import "./reset.css";
+import "@xyflow/react/dist/style.css";
 
 function FixedFlow() {
   const { nodes, edges } = useFixedLayoutStore();

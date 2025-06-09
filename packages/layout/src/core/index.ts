@@ -108,6 +108,7 @@ export class FixFlowLayoutEngine {
         x: (parentBlock.w - lw) / 2,
         y: parentBlock.queryViewHeight() + parentBlock.mb,
       },
+      type: "end-flow-node",
       style: {
         width: lw,
         height: 1,
@@ -115,6 +116,7 @@ export class FixFlowLayoutEngine {
         fontSize: 12,
         color: "#bbb",
         fontWeight: "bold",
+        padding: 0,
       },
     };
     return {
