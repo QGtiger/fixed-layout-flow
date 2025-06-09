@@ -24,7 +24,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "",
@@ -38,5 +39,13 @@
     "tailwindcss": "3",
     "tsup": "^8.5.0",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.6.4",
+    "ahooks": "^3.8.5",
+    "classnames": "^2.5.1",
+    "nanoid": "^5.0.3",
+    "resize-observer-polyfill": "^1.5.1",
+    "zustand": "^5.0.5"
   }
 }
