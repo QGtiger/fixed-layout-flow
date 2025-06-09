@@ -16,6 +16,14 @@ export class FixFlowLayoutEngine {
     });
   }
 
+  setFlowBlockById(id: string, flowBlock: FlowBlock) {
+    if (this.flowBlocksMap.has(id)) {
+      throw new Error(`FlowBlock with id ${id} does exist`);
+    } else {
+      this.flowBlocksMap.set(id, flowBlock);
+    }
+  }
+
   /**
    * 获取 FlowBlock节点
    * @returns {FlowBlock} - FlowBlock
@@ -43,7 +51,7 @@ export class FixFlowLayoutEngine {
       if (type === "custom") {
         flowblock = new FlowBlock(id, blocks[i]);
 
-        this.flowBlocksMap.set(id, flowblock);
+        this.setFlowBlockById(id, flowblock);
       }
 
       if (!flowblock) {
@@ -58,6 +66,7 @@ export class FixFlowLayoutEngine {
         rootBlock = flowblock;
       }
 
+      previousBlock = flowblock;
       i++;
     }
 

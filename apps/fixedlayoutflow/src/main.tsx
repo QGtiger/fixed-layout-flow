@@ -13,6 +13,12 @@ const blocks: FixedFlowBlocks = [
     data: { label: "Start Block" },
     blocks: [],
   },
+  {
+    id: "2",
+    type: "custom",
+    data: { label: "Start Block" },
+    blocks: [],
+  },
 ];
 
 createRoot(document.getElementById("root")!).render(
