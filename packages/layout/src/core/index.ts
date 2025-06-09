@@ -11,6 +11,30 @@ import { nanoid } from "nanoid";
 import { generateEdge, isPathsBlock } from "./blocks/utils";
 import { FlowPathsBlock } from "./blocks/FlowPathsBlock";
 import { FlowPathRuleBlock } from "./blocks/FlowPathRuleBlock";
+import { FlowLoopBlock } from "./blocks/FlowLoopBlock";
+
+function getPathRuleBlock(data?: BlockData): Block {
+  return {
+    id: `pathRule_${nanoid(5)}`,
+    type: "pathRule" as const,
+    data: data || {},
+  };
+}
+
+function getEmptyBlock(): Block {
+  return {
+    id: `default_empty_${nanoid(5)}`,
+    type: "none",
+  };
+}
+
+function getCustomBlock(data?: BlockData): Block {
+  return {
+    id: `custom_${nanoid(5)}`,
+    type: "custom" as const,
+    data: data || {},
+  };
+}
 
 export class FixFlowLayoutEngine {
   flowBlocksTree: FlowBlock;
@@ -55,11 +79,7 @@ export class FixFlowLayoutEngine {
    */
   addCustomFlowBlockById({ id, data }: { id: string; data?: BlockData }) {
     const fb = this.getFlowBlockById(id);
-    const _d = {
-      id: `custom_${nanoid(5)}`,
-      type: "custom" as const,
-      data: data || {},
-    };
+    const _d = getCustomBlock(data);
 
     fb.setNext(
       this.generateFixedLayoutByBlocks({
@@ -77,17 +97,26 @@ export class FixFlowLayoutEngine {
     if (!isPathsBlock(fb)) {
       throw new Error(`FlowBlock with id ${id} is not a paths block`);
     }
-    const _d = {
-      id: `pathRule_${nanoid(5)}`,
-      type: "pathRule" as const,
-      data: data || {},
-    };
+    const _d = getPathRuleBlock(data);
 
     (fb as FlowPathsBlock).addChild(
       this.generateFixedLayoutByBlocks({
         blocks: [_d],
       }),
       this.config?.pathRuleInsertIndex
+    );
+  }
+
+  addInnerBlockById({ id, data }: { id: string; data?: BlockData }) {
+    const fb = this.getFlowBlockById(id);
+    if (!(fb instanceof FlowLoopBlock)) {
+      throw new Error(`FlowBlock with id ${id} is not a loop block`);
+    }
+    const _d = getCustomBlock(data);
+    fb.setInnerBlock(
+      this.generateFixedLayoutByBlocks({
+        blocks: [_d],
+      })
     );
   }
 
@@ -105,20 +134,23 @@ export class FixFlowLayoutEngine {
       const block = blocks[i];
       const { data, id, type } = block;
       let flowblock: FlowBlock | undefined = undefined;
-      if (type === "custom") {
+      if (type === "custom" || type === "none") {
         flowblock = new FlowBlock(id, block);
       } else if (type === "paths") {
         const fb: FlowPathsBlock = (flowblock = new FlowPathsBlock(id, block));
 
-        if (block.blocks) {
-          block.blocks.forEach((b) => {
-            // 递归生成子流程块
-            const childBlock = this.generateFixedLayoutByBlocks({
-              blocks: [b],
-            });
-            fb.addChild(childBlock);
+        const childrenBlocks = block.blocks || [
+          getPathRuleBlock(),
+          getPathRuleBlock(),
+        ];
+
+        childrenBlocks.forEach((b) => {
+          // 递归生成子流程块
+          const childBlock = this.generateFixedLayoutByBlocks({
+            blocks: [b],
           });
-        }
+          fb.addChild(childBlock);
+        });
       } else if (type === "pathRule") {
         const fb: FlowPathRuleBlock = (flowblock = new FlowPathRuleBlock(
           id,
@@ -134,6 +166,13 @@ export class FixFlowLayoutEngine {
             fb.setLastNext(childBlock);
           });
         }
+      } else if (type === "loop") {
+        const fb: FlowLoopBlock = (flowblock = new FlowLoopBlock(id, block));
+
+        const innerBlock = this.generateFixedLayoutByBlocks({
+          blocks: block.blocks || [getEmptyBlock()],
+        });
+        fb.setInnerBlock(innerBlock);
       }
 
       if (!flowblock) {

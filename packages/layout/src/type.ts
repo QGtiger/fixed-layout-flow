@@ -21,7 +21,7 @@ export type BlockType =
 export type Block = {
   id: string;
   type: BlockType;
-  data: BlockData;
+  data?: BlockData;
   blocks?: Block[];
 };
 

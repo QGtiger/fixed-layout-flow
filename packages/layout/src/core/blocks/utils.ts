@@ -1,7 +1,12 @@
 import { Edge, MarkerType } from "@xyflow/react";
 import { FlowBlock } from "./FlowBlock";
 import type { FlowPathsBlock } from "./FlowPathsBlock";
-import { CustomNode } from "@/type";
+import { Block, CustomNode } from "@/type";
+import type { FlowLoopBlock } from "./FlowLoopBlock";
+
+export function isNoneNode(b: Block) {
+  return b.type === "none";
+}
 
 export function isPathsBlock(block: FlowBlock) {
   return block.blockData.type === "paths";
@@ -9,6 +14,10 @@ export function isPathsBlock(block: FlowBlock) {
 
 export function isPathRuleBlock(block: FlowBlock) {
   return block.blockData.type === "pathRule";
+}
+
+function isLoopBlock(block: FlowBlock) {
+  return block.blockData.type === "loop";
 }
 
 export function traceBlock(block: FlowBlock, cb: (b: FlowBlock) => void) {
@@ -80,7 +89,14 @@ export function generateNode(config: { block: FlowBlock }): CustomNode {
         };
       }
     }
-    // TODO 分支和循环节点的定位需要调整
+    if (isLoopBlock(parentBlock)) {
+      if ((parentBlock as FlowLoopBlock).innerBlock !== block) {
+        return {
+          x: (parentBlock.w - block.w) / 2,
+          y: parentBlock.mb + parentBlock.queryViewHeight(),
+        };
+      }
+    }
     return {
       x: (parentBlock.w - block.w) / 2,
       y: parentBlock.mb + parentBlock.h,

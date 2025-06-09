@@ -34,7 +34,13 @@ const blocks: FixedFlowBlocks = [
         id: "3-2",
         type: "pathRule",
         data: { label: "Child Block 2" },
-        blocks: [],
+        blocks: [
+          {
+            id: "3-2-1",
+            type: "loop",
+            data: { label: "Loop Block" },
+          },
+        ],
       },
     ],
   },
@@ -47,7 +53,28 @@ createRoot(document.getElementById("root")!).render(
         height: "100vh",
       }}
     >
-      <FixedFlowLayout initialBlocks={blocks} pathRuleInsertIndex={-1} />
+      <FixedFlowLayout
+        initialBlocks={[
+          {
+            id: "3-2-1",
+            type: "loop",
+            data: { label: "Loop Block" },
+            blocks: [
+              {
+                id: "3-2-1-1",
+                type: "custom",
+                data: { label: "Inner Block 1" },
+              },
+              {
+                id: "3-2-1-2",
+                type: "custom",
+                data: { label: "Inner Block 2" },
+              },
+            ],
+          },
+        ]}
+        pathRuleInsertIndex={-1}
+      />
     </div>
   </ErrorBoundary>
 );

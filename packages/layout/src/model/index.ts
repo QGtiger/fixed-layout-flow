@@ -34,6 +34,7 @@ export interface FixedLayoutModelActions {
   render: () => void;
   addCustomNode(opt: { parentId: string; data?: BlockData }): void;
   addPathRuleNode(opt: { parentId: string; data?: BlockData }): void;
+  addCustomNodeByInnerLoop(opt: { parentId: string; data?: BlockData }): void;
   getEdgeStrokeStyle: (
     sourceNode: CustomNode,
     targetNode: CustomNode
@@ -98,6 +99,13 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
               strokeWidth: 1,
             }
           );
+        },
+        addCustomNodeByInnerLoop({ parentId, data }) {
+          engineIns.addInnerBlockById({
+            id: parentId,
+            data,
+          });
+          render();
         },
       };
     }
