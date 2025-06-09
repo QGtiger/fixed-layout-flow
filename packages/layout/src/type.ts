@@ -2,6 +2,12 @@ import { Edge, EdgeProps, Node } from "@xyflow/react";
 
 export type CustomEdgeProps = EdgeProps & { data: { parentId: string } };
 
+export type CustomNode = Node & {
+  data: {
+    blockData: Block;
+  };
+};
+
 export type BlockType =
   | "start"
   | "paths" // 分支
@@ -9,6 +15,7 @@ export type BlockType =
   | "case" // ifelse
   | "loop"
   | "custom"
+  | "none" // 无效节点
   | "end";
 
 export type Block = {
@@ -34,10 +41,10 @@ export type FlowBlocksJSON = {
 //   index: number;
 // }
 
-export type EndNode = Node & { realParentId?: string };
+export type EndNode = CustomNode & { realParentId?: string };
 
 export type ReactFlowData = {
-  nodes: Node[];
+  nodes: CustomNode[];
   edges: Edge[];
   endNode: EndNode;
 };

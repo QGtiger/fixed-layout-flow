@@ -1,5 +1,5 @@
 import { FixFlowLayoutEngine } from "@/core";
-import { Block, BlockData, FixedFlowBlocks } from "@/type";
+import { Block, BlockData, CustomNode, FixedFlowBlocks } from "@/type";
 import { Edge, Node } from "@xyflow/react";
 import { createContext, CSSProperties } from "react";
 import { createStore } from "zustand";
@@ -7,7 +7,9 @@ import { queueEffectFn } from "./queueTickFn";
 
 export interface FixedLayoutModelConfig {
   initialBlocks: FixedFlowBlocks;
-  edgeStokeStyle?: CSSProperties;
+  edgeStokeStyle?:
+    | CSSProperties
+    | ((sourceNode: CustomNode, targetNode: CustomNode) => CSSProperties);
   viewMode?: boolean;
   pathRuleInsertIndex?: number;
 
@@ -32,6 +34,10 @@ export interface FixedLayoutModelActions {
   render: () => void;
   addCustomNode(opt: { parentId: string; data?: BlockData }): void;
   addPathRuleNode(opt: { parentId: string; data?: BlockData }): void;
+  getEdgeStrokeStyle: (
+    sourceNode: CustomNode,
+    targetNode: CustomNode
+  ) => CSSProperties;
 }
 
 export type FixedLayoutStoreType = ReturnType<
@@ -80,6 +86,18 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
             data,
           });
           render();
+        },
+        getEdgeStrokeStyle: (sourceNode, targetNode) => {
+          const { edgeStokeStyle } = get();
+          if (typeof edgeStokeStyle === "function") {
+            return edgeStokeStyle(sourceNode, targetNode);
+          }
+          return (
+            edgeStokeStyle || {
+              stroke: "#cccccc",
+              strokeWidth: 1,
+            }
+          );
         },
       };
     }

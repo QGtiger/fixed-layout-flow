@@ -25,8 +25,6 @@ function FixedFlow() {
   const { nodes, edges } = useFixedLayoutStore();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { setCenter, getNode, getNodesBounds, getViewport } = useReactFlow();
-  console.log("nodes", nodes);
-  console.log("edges", edges);
 
   useMount(() => {
     const wrapper = wrapperRef.current;

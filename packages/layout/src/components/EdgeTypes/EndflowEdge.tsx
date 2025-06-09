@@ -9,6 +9,7 @@ import {
 } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
 import { CustomEdgeProps } from "@/type";
+import useStrokeStyle from "@/hooks/useStorkeStyle";
 // import { WflowEdgeProps } from '../../layoutEngine/utils';
 // import CommonAddButton from './CommonAddButton';
 // import useStrokeColor from '../../hooks/useStrokeColor';
@@ -87,8 +88,12 @@ export function EndflowEdge(props: CustomEdgeProps) {
   const { getNode } = useReactFlow();
   const sourceNode = getNode(source);
   const targetNode = getNode(target);
-  const { edgeStokeStyle, viewMode, addCustomNode, onAddBlockByData } =
-    useFixedLayoutStore();
+  const { viewMode, addCustomNode, onAddBlockByData } = useFixedLayoutStore();
+
+  const styles = useStrokeStyle({
+    sourceId: source,
+    targetId: target,
+  });
 
   if (!sourceNode || !targetNode) {
     return <></>;
@@ -101,7 +106,7 @@ export function EndflowEdge(props: CustomEdgeProps) {
 
   return (
     <>
-      <BaseEdge path={edgePath2} markerEnd={markerEnd} style={edgeStokeStyle} />
+      <BaseEdge path={edgePath2} markerEnd={markerEnd} style={styles} />
       {!viewMode && (
         <EdgeLabelRenderer>
           <div

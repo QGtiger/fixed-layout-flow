@@ -1,6 +1,7 @@
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
 import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
+import useStrokeStyle from "@/hooks/useStorkeStyle";
 // import CommonAddButton from './CommonAddButton';
 // import useStrokeColor from '../../hooks/useStrokeColor';
 // import useFlowNode from '../../hooks/useFlowNode';
@@ -40,7 +41,8 @@ function getCustomSmoothStepPath(config: {
 }
 
 export function PathsEdge(props: EdgeProps) {
-  const { sourceX, sourceY, targetX, targetY, markerEnd, source } = props;
+  const { sourceX, sourceY, targetX, targetY, markerEnd, source, target } =
+    props;
   const [edgePath, labelX, labelY] = getCustomSmoothStepPath({
     radius: 3,
     sourceX,
@@ -48,12 +50,16 @@ export function PathsEdge(props: EdgeProps) {
     targetX,
     targetY,
   });
-  const { edgeStokeStyle, viewMode, addPathRuleNode, onAddBlockByData } =
-    useFixedLayoutStore();
+  const { viewMode, addPathRuleNode, onAddBlockByData } = useFixedLayoutStore();
+
+  const styles = useStrokeStyle({
+    sourceId: source,
+    targetId: target,
+  });
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={edgeStokeStyle} />
+      <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
       {!viewMode && (
         <EdgeLabelRenderer>
           <div

@@ -4,24 +4,39 @@ import {
   EdgeLabelRenderer,
   EdgeProps,
   getStraightPath,
+  useReactFlow,
 } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
-import { CustomEdgeProps } from "@/type";
+import { CustomEdgeProps, CustomNode } from "@/type";
+import useStrokeStyle from "@/hooks/useStorkeStyle";
 
 export default function CustomEdge(props: CustomEdgeProps) {
-  const { sourceX, sourceY, targetX, targetY, markerEnd, data } = props;
+  const {
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    markerEnd,
+    data,
+    source,
+    target,
+  } = props;
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
   });
-  const { edgeStokeStyle, viewMode, onAddBlockByData, addCustomNode } =
-    useFixedLayoutStore();
+  const { viewMode, onAddBlockByData, addCustomNode } = useFixedLayoutStore();
+
+  const styles = useStrokeStyle({
+    sourceId: source,
+    targetId: target,
+  });
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={edgeStokeStyle} />
+      <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
       {!viewMode && (
         <EdgeLabelRenderer>
           <div

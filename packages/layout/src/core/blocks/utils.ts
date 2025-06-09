@@ -1,6 +1,7 @@
-import { Edge, MarkerType, Node } from "@xyflow/react";
+import { Edge, MarkerType } from "@xyflow/react";
 import { FlowBlock } from "./FlowBlock";
 import type { FlowPathsBlock } from "./FlowPathsBlock";
+import { CustomNode } from "@/type";
 
 export function isPathsBlock(block: FlowBlock) {
   return block.blockData.type === "paths";
@@ -22,7 +23,7 @@ export function generateEdge(config: {
   sourceNode: {
     id: string;
   };
-  targetNode: Node;
+  targetNode: CustomNode;
   type?: string;
   markerEnd?: MarkerType;
 }): Edge {
@@ -43,7 +44,7 @@ export function generateEdge(config: {
   };
 }
 
-export function generateNode(config: { block: FlowBlock }): Node {
+export function generateNode(config: { block: FlowBlock }): CustomNode {
   const { block } = config;
   const { parent: parentBlock } = block;
   const position: {

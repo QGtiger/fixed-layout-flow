@@ -62,7 +62,13 @@ export class FlowPathsBlock extends FlowBlock {
     const id = `paths_${this.id}-end`;
     return {
       id,
-      data: { label: id },
+      data: {
+        blockData: {
+          id,
+          type: "none",
+          data: {},
+        },
+      },
       parentId: this.id,
       position: {
         x: (this.w - lw) / 2,

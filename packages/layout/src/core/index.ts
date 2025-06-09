@@ -1,8 +1,13 @@
-import { Block, BlockData, FixedFlowBlocks, ReactFlowData } from "@/type";
+import {
+  Block,
+  BlockData,
+  CustomNode,
+  FixedFlowBlocks,
+  ReactFlowData,
+} from "@/type";
 import { FlowBlock } from "./blocks/FlowBlock";
 
 import { nanoid } from "nanoid";
-import { Node } from "@xyflow/react";
 import { generateEdge, isPathsBlock } from "./blocks/utils";
 import { FlowPathsBlock } from "./blocks/FlowPathsBlock";
 import { FlowPathRuleBlock } from "./blocks/FlowPathRuleBlock";
@@ -189,9 +194,16 @@ export class FixFlowLayoutEngine {
     const parentId = endNode.realParentId || endNode.id;
     const parentBlock = this.getFlowBlockById(parentId)!;
 
-    const finalNode: Node = {
+    const finalNode: CustomNode = {
       id: `final-end`,
-      data: { label: "结束" } as any,
+      data: {
+        label: "流程结束",
+        blockData: {
+          id: `final-end`,
+          type: "none",
+          data: {},
+        },
+      },
       parentId,
       position: {
         x: (parentBlock.w - lw) / 2,
