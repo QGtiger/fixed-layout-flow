@@ -1,13 +1,15 @@
 import { FixFlowLayoutEngine } from "@/core";
 import { Block, FixedFlowBlocks } from "@/type";
 import { Edge, Node } from "@xyflow/react";
-import { createContext } from "react";
+import { createContext, CSSProperties } from "react";
 import { createStore } from "zustand";
 import { queueEffectFn } from "./queueTickFn";
 
 export interface FixedLayoutModelConfig {
   initialBlocks: FixedFlowBlocks;
   nodeRenderer?: (block: Block) => React.ReactNode;
+  edgeStokeStyle?: CSSProperties;
+  viewMode?: boolean;
 }
 
 export type FixedLayoutModelState = {
@@ -27,6 +29,7 @@ export type FixedLayoutStoreType = ReturnType<
 export const StoreContext = createContext<FixedLayoutStoreType>({} as any);
 
 export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
+  console.log(config);
   const { initialBlocks } = config;
   const engineIns = new FixFlowLayoutEngine(initialBlocks);
   const { nodes, edges } = engineIns.exportReactFlowData();
@@ -48,6 +51,10 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
         edges,
         render,
         layoutEngine: engineIns,
+        edgeStokeStyle: config.edgeStokeStyle || {
+          stroke: "#cccccc",
+          strokeWidth: 1,
+        },
       };
     }
   );

@@ -2,8 +2,9 @@ import { Edge, Node } from "@xyflow/react";
 
 export type BlockType =
   | "start"
-  | "condition"
-  | "case"
+  | "paths" // 分支
+  | "pathRule" // 条件
+  | "case" // ifelse
   | "loop"
   | "custom"
   | "end";

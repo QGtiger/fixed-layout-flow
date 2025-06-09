@@ -19,6 +19,7 @@ import { useMount } from "ahooks";
 
 import "./reset.css";
 import "@xyflow/react/dist/style.css";
+import edgeTypes from "./components/EdgeTypes";
 
 function FixedFlow() {
   const { nodes, edges } = useFixedLayoutStore();
@@ -50,6 +51,7 @@ function FixedFlow() {
           deleteKeyCode={null}
           nodesDraggable={false}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
         >
           <Background />
         </ReactFlow>
@@ -58,13 +60,12 @@ function FixedFlow() {
   );
 }
 
-export function FixedFlowLayout({ initialBlocks }: FixedLayoutModelConfig) {
+export function FixedFlowLayout(props: FixedLayoutModelConfig) {
+  const { initialBlocks } = props;
   const storeRef = useRef<FixedLayoutStoreType>(null);
 
   if (!storeRef.current) {
-    storeRef.current = createFixedLayoutModelStore({
-      initialBlocks,
-    });
+    storeRef.current = createFixedLayoutModelStore(props);
   }
   return (
     <ReactFlowProvider>

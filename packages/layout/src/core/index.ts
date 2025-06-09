@@ -4,6 +4,8 @@ import { FlowBlock } from "./blocks/FlowBlock";
 import { nanoid } from "nanoid";
 import { Node } from "@xyflow/react";
 import { generateEdge } from "./blocks/utils";
+import { FlowPathsBlock } from "./blocks/FlowPathsBlock";
+import { FlowPathRuleBlock } from "./blocks/FlowPathRuleBlock";
 
 export class FixFlowLayoutEngine {
   flowBlocksTree: FlowBlock;
@@ -46,17 +48,46 @@ export class FixFlowLayoutEngine {
     let previousBlock: FlowBlock | undefined;
     let i = 0;
     while (i < blocks.length) {
-      const { data, id, type } = blocks[i];
+      const block = blocks[i];
+      const { data, id, type } = block;
       let flowblock: FlowBlock | undefined = undefined;
       if (type === "custom") {
-        flowblock = new FlowBlock(id, blocks[i]);
+        flowblock = new FlowBlock(id, block);
+      } else if (type === "paths") {
+        const fb: FlowPathsBlock = (flowblock = new FlowPathsBlock(id, block));
 
-        this.setFlowBlockById(id, flowblock);
+        if (block.blocks) {
+          block.blocks.forEach((b) => {
+            // 递归生成子流程块
+            const childBlock = this.generateFixedLayoutByBlocks({
+              blocks: [b],
+            });
+            fb.addChild(childBlock);
+          });
+        }
+      } else if (type === "pathRule") {
+        const fb: FlowPathRuleBlock = (flowblock = new FlowPathRuleBlock(
+          id,
+          block
+        ));
+
+        if (block.blocks) {
+          block.blocks.forEach((b) => {
+            // 递归生成子流程块
+            const childBlock = this.generateFixedLayoutByBlocks({
+              blocks: [b],
+            });
+            fb.setLastNext(childBlock);
+          });
+        }
       }
 
       if (!flowblock) {
         throw new Error(`Block type ${type} is not supported`);
       }
+
+      // 设置 FlowBlockMap
+      this.setFlowBlockById(id, flowblock);
 
       if (previousBlock) {
         previousBlock.setNext(flowblock);

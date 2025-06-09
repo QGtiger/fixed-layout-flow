@@ -19,6 +19,25 @@ const blocks: FixedFlowBlocks = [
     data: { label: "Start Block" },
     blocks: [],
   },
+  {
+    id: "3",
+    type: "paths",
+    data: { label: "Paths Block" },
+    blocks: [
+      {
+        id: "3-1",
+        type: "pathRule",
+        data: { label: "Child Block 1" },
+        blocks: [],
+      },
+      {
+        id: "3-2",
+        type: "pathRule",
+        data: { label: "Child Block 2" },
+        blocks: [],
+      },
+    ],
+  },
 ];
 
 createRoot(document.getElementById("root")!).render(
@@ -28,7 +47,7 @@ createRoot(document.getElementById("root")!).render(
         height: "100vh",
       }}
     >
-      <FixedFlowLayout initialBlocks={blocks} />
+      <FixedFlowLayout initialBlocks={blocks} viewMode />
     </div>
   </ErrorBoundary>
 );
