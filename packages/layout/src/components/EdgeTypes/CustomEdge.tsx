@@ -6,8 +6,9 @@ import {
   getStraightPath,
 } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
+import { CustomEdgeProps } from "@/type";
 
-export default function CustomEdge(props: EdgeProps) {
+export default function CustomEdge(props: CustomEdgeProps) {
   const { sourceX, sourceY, targetX, targetY, markerEnd, data } = props;
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX,
@@ -15,7 +16,8 @@ export default function CustomEdge(props: EdgeProps) {
     targetX,
     targetY,
   });
-  const { edgeStokeStyle, viewMode } = useFixedLayoutStore();
+  const { edgeStokeStyle, viewMode, onAddBlockByData, addCustomNode } =
+    useFixedLayoutStore();
 
   return (
     <>
@@ -32,8 +34,15 @@ export default function CustomEdge(props: EdgeProps) {
             }}
           >
             <CommonAddButton
-              onClick={() => {
-                console.log("Add node by edge", props);
+              onClick={async () => {
+                const _data = await onAddBlockByData?.({
+                  type: "custom",
+                });
+
+                addCustomNode({
+                  parentId: data.parentId,
+                  data: _data,
+                });
               }}
             />
           </div>

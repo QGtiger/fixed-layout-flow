@@ -47,7 +47,7 @@ createRoot(document.getElementById("root")!).render(
         height: "100vh",
       }}
     >
-      <FixedFlowLayout initialBlocks={blocks} viewMode />
+      <FixedFlowLayout initialBlocks={blocks} pathRuleInsertIndex={-1} />
     </div>
   </ErrorBoundary>
 );

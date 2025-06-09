@@ -48,7 +48,8 @@ export function PathsEdge(props: EdgeProps) {
     targetX,
     targetY,
   });
-  const { edgeStokeStyle, viewMode } = useFixedLayoutStore();
+  const { edgeStokeStyle, viewMode, addPathRuleNode, onAddBlockByData } =
+    useFixedLayoutStore();
 
   return (
     <>
@@ -63,8 +64,14 @@ export function PathsEdge(props: EdgeProps) {
             }}
           >
             <CommonAddButton
-              onClick={() => {
-                console.log("Add node by edge", props);
+              onClick={async () => {
+                const _d = await onAddBlockByData?.({
+                  type: "pathRule",
+                });
+                addPathRuleNode({
+                  parentId: source,
+                  data: _d,
+                });
               }}
               label="添加分支"
             />

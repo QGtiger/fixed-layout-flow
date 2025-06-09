@@ -1,9 +1,9 @@
-import { FixedFlowBlocks, ReactFlowData } from "@/type";
+import { Block, BlockData, FixedFlowBlocks, ReactFlowData } from "@/type";
 import { FlowBlock } from "./blocks/FlowBlock";
 
 import { nanoid } from "nanoid";
 import { Node } from "@xyflow/react";
-import { generateEdge } from "./blocks/utils";
+import { generateEdge, isPathsBlock } from "./blocks/utils";
 import { FlowPathsBlock } from "./blocks/FlowPathsBlock";
 import { FlowPathRuleBlock } from "./blocks/FlowPathRuleBlock";
 
@@ -11,7 +11,12 @@ export class FixFlowLayoutEngine {
   flowBlocksTree: FlowBlock;
   flowBlocksMap: Map<string, FlowBlock> = new Map();
 
-  constructor(private blocks: FixedFlowBlocks) {
+  constructor(
+    private blocks: FixedFlowBlocks,
+    private config?: {
+      pathRuleInsertIndex?: number;
+    }
+  ) {
     // 初始化布局引擎
     this.flowBlocksTree = this.generateFixedLayoutByBlocks({
       blocks: this.blocks,
@@ -30,11 +35,55 @@ export class FixFlowLayoutEngine {
    * 获取 FlowBlock节点
    * @returns {FlowBlock} - FlowBlock
    */
-  getFlowBlockById(id: string): FlowBlock | undefined {
-    if (this.flowBlocksMap.has(id)) {
-      return this.flowBlocksMap.get(id);
+  getFlowBlockById(id: string): FlowBlock {
+    const fb = this.flowBlocksMap.get(id);
+    if (!fb) {
+      throw new Error(`FlowBlock with id ${id} does not exist`);
     }
-    return undefined;
+
+    return fb;
+  }
+
+  /**
+   * 添加自定义流程块
+   * @param opts - 包含 id 和 data 的选项
+   */
+  addCustomFlowBlockById({ id, data }: { id: string; data?: BlockData }) {
+    const fb = this.getFlowBlockById(id);
+    const _d = {
+      id: `custom_${nanoid(5)}`,
+      type: "custom" as const,
+      data: data || {},
+    };
+
+    fb.setNext(
+      this.generateFixedLayoutByBlocks({
+        blocks: [_d],
+      })
+    );
+  }
+
+  /**
+   * 添加路径流程块
+   * @param opts - 包含 id 和 data 的选项
+   */
+  addPathRuleFlowBlockById({ id, data }: { id: string; data?: BlockData }) {
+    const fb = this.getFlowBlockById(id);
+    if (!isPathsBlock(fb)) {
+      throw new Error(`FlowBlock with id ${id} is not a paths block`);
+    }
+    const _d = {
+      id: `pathRule_${nanoid(5)}`,
+      type: "pathRule" as const,
+      data: data || {},
+    };
+
+    (fb as FlowPathsBlock).addChild(
+      this.generateFixedLayoutByBlocks({
+        blocks: [_d],
+      }),
+      this.config?.pathRuleInsertIndex
+    );
   }
 
   /**

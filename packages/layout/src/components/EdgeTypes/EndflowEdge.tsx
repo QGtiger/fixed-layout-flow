@@ -8,6 +8,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
+import { CustomEdgeProps } from "@/type";
 // import { WflowEdgeProps } from '../../layoutEngine/utils';
 // import CommonAddButton from './CommonAddButton';
 // import useStrokeColor from '../../hooks/useStrokeColor';
@@ -72,7 +73,7 @@ function customStepLine(point1: XYPosition, point2: XYPosition) {
   }
 }
 
-export function EndflowEdge(props: EdgeProps) {
+export function EndflowEdge(props: CustomEdgeProps) {
   const {
     sourceX,
     sourceY,
@@ -86,7 +87,8 @@ export function EndflowEdge(props: EdgeProps) {
   const { getNode } = useReactFlow();
   const sourceNode = getNode(source);
   const targetNode = getNode(target);
-  const { edgeStokeStyle, viewMode } = useFixedLayoutStore();
+  const { edgeStokeStyle, viewMode, addCustomNode, onAddBlockByData } =
+    useFixedLayoutStore();
 
   if (!sourceNode || !targetNode) {
     return <></>;
@@ -112,8 +114,15 @@ export function EndflowEdge(props: EdgeProps) {
             }}
           >
             <CommonAddButton
-              onClick={() => {
-                console.log("Add node by edge", props);
+              onClick={async () => {
+                const _data = await onAddBlockByData?.({
+                  type: "custom",
+                });
+
+                addCustomNode({
+                  parentId: data.parentId,
+                  data: _data,
+                });
               }}
             />
           </div>

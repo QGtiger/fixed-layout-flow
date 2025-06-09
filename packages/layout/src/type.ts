@@ -1,4 +1,6 @@
-import { Edge, Node } from "@xyflow/react";
+import { Edge, EdgeProps, Node } from "@xyflow/react";
+
+export type CustomEdgeProps = EdgeProps & { data: { parentId: string } };
 
 export type BlockType =
   | "start"
