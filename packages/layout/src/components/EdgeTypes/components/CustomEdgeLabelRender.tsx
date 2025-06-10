@@ -7,9 +7,11 @@ export default function CustomEdgeLabelRender({
   children,
   source,
   target,
+  hidden = false,
 }: PropsWithChildren<{
   source: string;
   target: string;
+  hidden?: boolean;
 }>) {
   const { viewMode } = useFixedLayoutStore();
   const { getNode } = useReactFlow<CustomNode>();
@@ -23,5 +25,7 @@ export default function CustomEdgeLabelRender({
   )
     return null;
 
-  return !viewMode && <EdgeLabelRenderer>{children}</EdgeLabelRenderer>;
+  return (
+    !viewMode && !hidden && <EdgeLabelRenderer>{children}</EdgeLabelRenderer>
+  );
 }

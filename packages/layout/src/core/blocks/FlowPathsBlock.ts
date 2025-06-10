@@ -156,17 +156,18 @@ export class FlowPathsBlock extends FlowBlock {
     const edges = Array.prototype.concat.call(
       [],
       (() => {
-        return childrenNodes.startNodes.map((node) => {
+        return childrenNodes.startNodes.map((node, index) => {
           return generateEdge({
             sourceNode: this,
             targetNode: node,
             type: "pathsEdge",
+            showLabel: index === childrenNodes.endNodes.length - 1,
           });
         });
       })(),
       childrenNodes.edges,
       (() => {
-        return childrenNodes.endNodes.map((node) => {
+        return childrenNodes.endNodes.map((node, index) => {
           return generateEdge({
             sourceNode: node,
             targetNode: endNode,

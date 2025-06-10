@@ -1,11 +1,10 @@
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
-import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "@xyflow/react";
+import { BaseEdge } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
 import useStrokeStyle from "@/hooks/useStorkeStyle";
-// import CommonAddButton from './CommonAddButton';
-// import useStrokeColor from '../../hooks/useStrokeColor';
-// import useFlowNode from '../../hooks/useFlowNode';
-// import { WflowEdgeProps } from '../../layoutEngine/utils';
+import CustomEdgeLabelRender from "./components/CustomEdgeLabelRender";
+import { CustomEdgeProps } from "@/type";
+import { memo } from "react";
 
 function getCustomSmoothStepPath(config: {
   sourceX: number;
@@ -40,9 +39,17 @@ function getCustomSmoothStepPath(config: {
   return [path, labelX, labelY];
 }
 
-export function PathsEdge(props: EdgeProps) {
-  const { sourceX, sourceY, targetX, targetY, markerEnd, source, target } =
-    props;
+export default memo(function PathsEdge(props: CustomEdgeProps) {
+  const {
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    markerEnd,
+    source,
+    target,
+    data,
+  } = props;
   const [edgePath, labelX, labelY] = getCustomSmoothStepPath({
     radius: 3,
     sourceX,
@@ -50,7 +57,7 @@ export function PathsEdge(props: EdgeProps) {
     targetX,
     targetY,
   });
-  const { viewMode, addPathRuleNode, onAddBlockByData } = useFixedLayoutStore();
+  const { addPathRuleNode, onAddBlockByData } = useFixedLayoutStore();
 
   const styles = useStrokeStyle({
     sourceId: source,
@@ -60,30 +67,32 @@ export function PathsEdge(props: EdgeProps) {
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
-      {!viewMode && (
-        <EdgeLabelRenderer>
-          <div
-            className=" absolute pointer-events-auto"
-            style={{
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              transformOrigin: "center",
+      <CustomEdgeLabelRender
+        hidden={!data.showLabel}
+        source={source}
+        target={target}
+      >
+        <div
+          className=" absolute pointer-events-auto"
+          style={{
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            transformOrigin: "center",
+          }}
+        >
+          <CommonAddButton
+            onClick={async () => {
+              const _d = await onAddBlockByData?.({
+                type: "pathRule",
+              });
+              addPathRuleNode({
+                parentId: source,
+                data: _d,
+              });
             }}
-          >
-            <CommonAddButton
-              onClick={async () => {
-                const _d = await onAddBlockByData?.({
-                  type: "pathRule",
-                });
-                addPathRuleNode({
-                  parentId: source,
-                  data: _d,
-                });
-              }}
-              label="添加分支"
-            />
-          </div>
-        </EdgeLabelRenderer>
-      )}
+            label="添加分支"
+          />
+        </div>
+      </CustomEdgeLabelRender>
     </>
   );
-}
+});

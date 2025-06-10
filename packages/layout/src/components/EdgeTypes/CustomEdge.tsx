@@ -38,7 +38,11 @@ export default function CustomEdge(props: CustomEdgeProps) {
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
-      <CustomEdgeLabelRender source={source} target={target}>
+      <CustomEdgeLabelRender
+        hidden={!data.showLabel}
+        source={source}
+        target={target}
+      >
         <div
           className=" absolute pointer-events-auto"
           style={{

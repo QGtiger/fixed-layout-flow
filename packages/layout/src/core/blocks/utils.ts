@@ -31,8 +31,15 @@ export function generateEdge(config: {
   targetNode: CustomNode;
   type?: string;
   markerEnd?: MarkerType;
+  showLabel?: boolean;
 }): Edge {
-  const { sourceNode, targetNode, type = "customEdge", markerEnd } = config;
+  const {
+    sourceNode,
+    targetNode,
+    type = "customEdge",
+    markerEnd,
+    showLabel = true,
+  } = config;
 
   return {
     id: `${sourceNode.id}-${targetNode.id}`,
@@ -40,6 +47,7 @@ export function generateEdge(config: {
     target: targetNode.id,
     data: {
       parentId: (sourceNode as any).realParentId || sourceNode.id,
+      showLabel,
     },
     style: {
       visibility: "visible",

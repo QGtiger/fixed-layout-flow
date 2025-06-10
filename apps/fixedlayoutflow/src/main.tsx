@@ -80,17 +80,7 @@ createRoot(document.getElementById("root")!).render(
         height: "100vh",
       }}
     >
-      <FixedFlowLayout
-        initialBlocks={[
-          {
-            id: "3-2-1-2",
-            type: "loop",
-            data: { label: "Loop Child Block 1" },
-            blocks: [],
-          },
-        ]}
-        pathRuleInsertIndex={-1}
-      />
+      <FixedFlowLayout initialBlocks={blocks} pathRuleInsertIndex={-1} />
     </div>
   </ErrorBoundary>
 );
