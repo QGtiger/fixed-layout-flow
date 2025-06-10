@@ -52,8 +52,6 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
   });
   const { viewMode, addCustomNode, onAddBlockByData } = useFixedLayoutStore();
 
-  console.log(111, targetVw);
-
   if (targetVw === 0) return null;
 
   const edgePath = MakeLine({
@@ -63,7 +61,7 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
         y: sourceY,
       },
       {
-        y: sourceY + 28,
+        y: sourceY + 39,
       },
       {
         x: targetX - targetVw / 2 + 20,

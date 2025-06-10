@@ -22,7 +22,7 @@ const CustomNode = (
   });
 
   return (
-    <div ref={nodeRef}>
+    <div className="custom-node" ref={nodeRef}>
       {nodeRenderer ? nodeRenderer(data) : "请实现 nodeRenderer 函数"}
       <Handle type="target" position={Position.Top} isConnectable={false} />
       <Handle type="source" position={Position.Bottom} isConnectable={false} />

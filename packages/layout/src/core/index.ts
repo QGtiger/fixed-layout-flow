@@ -214,6 +214,9 @@ export class FixFlowLayoutEngine {
           this.clearViewSizeCacheByTree(child);
         });
       }
+      if (currentBlock.innerBlock) {
+        this.clearViewSizeCacheByTree(currentBlock.innerBlock);
+      }
       currentBlock = currentBlock.next;
     }
   }

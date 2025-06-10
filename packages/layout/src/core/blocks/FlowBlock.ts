@@ -6,6 +6,7 @@ export class FlowBlock extends DisplayObject {
   next?: FlowBlock;
   parent?: FlowBlock;
   children?: FlowBlock[];
+  innerBlock?: FlowBlock;
 
   viewWidth: number = 0;
   viewHeight: number = 0;

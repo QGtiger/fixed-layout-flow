@@ -109,6 +109,10 @@ export function generateNode(config: { block: FlowBlock }): CustomNode {
   //   type = 'workflowNode';
   // }
 
+  // 计算一下
+  block.queryViewWidth();
+  block.queryViewHeight();
+
   return {
     id: block.id,
     data: {

@@ -7,6 +7,7 @@ export class FlowLoopBlock extends FlowBlock {
   innerMb: number = 45;
   // 左右padding
   padding: number = 40;
+  // mb = 35;
 
   setInnerBlock(block: FlowBlock, replace?: boolean) {
     if (this.innerBlock) {
