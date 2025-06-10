@@ -13,6 +13,10 @@ import { FlowPathsBlock } from "./blocks/FlowPathsBlock";
 import { FlowPathRuleBlock } from "./blocks/FlowPathRuleBlock";
 import { FlowLoopBlock } from "./blocks/FlowLoopBlock";
 
+function isPlaceholderBlock(block: Block) {
+  return block.type === "placeholder";
+}
+
 function getPathRuleBlock(data?: BlockData): Block {
   return {
     id: `pathRule_${nanoid(5)}`,
@@ -24,7 +28,7 @@ function getPathRuleBlock(data?: BlockData): Block {
 function getEmptyBlock(): Block {
   return {
     id: `default_empty_${nanoid(5)}`,
-    type: "none",
+    type: "placeholder",
   };
 }
 
@@ -113,10 +117,14 @@ export class FixFlowLayoutEngine {
       throw new Error(`FlowBlock with id ${id} is not a loop block`);
     }
     const _d = getCustomBlock(data);
+    const innerBlock = fb.innerBlock;
+    const isReplace =
+      innerBlock?.blockData && isPlaceholderBlock(innerBlock?.blockData);
     fb.setInnerBlock(
       this.generateFixedLayoutByBlocks({
         blocks: [_d],
-      })
+      }),
+      isReplace
     );
   }
 
@@ -134,7 +142,7 @@ export class FixFlowLayoutEngine {
       const block = blocks[i];
       const { data, id, type } = block;
       let flowblock: FlowBlock | undefined = undefined;
-      if (type === "custom" || type === "none") {
+      if (type === "custom" || type === "placeholder") {
         flowblock = new FlowBlock(id, block);
       } else if (type === "paths") {
         const fb: FlowPathsBlock = (flowblock = new FlowPathsBlock(id, block));
@@ -170,7 +178,7 @@ export class FixFlowLayoutEngine {
         const fb: FlowLoopBlock = (flowblock = new FlowLoopBlock(id, block));
 
         const innerBlock = this.generateFixedLayoutByBlocks({
-          blocks: block.blocks || [getEmptyBlock()],
+          blocks: block.blocks?.length ? block.blocks : [getEmptyBlock()],
         });
         fb.setInnerBlock(innerBlock);
       }

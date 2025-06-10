@@ -7,8 +7,9 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
-import { CustomEdgeProps, CustomNode } from "@/type";
+import { CustomEdgeProps } from "@/type";
 import useStrokeStyle from "@/hooks/useStorkeStyle";
+import CustomEdgeLabelRender from "./components/CustomEdgeLabelRender";
 
 export default function CustomEdge(props: CustomEdgeProps) {
   const {
@@ -27,7 +28,7 @@ export default function CustomEdge(props: CustomEdgeProps) {
     targetX,
     targetY,
   });
-  const { viewMode, onAddBlockByData, addCustomNode } = useFixedLayoutStore();
+  const { onAddBlockByData, addCustomNode } = useFixedLayoutStore();
 
   const styles = useStrokeStyle({
     sourceId: source,
@@ -37,32 +38,28 @@ export default function CustomEdge(props: CustomEdgeProps) {
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
-      {!viewMode && (
-        <EdgeLabelRenderer>
-          <div
-            className=" absolute pointer-events-auto"
-            style={{
-              transform: `translate(-50%, -50%) translate(${labelX}px,${
-                labelY - 2
-              }px)`,
-              transformOrigin: "center",
-            }}
-          >
-            <CommonAddButton
-              onClick={async () => {
-                const _data = await onAddBlockByData?.({
+      <CustomEdgeLabelRender source={source} target={target}>
+        <div
+          className=" absolute pointer-events-auto"
+          style={{
+            transform: `translate(-50%, -50%) translate(${labelX}px,${
+              labelY - 2
+            }px)`,
+            transformOrigin: "center",
+          }}
+        >
+          <CommonAddButton
+            onClick={async () => {
+              addCustomNode({
+                parentId: data.parentId,
+                data: await onAddBlockByData?.({
                   type: "custom",
-                });
-
-                addCustomNode({
-                  parentId: data.parentId,
-                  data: _data,
-                });
-              }}
-            />
-          </div>
-        </EdgeLabelRenderer>
-      )}
+                }),
+              });
+            }}
+          />
+        </div>
+      </CustomEdgeLabelRender>
     </>
   );
 }

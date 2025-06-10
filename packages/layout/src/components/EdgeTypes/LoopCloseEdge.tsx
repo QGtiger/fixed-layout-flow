@@ -4,6 +4,7 @@ import { CustomEdgeProps } from "@/type";
 import { BaseEdge, EdgeLabelRenderer, XYPosition } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
+import CustomEdgeLabelRender from "./components/CustomEdgeLabelRender";
 
 type P = Partial<XYPosition>;
 
@@ -50,7 +51,7 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
     sourceId: source,
     targetId: target,
   });
-  const { viewMode, addCustomNode, onAddBlockByData } = useFixedLayoutStore();
+  const { addCustomNode, onAddBlockByData } = useFixedLayoutStore();
 
   if (targetVw === 0) return null;
 
@@ -61,7 +62,7 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
         y: sourceY,
       },
       {
-        y: sourceY + 39,
+        y: sourceY + 30,
       },
       {
         x: targetX - targetVw / 2 + 20,
@@ -79,28 +80,26 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
-      {!viewMode && (
-        <EdgeLabelRenderer>
-          <div
-            className=" absolute pointer-events-auto"
-            style={{
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              transformOrigin: "center",
+      <CustomEdgeLabelRender source={source} target={target}>
+        <div
+          className=" absolute pointer-events-auto"
+          style={{
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            transformOrigin: "center",
+          }}
+        >
+          <CommonAddButton
+            onClick={async () => {
+              addCustomNode({
+                parentId: data.parentId,
+                data: await onAddBlockByData?.({
+                  type: "custom",
+                }),
+              });
             }}
-          >
-            <CommonAddButton
-              onClick={async () => {
-                addCustomNode({
-                  parentId: data.parentId,
-                  data: await onAddBlockByData?.({
-                    type: "custom",
-                  }),
-                });
-              }}
-            />
-          </div>
-        </EdgeLabelRenderer>
-      )}
+          />
+        </div>
+      </CustomEdgeLabelRender>
     </>
   );
 }

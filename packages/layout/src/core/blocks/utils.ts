@@ -4,10 +4,6 @@ import type { FlowPathsBlock } from "./FlowPathsBlock";
 import { Block, CustomNode } from "@/type";
 import type { FlowLoopBlock } from "./FlowLoopBlock";
 
-export function isNoneNode(b: Block) {
-  return b.type === "none";
-}
-
 export function isPathsBlock(block: FlowBlock) {
   return block.blockData.type === "paths";
 }
@@ -53,7 +49,12 @@ export function generateEdge(config: {
   };
 }
 
-export function generateNode(config: { block: FlowBlock }): CustomNode {
+export function generateNode(config: {
+  block: FlowBlock;
+  opts?: {
+    inner?: boolean;
+  };
+}): CustomNode {
   const { block } = config;
   const { parent: parentBlock } = block;
   const position: {
@@ -117,10 +118,15 @@ export function generateNode(config: { block: FlowBlock }): CustomNode {
     id: block.id,
     data: {
       blockData: block.blockData,
+      inner: config.opts?.inner || false,
+      parentId: parentBlock?.id,
     },
     position,
     parentId: parentBlock?.id,
-    type: "custom-node",
+    type:
+      block.blockData.type === "placeholder"
+        ? "placeholder-node"
+        : "custom-node",
     style: {
       visibility: "visible",
     },

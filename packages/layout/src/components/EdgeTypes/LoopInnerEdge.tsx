@@ -1,8 +1,9 @@
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
 import useStrokeStyle from "@/hooks/useStorkeStyle";
 import { CustomEdgeProps } from "@/type";
-import { BaseEdge, EdgeLabelRenderer, getStraightPath } from "@xyflow/react";
+import { BaseEdge, getStraightPath } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
+import CustomEdgeLabelRender from "./components/CustomEdgeLabelRender";
 
 export default function LoopInnerEdge(props: CustomEdgeProps) {
   const {
@@ -25,36 +26,33 @@ export default function LoopInnerEdge(props: CustomEdgeProps) {
     sourceId: source,
     targetId: target,
   });
-  const { viewMode, addCustomNodeByInnerLoop, onAddBlockByData } =
-    useFixedLayoutStore();
+  const { addCustomNodeByInnerLoop, onAddBlockByData } = useFixedLayoutStore();
 
   return (
     <>
       <BaseEdge path={edgePath} markerEnd={markerEnd} style={styles} />
-      {!viewMode && (
-        <EdgeLabelRenderer>
-          <div
-            className=" absolute pointer-events-auto"
-            style={{
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-              transformOrigin: "center",
-            }}
-          >
-            <CommonAddButton
-              onClick={async () => {
-                const _data = await onAddBlockByData?.({
-                  type: "custom",
-                });
+      <CustomEdgeLabelRender source={source} target={target}>
+        <div
+          className=" absolute pointer-events-auto"
+          style={{
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            transformOrigin: "center",
+          }}
+        >
+          <CommonAddButton
+            onClick={async () => {
+              const _data = await onAddBlockByData?.({
+                type: "custom",
+              });
 
-                addCustomNodeByInnerLoop({
-                  parentId: data.parentId,
-                  data: _data,
-                });
-              }}
-            />
-          </div>
-        </EdgeLabelRenderer>
-      )}
+              addCustomNodeByInnerLoop({
+                parentId: data.parentId,
+                data: _data,
+              });
+            }}
+          />
+        </div>
+      </CustomEdgeLabelRender>
     </>
   );
 }

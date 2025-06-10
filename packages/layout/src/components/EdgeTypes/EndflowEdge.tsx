@@ -1,15 +1,9 @@
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  EdgeProps,
-  Node,
-  XYPosition,
-  useReactFlow,
-} from "@xyflow/react";
+import { BaseEdge, Node, XYPosition, useReactFlow } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
 import { CustomEdgeProps } from "@/type";
 import useStrokeStyle from "@/hooks/useStorkeStyle";
+import CustomEdgeLabelRender from "./components/CustomEdgeLabelRender";
 // import { WflowEdgeProps } from '../../layoutEngine/utils';
 // import CommonAddButton from './CommonAddButton';
 // import useStrokeColor from '../../hooks/useStrokeColor';
@@ -88,7 +82,7 @@ export function EndflowEdge(props: CustomEdgeProps) {
   const { getNode } = useReactFlow();
   const sourceNode = getNode(source);
   const targetNode = getNode(target);
-  const { viewMode, addCustomNode, onAddBlockByData } = useFixedLayoutStore();
+  const { addCustomNode, onAddBlockByData } = useFixedLayoutStore();
 
   const styles = useStrokeStyle({
     sourceId: source,
@@ -107,32 +101,30 @@ export function EndflowEdge(props: CustomEdgeProps) {
   return (
     <>
       <BaseEdge path={edgePath2} markerEnd={markerEnd} style={styles} />
-      {!viewMode && (
-        <EdgeLabelRenderer>
-          <div
-            className=" absolute pointer-events-auto"
-            style={{
-              transform: `translate(-50%, -50%) translate(${sourceX}px,${
-                sourceY + 15
-              }px)`,
-              transformOrigin: "center",
-            }}
-          >
-            <CommonAddButton
-              onClick={async () => {
-                const _data = await onAddBlockByData?.({
-                  type: "custom",
-                });
+      <CustomEdgeLabelRender source={source} target={target}>
+        <div
+          className=" absolute pointer-events-auto"
+          style={{
+            transform: `translate(-50%, -50%) translate(${sourceX}px,${
+              sourceY + 15
+            }px)`,
+            transformOrigin: "center",
+          }}
+        >
+          <CommonAddButton
+            onClick={async () => {
+              const _data = await onAddBlockByData?.({
+                type: "custom",
+              });
 
-                addCustomNode({
-                  parentId: data.parentId,
-                  data: _data,
-                });
-              }}
-            />
-          </div>
-        </EdgeLabelRenderer>
-      )}
+              addCustomNode({
+                parentId: data.parentId,
+                data: _data,
+              });
+            }}
+          />
+        </div>
+      </CustomEdgeLabelRender>
     </>
   );
 }

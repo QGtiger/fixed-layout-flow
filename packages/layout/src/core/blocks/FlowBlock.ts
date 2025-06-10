@@ -87,9 +87,14 @@ export class FlowBlock extends DisplayObject {
     return 1;
   }
 
-  exportReactFlowDataByFlowBlock(): ReactFlowData {
+  exportReactFlowDataByFlowBlock(config?: {
+    innerBlock?: boolean;
+  }): ReactFlowData {
     const currNode = generateNode({
       block: this,
+      opts: {
+        inner: config?.innerBlock,
+      },
     });
     const nextBlockData = this.next?.exportReactFlowDataByFlowBlock() || {
       nodes: [],

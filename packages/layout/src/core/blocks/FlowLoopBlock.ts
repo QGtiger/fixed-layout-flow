@@ -1,6 +1,6 @@
 import { EndNode, ReactFlowData } from "@/type";
 import { FlowBlock } from "./FlowBlock";
-import { generateEdge, generateNode, isNoneNode, traceBlock } from "./utils";
+import { generateEdge, generateNode, traceBlock } from "./utils";
 
 export class FlowLoopBlock extends FlowBlock {
   innerBlock?: FlowBlock;
@@ -70,6 +70,7 @@ export class FlowLoopBlock extends FlowBlock {
       parentId: this.id,
       position: {
         x: (this.w - lw) / 2,
+        // TODO 为了循环连线 连贯
         y: this.queryViewHeight(),
       },
       style: {
@@ -105,7 +106,9 @@ export class FlowLoopBlock extends FlowBlock {
     return count;
   }
 
-  exportReactFlowDataByFlowBlock(): ReactFlowData {
+  exportReactFlowDataByFlowBlock(config?: {
+    innerBlock?: boolean;
+  }): ReactFlowData {
     if (!this.innerBlock) {
       throw new Error("innerBlock is required");
     }
@@ -117,10 +120,15 @@ export class FlowLoopBlock extends FlowBlock {
 
     const endNode = this.generateEndNode();
 
-    const innerChildNodes = this.innerBlock.exportReactFlowDataByFlowBlock();
+    const innerChildNodes = this.innerBlock.exportReactFlowDataByFlowBlock({
+      innerBlock: true,
+    });
 
     const currNode = generateNode({
       block: this,
+      opts: {
+        inner: config?.innerBlock,
+      },
     });
 
     const nextBlockData = this.next?.exportReactFlowDataByFlowBlock() || {
@@ -144,15 +152,11 @@ export class FlowLoopBlock extends FlowBlock {
       }),
       ...innerChildNodes.edges,
 
-      ...(isNoneNode(this.innerBlock.blockData)
-        ? []
-        : [
-            generateEdge({
-              sourceNode: innerChildNodes.endNode,
-              targetNode: currNode,
-              type: "loopCloseEdge",
-            }),
-          ]),
+      generateEdge({
+        sourceNode: innerChildNodes.endNode,
+        targetNode: currNode,
+        type: "loopCloseEdge",
+      }),
       ...(() => {
         const nextNode = nextBlockData.nodes.at(0);
         if (!nextNode) return [];

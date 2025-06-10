@@ -19,6 +19,7 @@ export interface FixedLayoutModelConfig {
    * @returns ReactNode
    */
   nodeRenderer?: (block: Block) => React.ReactNode;
+  placeholderRenderer?: (block: Block) => React.ReactNode;
   onAddBlockByData?: (opts: {
     type: "pathRule" | "custom";
   }) => Promise<BlockData>;
