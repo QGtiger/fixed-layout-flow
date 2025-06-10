@@ -52,7 +52,7 @@ export class FixFlowLayoutEngine {
   ) {
     // 初始化布局引擎
     this.flowBlocksTree = this.generateFixedLayoutByBlocks({
-      blocks: this.blocks,
+      blocks: this.blocks.length ? this.blocks : [getEmptyBlock()],
     });
   }
 
@@ -126,6 +126,23 @@ export class FixFlowLayoutEngine {
       }),
       isReplace
     );
+  }
+
+  resetRootBlockById({
+    replace = true,
+    data,
+  }: {
+    data?: BlockData;
+    replace?: boolean;
+  }) {
+    const fb = this.generateFixedLayoutByBlocks({
+      blocks: [getCustomBlock(data)],
+    });
+    fb.setNext(this.flowBlocksTree);
+    if (replace) {
+      this.flowBlocksTree.drop();
+    }
+    this.flowBlocksTree = fb;
   }
 
   /**

@@ -30,10 +30,10 @@ export type BlockType =
   | "placeholder" // 占位符
   | "end";
 
-export type Block = {
+export type Block<T = BlockData> = {
   id: string;
   type: BlockType;
-  data?: BlockData;
+  data?: T;
   blocks?: Block[];
 };
 

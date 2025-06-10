@@ -1,77 +1,8 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { createRoot } from "react-dom/client";
 
-import { FixedFlowLayout, type FixedFlowBlocks } from "@fixedflow/layout";
-import "@fixedflow/layout/styles.css";
-
 import "./index.css";
-
-const blocks: FixedFlowBlocks = [
-  {
-    id: "1",
-    type: "custom",
-    data: { label: "Start Block" },
-    blocks: [],
-  },
-  {
-    id: "2",
-    type: "custom",
-    data: { label: "Start Block" },
-    blocks: [],
-  },
-  {
-    id: "3",
-    type: "paths",
-    data: { label: "Paths Block" },
-    blocks: [
-      {
-        id: "3-1",
-        type: "pathRule",
-        data: { label: "Child Block 1" },
-        blocks: [],
-      },
-      {
-        id: "3-2",
-        type: "pathRule",
-        data: { label: "Child Block 2" },
-        blocks: [
-          {
-            id: "3-2-1",
-            type: "loop",
-            data: { label: "Loop Block" },
-            blocks: [
-              {
-                id: "3-2-1-1",
-                type: "paths",
-                data: { label: "Loop Child Block 1" },
-                blocks: [
-                  {
-                    id: "3-2-1-1-1",
-                    type: "pathRule",
-                    data: { label: "Loop Child Block 1-1" },
-                    blocks: [],
-                  },
-                  {
-                    id: "3-2-1-1-2",
-                    type: "pathRule",
-                    data: { label: "Loop Child Block 1-2" },
-                    blocks: [],
-                  },
-                ],
-              },
-              {
-                id: "3-2-1-2",
-                type: "loop",
-                data: { label: "Loop Child Block 1" },
-                blocks: [],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
+import IndexPage from "./pages";
 
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary fallback={<div>Something went wrong</div>}>
@@ -80,7 +11,7 @@ createRoot(document.getElementById("root")!).render(
         height: "100vh",
       }}
     >
-      <FixedFlowLayout initialBlocks={blocks} pathRuleInsertIndex={-1} />
+      <IndexPage />
     </div>
   </ErrorBoundary>
 );

@@ -36,6 +36,7 @@ export interface FixedLayoutModelActions {
   addCustomNode(opt: { parentId: string; data?: BlockData }): void;
   addPathRuleNode(opt: { parentId: string; data?: BlockData }): void;
   addCustomNodeByInnerLoop(opt: { parentId: string; data?: BlockData }): void;
+  resetRootNode: (opt: { data?: BlockData }) => void;
   getEdgeStrokeStyle: (
     sourceNode: CustomNode,
     targetNode: CustomNode
@@ -49,8 +50,7 @@ export type FixedLayoutStoreType = ReturnType<
 export const StoreContext = createContext<FixedLayoutStoreType>({} as any);
 
 export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
-  console.log(config);
-  const { initialBlocks } = config;
+  const { initialBlocks, viewMode } = config;
   const engineIns = new FixFlowLayoutEngine(initialBlocks, config);
   const { nodes, edges } = engineIns.exportReactFlowData();
 
@@ -76,6 +76,7 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
           strokeWidth: 1,
         },
         addCustomNode(opt) {
+          if (viewMode) return;
           engineIns.addCustomFlowBlockById({
             id: opt.parentId,
             data: opt.data,
@@ -83,6 +84,7 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
           render();
         },
         addPathRuleNode({ parentId, data }) {
+          if (viewMode) return;
           engineIns.addPathRuleFlowBlockById({
             id: parentId,
             data,
@@ -102,10 +104,16 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
           );
         },
         addCustomNodeByInnerLoop({ parentId, data }) {
+          if (viewMode) return;
           engineIns.addInnerBlockById({
             id: parentId,
             data,
           });
+          render();
+        },
+        resetRootNode: ({ data }) => {
+          if (viewMode) return;
+          engineIns.resetRootBlockById({ data, replace: true });
           render();
         },
       };

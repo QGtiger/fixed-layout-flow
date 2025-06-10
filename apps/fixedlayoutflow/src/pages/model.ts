@@ -1,0 +1,123 @@
+import type { FixedFlowBlocks } from "@fixedflow/layout";
+import { createCustomModel } from "../common/createModel";
+import { useCreation, useMount, useReactive } from "ahooks";
+
+import { Meta } from "./meta";
+
+export interface FlowModelProps {
+  worlflows: WorkflowNode[];
+}
+
+export const FlowModel = createCustomModel(() => {
+  const viewModel = useReactive({
+    worlflows: [] as WorkflowNode[],
+    isLoading: true,
+  });
+
+  const { worlflows } = viewModel;
+
+  useMount(() => {
+    window.addEventListener("message", ({ data: eventData }) => {
+      if (eventData.type === "fixedflow:load") {
+        const { nodeMeta } = eventData.data;
+        viewModel.worlflows = JSON.parse(nodeMeta).nodes as WorkflowNode[];
+        viewModel.isLoading = false;
+      }
+    });
+
+    //@ts-expect-error 累心该错误
+    window["test"] = () => {
+      window.postMessage(
+        {
+          type: "fixedflow:load",
+          data: {
+            nodeMeta: Meta,
+          },
+        },
+        "*"
+      );
+    };
+  });
+
+  const blocks: FixedFlowBlocks = useCreation(() => {
+    console.log("========worlflows");
+    if (worlflows.length === 0) {
+      return [];
+    }
+    const workflowMap = new Map<string, WorkflowNode>();
+    worlflows.forEach((item) => {
+      workflowMap.set(item.id, item);
+    });
+
+    function findNodeById(id: string): WorkflowNode {
+      const node = workflowMap.get(id);
+      if (!node) {
+        throw new Error(`Node with id ${id} not found`);
+      }
+      return node;
+    }
+
+    function createBlocks(
+      id: string,
+      blocks: FixedFlowBlocks = []
+    ): FixedFlowBlocks {
+      const currNode = findNodeById(id);
+      blocks.push(createBlock(currNode));
+
+      if (currNode.next) {
+        createBlocks(currNode.next, blocks);
+      }
+
+      return blocks;
+    }
+
+    function createBlock(node: WorkflowNode): FixedFlowBlocks[number] {
+      const { id, connectorCode, next } = node;
+      if (connectorCode === "Path") {
+        return {
+          id,
+          type: "paths",
+          data: node,
+          blocks: node.children?.map((childId) => {
+            const childNode = findNodeById(childId);
+            return createBlock(childNode);
+          }),
+        };
+      } else if (
+        connectorCode === "PathRule" ||
+        connectorCode === "DefaultPath"
+      ) {
+        return {
+          id,
+          type: "pathRule",
+          data: node,
+          blocks: next ? createBlocks(next) : [],
+        };
+      } else if (connectorCode === "Loop") {
+        return {
+          id,
+          type: "loop",
+          data: node,
+          blocks: node.children?.[0] ? createBlocks(node.children[0]) : [],
+        };
+      } else if (!connectorCode) {
+        return {
+          id,
+          type: "placeholder",
+        };
+      }
+
+      return {
+        id,
+        type: "custom",
+        data: node,
+      };
+    }
+
+    return createBlocks(worlflows[0].id);
+  }, [worlflows]);
+  return {
+    blocks,
+    ...viewModel,
+  };
+});

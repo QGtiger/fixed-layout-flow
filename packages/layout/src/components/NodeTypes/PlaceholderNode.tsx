@@ -12,23 +12,26 @@ const PlaceholderNode = (props: CustomNodeProps) => {
     onAddBlockByData,
     addCustomNode,
     addCustomNodeByInnerLoop,
+    resetRootNode,
   } = useFixedLayoutStore();
 
   const onAdd = async () => {
-    if (!data.parentId) return;
+    const _d = await onAddBlockByData?.({
+      type: "custom",
+    });
+    if (!data.parentId) {
+      resetRootNode({ data: _d });
+      return;
+    }
     if (data.inner) {
       addCustomNodeByInnerLoop({
         parentId: data.parentId,
-        data: await onAddBlockByData?.({
-          type: "custom",
-        }),
+        data: _d,
       });
     } else {
       addCustomNode({
         parentId: data.parentId,
-        data: await onAddBlockByData?.({
-          type: "custom",
-        }),
+        data: _d,
       });
     }
   };
