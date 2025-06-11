@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:web": "VITE_BUILD_MODE=web vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fixedflow/layout": "workspace:^",
+    "@xybot/cli": "1.4.9-beta.2",
     "ahooks": "^3.8.5",
     "fflate": "^0.8.2",
     "framer-motion": "^12.16.0",
