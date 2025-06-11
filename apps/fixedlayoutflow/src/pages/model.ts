@@ -3,6 +3,7 @@ import { createCustomModel } from "../common/createModel";
 import { useCreation, useMount, useReactive } from "ahooks";
 
 import { Meta } from "./meta";
+import { compress, uncompress } from "../utils";
 
 export interface FlowModelProps {
   worlflows: WorkflowNode[];
@@ -17,11 +18,31 @@ export const FlowModel = createCustomModel(() => {
   const { worlflows } = viewModel;
 
   useMount(() => {
+    function loadWorkflowFromMeta(data: { nodes: WorkflowNode[] }) {
+      viewModel.worlflows = data.nodes;
+      viewModel.isLoading = false;
+    }
+
+    const hash = window.location.hash.slice(1);
+    console.log("hash", compress(Meta));
+    if (hash) {
+      console.log(JSON.parse(uncompress(hash)));
+      loadWorkflowFromMeta(JSON.parse(uncompress(hash)));
+    }
+
+    const flowOssUrl = new URL(location.href).searchParams.get("flowOssUrl");
+    if (flowOssUrl) {
+      fetch(decodeURIComponent(flowOssUrl))
+        .then((res) => res.json())
+        .then((data) => {
+          loadWorkflowFromMeta(data);
+        });
+    }
+
     window.addEventListener("message", ({ data: eventData }) => {
       if (eventData.type === "fixedflow:load") {
         const { nodeMeta } = eventData.data;
-        viewModel.worlflows = JSON.parse(nodeMeta).nodes as WorkflowNode[];
-        viewModel.isLoading = false;
+        loadWorkflowFromMeta(JSON.parse(nodeMeta));
       }
     });
 
@@ -40,7 +61,7 @@ export const FlowModel = createCustomModel(() => {
   });
 
   const blocks: FixedFlowBlocks = useCreation(() => {
-    console.log("========worlflows");
+    console.log("convert worlflows to blocks", worlflows);
     if (worlflows.length === 0) {
       return [];
     }
