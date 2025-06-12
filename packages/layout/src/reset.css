@@ -5,3 +5,7 @@
 .react-flow__handle {
   visibility: hidden;
 }
+
+.react-flow__attribution {
+  display: none;
+}

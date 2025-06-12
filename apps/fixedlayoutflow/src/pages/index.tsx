@@ -2,14 +2,15 @@ import { FixedFlowLayout, type Block } from "@fixedflow/layout";
 import "@fixedflow/layout/styles.css";
 import { FlowModel } from "./model";
 import { CircleLoader } from "../components/CircleLoader";
+import HighlightTemplate from "./components/HighlightTemplate";
 
 function CustomNodeRenderer({ data }: Block<WorkflowNode>) {
   return (
-    <div className=" flex flex-col bg-white rounded-md shadow-lg border overflow-hidden border-gray-300 w-[300px]">
+    <div className=" flex flex-col bg-white rounded-md shadow-md border overflow-hidden border-gray-300 w-[300px] hover:shadow-lg hover:border-blue-400 transition-all duration-200">
       <div className=" px-4 py-2 bg-[linear-gradient(to_top,rgb(0,0,0,0.0)_0%,rgba(242,242,255)_100%)]">
         <div className="flex items-center">
           <div className="flex items-center gap-2">
-            <img src={data?.iconUrl} alt="" className=" w-7 h-7 object-cover" />
+            <img src={data?.iconUrl} alt="" className=" w-6 h-6 object-cover" />
             <span className=" text-sm ">{data?.connectorName}</span>
           </div>
         </div>
@@ -17,9 +18,16 @@ function CustomNodeRenderer({ data }: Block<WorkflowNode>) {
       <div className=" px-4">
         <div className=" devider h-[1px] bg-gray-300"></div>
       </div>
-      <div className="px-4 py-4 pb-4">
-        <div className="text-xs text-gray-700">
-          {data?.description || "无描述"}
+      <div className="px-4 py-3 pb-4">
+        <div
+          className="text-xs text-gray-700"
+          style={{
+            lineHeight: "2",
+            wordBreak: "break-all",
+            wordWrap: "break-word",
+          }}
+        >
+          <HighlightTemplate content={data?.description || "无描述"} />
         </div>
       </div>
     </div>
@@ -50,6 +58,10 @@ function IndexPage() {
         // @ts-expect-error 类型推导错误
         nodeRenderer={CustomNodeRenderer}
         placeholderRenderer={PlaceholderRenderer}
+        edgeStokeStyle={{
+          stroke: "#cccccc",
+          strokeWidth: 2,
+        }}
         viewMode
       />
     </div>

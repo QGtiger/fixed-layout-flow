@@ -23,6 +23,17 @@ export const FlowModel = createCustomModel(() => {
       viewModel.isLoading = false;
     }
 
+    const nodeMeta = localStorage.getItem("fixedflow:nodeMeta");
+    if (nodeMeta) {
+      try {
+        const parsedMeta = JSON.parse(nodeMeta);
+        console.log("load workflow from localStorage", parsedMeta);
+        loadWorkflowFromMeta(parsedMeta);
+      } catch (error) {
+        console.error("Failed to parse nodeMeta from localStorage", error);
+      }
+    }
+
     const hash = window.location.hash.slice(1);
     console.log("hash", compress(Meta));
     if (hash) {
