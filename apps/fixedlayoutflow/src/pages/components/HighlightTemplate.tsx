@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import React from "react";
+import ExpressHighlight from "./ExpressHighlight";
 
 interface HighlightTemplateProps {
   content: string;
@@ -30,8 +31,8 @@ const HighlightTemplate: React.FC<HighlightTemplateProps> = ({
               key={index}
               className={classNames(highlightClassName, " px-1 ")}
             >
-              <span className="px-0.5 py-0.5 rounded border border-gray-300">
-                {innerContent}
+              <span className="px-0.5 py-[3px] rounded border border-gray-300">
+                <ExpressHighlight content={innerContent} />
               </span>
             </span>
           );

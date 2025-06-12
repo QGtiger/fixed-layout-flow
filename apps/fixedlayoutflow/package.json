@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": " vite build",
     "build:web": "VITE_BUILD_MODE=web vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -13,6 +13,7 @@
   "dependencies": {
     "@fixedflow/layout": "workspace:^",
     "ahooks": "^3.8.5",
+    "antd": "5",
     "classnames": "^2.5.1",
     "fflate": "^0.8.2",
     "framer-motion": "^12.16.0",

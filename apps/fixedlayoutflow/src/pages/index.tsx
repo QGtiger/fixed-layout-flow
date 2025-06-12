@@ -20,7 +20,7 @@ function CustomNodeRenderer({ data }: Block<WorkflowNode>) {
       </div>
       <div className="px-4 py-3 pb-4">
         <div
-          className="text-xs text-gray-700"
+          className=" text-gray-700"
           style={{
             lineHeight: "2",
             wordBreak: "break-all",

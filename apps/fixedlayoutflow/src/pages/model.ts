@@ -4,6 +4,7 @@ import { useCreation, useMount, useReactive } from "ahooks";
 
 import { Meta } from "./meta";
 import { compress, uncompress } from "../utils";
+import useWorkflowNodeMap from "./hooks/useWorkflowNodeController";
 
 export interface FlowModelProps {
   worlflows: WorkflowNode[];
@@ -148,8 +149,12 @@ export const FlowModel = createCustomModel(() => {
 
     return createBlocks(worlflows[0].id);
   }, [worlflows]);
+
+  const nodeController = useWorkflowNodeMap(worlflows);
+
   return {
     blocks,
     ...viewModel,
+    nodeController,
   };
 });
