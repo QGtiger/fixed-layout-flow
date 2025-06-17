@@ -1,29 +1,16 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
-import { keymap, type Command } from "@codemirror/view";
+import { javascript } from "@codemirror/lang-javascript";
+import { EditorState } from "@codemirror/state";
+import { keymap, EditorView } from "@codemirror/view";
 import { useCreation } from "ahooks";
 import { generateSampleDataByOutputStruct } from "../../utils/workflowUtils";
-import { getCompletionsByExpr } from "./utils";
-
-function closeBracketsByKey<T extends string>(
-  key: T
-): { key: T; run: Command } {
-  return {
-    key: key,
-    run: (view) => {
-      return false; // 让 codemirror 处理
-      const { state } = view;
-      const { from } = state.selection.main;
-
-      view.dispatch({
-        changes: { from, to: from, insert: key },
-        selection: { anchor: from + 1 }, // 光标移到中间
-      });
-
-      return true;
-    },
-  };
-}
+import {
+  createExpressionTheme,
+  getCompletionsByExpr,
+  highlightExpressions,
+} from "./utils";
+import { useState } from "react";
 
 const autoInsertDoubleBraces = keymap.of([
   {
@@ -40,15 +27,12 @@ const autoInsertDoubleBraces = keymap.of([
       return true;
     },
   },
-  closeBracketsByKey("("),
-  closeBracketsByKey("["),
-  closeBracketsByKey("'"),
-  closeBracketsByKey('"'),
 ]);
 
 export default function CustomCodeEditor(props: {
   structMap: Record<string, OutputStructItem[]>;
 }) {
+  const [, setCode] = useState("");
   const { structMap } = props;
 
   const sampleMap = useCreation(() => {
@@ -94,12 +78,27 @@ export default function CustomCodeEditor(props: {
 
   return (
     <CodeMirror
-      value=""
-      height="200px"
+      theme="light"
+      value="222"
+      onChange={(value) => setCode(value)}
       extensions={[
         autocompletion({ override: [myCompletions] }),
         autoInsertDoubleBraces,
+        EditorState.transactionFilter.of((tr) => {
+          return tr.newDoc.lines > 1 ? [] : [tr];
+        }),
+        createExpressionTheme(),
+        highlightExpressions(),
+        EditorView.lineWrapping,
       ]}
+      basicSetup={{
+        lineNumbers: false,
+        highlightActiveLine: false,
+        highlightSelectionMatches: false,
+        bracketMatching: false,
+        closeBrackets: false,
+        foldGutter: false,
+      }}
     />
   );
 }

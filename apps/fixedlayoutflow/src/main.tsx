@@ -16,7 +16,7 @@ createRoot(document.getElementById("root")!).render(
       }}
     >
       {/* <IndexPage /> */}
-      {/* <CodeEditorPage /> */}
+      <CodeEditorPage />
       {/* <CodeEditorFormChatGpt /> */}
       <CustomCodeEditor
         structMap={{

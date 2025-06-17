@@ -1,5 +1,7 @@
 import type { Completion } from "@codemirror/autocomplete";
 import { getType } from "../../../utils/workflowUtils";
+import { Decoration, EditorView } from "@codemirror/view";
+import { RangeSetBuilder } from "@codemirror/state";
 
 export function runInSandbox(
   code: string,
@@ -39,6 +41,66 @@ export function runInSandbox(
     onSandboxError?.(error as Error);
   }
 }
+
+export const createExpressionTheme = (highlightColor = "#e3f2fd") =>
+  EditorView.theme({
+    // 基础表达式样式
+    ".cm-expression": {
+      backgroundColor: highlightColor,
+      borderRadius: "3px",
+    },
+    // 选中部分的样式（半透明叠加）
+    ".cm-expression-selected": {
+      backgroundColor: "rgba(25, 118, 210, 0.3)", // 半透明蓝色
+    },
+  });
+
+// 表达式高亮扩展
+export const highlightExpressions = () => {
+  // @ts-expect-error interface 不匹配
+  return EditorView.decorations.compute(["selection"], (state) => {
+    const builder = new RangeSetBuilder();
+    const doc = state.doc.toString();
+    const regex = /{{[^{}]*}}/g;
+    let match;
+
+    // 1. 始终添加所有表达式的基础装饰
+    while ((match = regex.exec(doc)) !== null) {
+      const start = match.index;
+      const end = start + match[0].length;
+      builder.add(start, end, Decoration.mark({ class: "cm-expression" }));
+    }
+
+    // 2. 添加选中部分的特殊装饰
+    for (const range of state.selection.ranges) {
+      if (!range.empty) {
+        const start = range.from;
+        const end = range.to;
+
+        // 检查选中是否与任何表达式重叠
+        regex.lastIndex = 0; // 重置正则
+        while ((match = regex.exec(doc)) !== null) {
+          const exprStart = match.index;
+          const exprEnd = exprStart + match[0].length;
+
+          // 如果选中与表达式有重叠
+          if (start < exprEnd && end > exprStart) {
+            // 添加选中装饰（只覆盖实际选中部分）
+            const from = Math.max(start, exprStart);
+            const to = Math.min(end, exprEnd);
+            builder.add(
+              from,
+              to,
+              Decoration.mark({ class: "cm-expression-selected" })
+            );
+          }
+        }
+      }
+    }
+
+    return builder.finish();
+  });
+};
 
 export function getCompletionsByExpr(
   expr: string,
