@@ -1,7 +1,7 @@
 const ArrayIndexKey = "array[index]";
 const ArrayIndexLabel = "数组索引";
 
-function getType(
+export function getType(
   value: any
 ): "number" | "string" | "boolean" | "object" | "array" {
   if (Array.isArray(value)) {
@@ -95,4 +95,53 @@ export function completeOutputStruct(
   process(cloneStruct, cloneSample);
 
   return cloneStruct;
+}
+
+function getDefaultValueByType(type: string): any {
+  switch (type) {
+    case "number":
+      return 0;
+    case "string":
+      return "mock string";
+    case "boolean":
+      return false;
+    default:
+      throw new Error(`Unsupported type: ${type}`);
+  }
+}
+
+export function generateSampleDataByOutputStruct(
+  struct: OutputStructItem[]
+): Record<string, any> {
+  const sample: Record<string, any> = {};
+
+  function process(currStruct: OutputStructItem[], currSample: any) {
+    for (const item of currStruct) {
+      if (item.type === "array") {
+        // 如果是数组，生成一个空数组
+        // 这里可以根据实际情况生成一个默认的数组
+        const arrayItem = item.children?.[0];
+        if (arrayItem) {
+          // 如果数组有子结构，递归处理
+          currSample[item.name] = [
+            ...Object.values(generateSampleDataByOutputStruct([arrayItem])),
+          ];
+        } else {
+          // 如果没有子结构，生成一个空数组
+          currSample[item.name] = [];
+        }
+      } else if (item.type === "object") {
+        // 如果有子结构，递归处理
+        currSample[item.name] = {};
+        process(item.children || [], currSample[item.name]);
+      } else {
+        // 否则生成一个默认值
+        currSample[item.name] = getDefaultValueByType(item.type);
+      }
+    }
+  }
+
+  process(struct, sample);
+
+  return sample;
 }

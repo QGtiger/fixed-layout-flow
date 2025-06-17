@@ -11,7 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.18.6",
+    "@codemirror/lang-javascript": "^6.2.4",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.37.2",
     "@fixedflow/layout": "workspace:^",
+    "@uiw/react-codemirror": "^4.23.13",
     "ahooks": "^3.8.5",
     "antd": "5",
     "classnames": "^2.5.1",
