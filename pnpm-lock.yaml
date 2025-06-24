@@ -6,11 +6,7 @@ settings:
 
 importers:
 
-  .:
-    dependencies:
-      '@xybot/cli':
-        specifier: 1.4.9-beta.3
-        version: 1.4.9-beta.3(postcss@8.5.4)(react@19.1.0)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0))
+  .: {}
 
   apps/fixedlayoutflow:
     dependencies:
@@ -2283,10 +2279,6 @@ packages:
 
   '@xybot/cli@1.4.9':
     resolution: {integrity: sha512-BsajzOfZQBbYzbx+PFMgbxfqJgeO6PyfI4Vqgpo6jv5aI6vvZT7Dj/nRC7YjtdMilelVZqJ+UwqBLBnxiTX1VQ==, tarball: https://packages.aliyun.com/604c1a6bf11bae7ca07d6ad3/npm/npm-registry/@xybot/cli/-/@xybot/cli-1.4.9.tgz}
-    hasBin: true
-
-  '@xybot/cli@1.4.9-beta.3':
-    resolution: {integrity: sha512-/+KtNkXKbXyVasusA55Vy6CN5ALiM3YdfeIhEmtZPVDq5Zb8srTkGS5V2/+cE+0j5R4hCbx/651GxD7+t4aEkQ==, tarball: https://packages.aliyun.com/604c1a6bf11bae7ca07d6ad3/npm/npm-registry/@xybot/cli/-/@xybot/cli-1.4.9-beta.3.tgz}
     hasBin: true
 
   '@xybot/i18n@0.0.4':
@@ -8074,56 +8066,11 @@ snapshots:
       uuid: 11.1.0
       vite: 5.4.19(@types/node@20.19.1)(terser@5.24.0)
 
-  '@xybot/bury@0.1.4(react@19.1.0)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0))':
-    dependencies:
-      fs-extra: 11.1.1
-      glob: 7.2.0
-      lodash.throttle: 4.1.1
-      react: 19.1.0
-      ts-morph: 24.0.0
-      uuid: 11.1.0
-      vite: 6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0)
-
   '@xybot/cli@1.4.9(postcss@8.5.4)(react@18.3.1)(typescript@5.8.3)(vite@5.4.19(@types/node@20.19.1)(terser@5.24.0))':
     dependencies:
       '@ast-grep/napi': 0.16.1
       '@xybot/bury': 0.1.4(react@18.3.1)(vite@5.4.19(@types/node@20.19.1)(terser@5.24.0))
       '@xybot/i18n': 0.0.4(react@18.3.1)(vite@5.4.19(@types/node@20.19.1)(terser@5.24.0))
-      '@xybot/init-config': 1.2.1
-      '@xybot/standard': 1.0.0(postcss@8.5.4)
-      axios: 1.6.2
-      cac: 6.7.14
-      cheerio: 1.0.0
-      chokidar: 3.6.0
-      destr: 2.0.5
-      ejs: 3.1.10
-      esbuild: 0.19.12
-      fs-extra: 11.1.1
-      get-port: 5.1.1
-      jsdom: 20.0.3
-      openapi-typescript: 7.6.0(typescript@5.8.3)
-      prettier: 3.5.3
-      prompts: 2.4.2
-      ts-morph: 20.0.0
-      zx: 7.2.3
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - debug
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - postcss
-      - react
-      - supports-color
-      - typescript
-      - utf-8-validate
-      - vite
-
-  '@xybot/cli@1.4.9-beta.3(postcss@8.5.4)(react@19.1.0)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0))':
-    dependencies:
-      '@ast-grep/napi': 0.16.1
-      '@xybot/bury': 0.1.4(react@19.1.0)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0))
-      '@xybot/i18n': 0.1.0-beta.19(react@19.1.0)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0))
       '@xybot/init-config': 1.2.1
       '@xybot/standard': 1.0.0(postcss@8.5.4)
       axios: 1.6.2
@@ -8179,19 +8126,6 @@ snapshots:
       ts-morph: 25.0.1
       uuid: 11.1.0
       vite: 5.4.19(@types/node@20.19.1)(terser@5.24.0)
-
-  '@xybot/i18n@0.1.0-beta.19(react@19.1.0)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0))':
-    dependencies:
-      esbuild: 0.19.12
-      fs-extra: 11.1.1
-      glob: 7.2.0
-      intl-messageformat: 10.3.5
-      lodash.throttle: 4.1.1
-      p-limit: 4.0.0
-      react: 19.1.0
-      ts-morph: 25.0.1
-      uuid: 11.1.0
-      vite: 6.3.5(@types/node@22.15.30)(jiti@1.21.7)(terser@5.24.0)(yaml@2.8.0)
 
   '@xybot/init-config@1.2.1':
     dependencies:
