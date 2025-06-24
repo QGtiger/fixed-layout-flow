@@ -1,0 +1,48 @@
+{
+  "name": "xybot-front-flow",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "xybot dev",
+    "build": "tsc && xybot build"
+  },
+  "files": [
+    "dist/",
+    "package.json",
+    "manifest.json"
+  ],
+  "dependencies": {
+    "@sentry/react": "8.42.0",
+    "@tanstack/react-query": "^5.29.2",
+    "@types/node": "^20.10.7",
+    "@xybot/bury": "0.1.4",
+    "@xybot/i18n": "0.1.0-beta.19",
+    "antd": "^5.12.8",
+    "kiwi-intl": "1.2.6-beta.0",
+    "lodash.throttle": "4.1.1",
+    "msw": "2.4.13",
+    "openapi-fetch": "0.12.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.2",
+    "ua-parser-js": "2.0.0",
+    "xhook": "1.6.2"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.40.0",
+    "@types/react": "^18.0.22",
+    "@types/react-dom": "^18.0.7",
+    "@types/xhook": "1.5.3",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@xybot/cli": "1.4.9-beta.3",
+    "autoprefixer": "^10.4.16",
+    "code-inspector-plugin": "^0.5.2",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-html": "^3.2.1",
+    "vite-plugin-svgr": "4.2.0"
+  }
+}
