@@ -5,6 +5,8 @@ import { navigate } from "@/utils/navigation";
 // 走控制台登录
 const ACCESS_TOKEN_KEY = "ACCESS_TOKEN";
 
+export const API_URL = process.env.API_URL || window.YD?.API_URL;
+
 export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
@@ -18,7 +20,7 @@ export function setAccessToken(token: string) {
 
 export const client = axios.create({
   // @ts-ignore
-  baseURL: process.env.API_URL || window.YD?.API_URL,
+  baseURL: API_URL,
 });
 
 client.interceptors.request.use((config) => {

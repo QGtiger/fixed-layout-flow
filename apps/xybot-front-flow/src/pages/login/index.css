@@ -1,0 +1,32 @@
+.custom-login .xybot-sso-login-bottom {
+  margin-top: 76px;
+}
+
+.custom-login .xybot-sso-login .ant-btn {
+  background: #1d2129;
+  box-shadow: 0 2px rgba(29, 33, 41, 0.15);
+  margin-top: 24px;
+}
+
+.custom-login .xybot-sso-login .ant-btn:hover {
+  background-color: rgba(29, 33, 41, 0.8);
+}
+
+.custom-login .xybot-sso-login-title {
+  margin-bottom: 24px;
+}
+
+.custom-login .xybot-sso-login {
+  padding: 60px 40px 40px;
+}
+
+.custom-login .ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.custom-login .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #1d2129 !important;
+}
+
+.custom-login .ant-checkbox-input:checked + .ant-checkbox-inner,
+.custom-login .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:hover .ant-checkbox-inner {
+  background-color: #1d2129 !important;
+  border-color: #1d2129 !important;
+}
