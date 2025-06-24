@@ -19,6 +19,7 @@ import { MessageRef } from "@/utils/customMessage";
 import { setLocation, setNavigator } from "@/utils/navigation";
 import { UserModel } from "@/models/UserModel";
 import { ModalRef } from "@/utils/customModal";
+import ConsoleLayoutWrapper from "./consoleLayout";
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   useMount(() => {
@@ -60,7 +61,6 @@ const queryClient = new QueryClient({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export default () => {
-  const outlet = useOutlet();
   const navigate = useNavigate();
   const location = useLocation();
   const [api, notificationHolder] = notification.useNotification();
@@ -88,12 +88,12 @@ export default () => {
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: "#9b87f5", // Match your primary color
+                colorPrimary: "#3875f6", // Match your primary color
               },
             }}
           >
             <UserModel.Provider>
-              {outlet}
+              <ConsoleLayoutWrapper />
               <div>
                 {notificationHolder}
                 {messageContextHolder}
