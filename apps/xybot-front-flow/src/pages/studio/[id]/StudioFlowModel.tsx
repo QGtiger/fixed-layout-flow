@@ -23,6 +23,7 @@ export const StudioFlowModel = createCustomModel(() => {
   const { id } = useParams<"id">();
   const viewModel = useReactive({
     nodes: [] as WorkflowNode[],
+    selectedId: "",
   });
   if (!id) {
     throw new Error("Flow ID is required");
@@ -51,7 +52,7 @@ export const StudioFlowModel = createCustomModel(() => {
     }
   });
 
-  const { nodes: worlflows } = viewModel;
+  const { nodes: worlflows, selectedId } = viewModel;
 
   const blocks: FixedFlowBlocks = useCreation(() => {
     console.log("convert worlflows to blocks", worlflows);
@@ -131,5 +132,34 @@ export const StudioFlowModel = createCustomModel(() => {
     return createBlocks(worlflows[0].id);
   }, [worlflows]);
 
-  return { loading, blocks };
+  const nodeController = useCreation(() => {
+    const nodeMap = new Map<string, WorkflowNode>();
+
+    worlflows.forEach((node) => {
+      nodeMap.set(node.id, node);
+    });
+
+    return {
+      getNode: (id: string): WorkflowNode | undefined => nodeMap.get(id),
+      getAllNodes: (): WorkflowNode[] => Array.from(nodeMap.values()),
+      hasNode: (id: string): boolean => nodeMap.has(id),
+    };
+  }, [worlflows]);
+
+  const selectedNode = useCreation(() => {
+    if (!selectedId) {
+      return undefined;
+    }
+    return nodeController.getNode(selectedId);
+  }, [selectedId, nodeController]);
+
+  return {
+    loading,
+    blocks,
+    ...nodeController,
+    selectedNode,
+    setSelectedId: (id: string) => {
+      viewModel.selectedId = id;
+    },
+  };
 });
