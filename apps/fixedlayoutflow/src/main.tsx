@@ -3,10 +3,6 @@ import { createRoot } from "react-dom/client";
 
 import "./index.css";
 import IndexPage from "./pages";
-import CodeEditorPage from "./pages/CodeEditor";
-import CodeEditorFormChatGpt from "./pages/CodeEditor/CodeEditorFormChatGpt";
-import CustomCodeEditor from "./pages/CodeEditor/CustomCodeEditor";
-import { completeOutputStruct } from "./utils/workflowUtils";
 
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary fallback={<div>Something went wrong</div>}>
@@ -15,9 +11,12 @@ createRoot(document.getElementById("root")!).render(
         height: "100vh",
       }}
     >
-      {/* <IndexPage /> */}
-      <CodeEditorPage />
-      {/* <CodeEditorFormChatGpt /> */}
+      {/* <N8nExpressionEditor /> */}
+      {/* <CMEditor /> */}
+      <IndexPage />
+      {/* <CodeEditorPage />
+      <TooltipExample />
+      22
       <CustomCodeEditor
         structMap={{
           节点1: completeOutputStruct([], {
@@ -228,6 +227,8 @@ createRoot(document.getElementById("root")!).render(
           ],
         }}
       />
+      33
+      <DotTooltipExample /> */}
     </div>
   </ErrorBoundary>
 );

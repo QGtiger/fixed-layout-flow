@@ -1,16 +1,14 @@
 import CodeMirror from "@uiw/react-codemirror";
-import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
-import { javascript } from "@codemirror/lang-javascript";
+import { autocompletion } from "@codemirror/autocomplete";
 import { EditorState } from "@codemirror/state";
 import { keymap, EditorView } from "@codemirror/view";
 import { useCreation } from "ahooks";
 import { generateSampleDataByOutputStruct } from "../../utils/workflowUtils";
-import {
-  createExpressionTheme,
-  getCompletionsByExpr,
-  highlightExpressions,
-} from "./utils";
+import { createExpressionTheme, highlightExpressions } from "./utils";
 import { useState } from "react";
+
+import "./index.css";
+import { getCompletionsBySample } from "./utils/completionsBySample";
 
 const autoInsertDoubleBraces = keymap.of([
   {
@@ -51,45 +49,31 @@ export default function CustomCodeEditor(props: {
     return sample;
   }, [structMap]);
 
-  function myCompletions(context: CompletionContext): any {
-    const { state, pos } = context;
-    const line = state.doc.lineAt(pos);
-    const textBefore = line.text.slice(0, pos);
-    const textAfter = line.text.slice(pos);
-
-    console.log("Text Before:", textBefore, "\nText After:", textAfter);
-
-    const inExpression =
-      /{{[^{}]*$/.test(textBefore) && /[^{}]*}}/.test(textAfter);
-
-    // {{ 2123123123.  11 {{ 2 }} }} 这里是获取 后一个
-    const expression = textBefore.match(/.*{{\s*(.*)$/)?.[1]; // ?.trim(); 不用去除空格  /.*{{\s*([^\s]*)$/ 为什么不是用 [^\s]*] 是因为 $('RP' + "A")
-    // console.log("In Expression:", inExpression, "Expression:", expression);
-    if (!inExpression || !expression) return null; // 如果不在表达式中，直接返回 null
-
-    const result = getCompletionsByExpr(expression, textAfter, sampleMap || {});
-    return result.length
-      ? {
-          from: pos,
-          options: result,
-        }
-      : null;
-  }
-
   return (
     <CodeMirror
       theme="light"
       value="222"
       onChange={(value) => setCode(value)}
       extensions={[
-        autocompletion({ override: [myCompletions] }),
+        // 自动 输入 { => {{  }}
         autoInsertDoubleBraces,
+        // 单行文本
         EditorState.transactionFilter.of((tr) => {
           return tr.newDoc.lines > 1 ? [] : [tr];
         }),
+        // 表达式高亮 样式
         createExpressionTheme(),
+        // 表达式解析
         highlightExpressions(),
         EditorView.lineWrapping,
+        // 代码补全逻辑
+        autocompletion({
+          override: [
+            (context) => {
+              return getCompletionsBySample(context, sampleMap);
+            },
+          ],
+        }),
       ]}
       basicSetup={{
         lineNumbers: false,

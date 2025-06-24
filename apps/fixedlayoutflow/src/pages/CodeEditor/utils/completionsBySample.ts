@@ -1,91 +1,6 @@
-import type { Completion } from "@codemirror/autocomplete";
+import type { Completion, CompletionContext } from "@codemirror/autocomplete";
+import { runInSandbox } from ".";
 import { getType } from "../../../utils/workflowUtils";
-import { Decoration, EditorView } from "@codemirror/view";
-import { RangeSetBuilder } from "@codemirror/state";
-import { getExpression } from "./expression";
-
-export function runInSandbox(
-  code: string,
-  options?: {
-    saftContextMap?: Record<string, any>;
-    onSandboxError?: (error: Error) => void;
-    onSandboxSuccess?: (result: any) => void;
-  }
-) {
-  const {
-    saftContextMap = {},
-    onSandboxError,
-    onSandboxSuccess,
-  } = options || {};
-  // 创建安全的执行上下文
-  const safeContext = {
-    // 预置的安全API
-    ...saftContextMap,
-  };
-
-  // 创建代理以防止访问非允许的属性
-  const sandbox = new Proxy(safeContext, {
-    has() {
-      return true; // 允许访问所有属性
-    },
-    get(target, key, receiver) {
-      return Reflect.get(target, key, receiver);
-    },
-  });
-
-  // 使用Function构造函数执行代码
-  try {
-    const fn = new Function("sandbox", `with(sandbox) { return ${code} }`);
-    onSandboxSuccess?.(fn(sandbox));
-  } catch (error) {
-    console.error("Sandbox execution error:", error);
-    onSandboxError?.(error as Error);
-  }
-}
-
-export const nativeSelectionTheme = EditorView.baseTheme({
-  "&.cm-editor .cm-content": {
-    caretColor: "auto !important", // 使用原生光标
-  },
-  "&.cm-editor .cm-content .cm-line": {
-    caretColor: "auto !important", // 使用原生光标
-  },
-  "&.cm-editor .cm-selectionBackground, &.cm-editor .cm-selectionMatch": {
-    background: "transparent !important", // 禁用 CodeMirror 选区背景
-  },
-  "&.cm-editor .cm-line::selection": {
-    background: "#ccc", // 使用浏览器默认选区颜色（Windows 是蓝色）
-  },
-});
-
-export const createExpressionTheme = (highlightColor = "#e3f2fd") =>
-  EditorView.theme({
-    // 基础表达式样式
-    ".cm-expression": {
-      backgroundColor: highlightColor,
-      borderRadius: "3px",
-    },
-  });
-
-// 表达式高亮扩展
-export const highlightExpressions = () => {
-  // @ts-expect-error interface 不匹配
-  return EditorView.decorations.compute(["selection"], (state) => {
-    const builder = new RangeSetBuilder();
-    const doc = state.doc.toString();
-    const regex = /{{[^{}]*}}/g;
-    let match;
-
-    // 1. 始终添加所有表达式的基础装饰
-    while ((match = regex.exec(doc)) !== null) {
-      const start = match.index;
-      const end = start + match[0].length;
-      builder.add(start, end, Decoration.mark({ class: "cm-expression" }));
-    }
-
-    return builder.finish();
-  });
-};
 
 export function getCompletionsByExpr(
   expr: string,
@@ -94,7 +9,6 @@ export function getCompletionsByExpr(
 ): Completion[] {
   const dollarMatch = expr.match(/.*\$(.*)$/);
   const exp = dollarMatch?.[1];
-  console.log("匹配到的表达式:", getExpression(expr), "原始表达式:", expr);
   if (!dollarMatch) return [];
   const expWithDollar = `$${exp}`;
   // 各个分割符 后续的长度
@@ -221,4 +135,32 @@ export function getCompletionsByExpr(
     }
     return acc;
   }, [] as Completion[]);
+}
+
+export function getCompletionsBySample(
+  context: CompletionContext,
+  sampleMap?: Record<string, any>
+): any {
+  const { state, pos } = context;
+  const line = state.doc.lineAt(pos);
+  const textBefore = line.text.slice(0, pos);
+  const textAfter = line.text.slice(pos);
+
+  console.log("Text Before:", textBefore, "\nText After:", textAfter);
+
+  const inExpression =
+    /{{[^{}]*$/.test(textBefore) && /[^{}]*}}/.test(textAfter);
+
+  // {{ 2123123123.  11 {{ 2 }} }} 这里是获取 后一个
+  const expression = textBefore.match(/.*{{\s*(.*)$/)?.[1]; // ?.trim(); 不用去除空格  /.*{{\s*([^\s]*)$/ 为什么不是用 [^\s]*] 是因为 $('RP' + "A")
+  // console.log("In Expression:", inExpression, "Expression:", expression);
+  if (!inExpression || !expression) return null; // 如果不在表达式中，直接返回 null
+
+  const result = getCompletionsByExpr(expression, textAfter, sampleMap || {});
+  return result.length
+    ? {
+        from: pos,
+        options: result,
+      }
+    : null;
 }
