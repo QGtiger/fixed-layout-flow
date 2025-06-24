@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@xybot/cli':
         specifier: 1.4.9-beta.3
-        version: 1.4.9-beta.3(postcss@8.5.4)(react@19.1.0)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))
+        version: 1.4.9-beta.3(postcss@8.5.4)(react@19.1.0)(typescript@4.9.5)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))
 
   apps/fixedlayoutflow:
     dependencies:
@@ -197,11 +197,11 @@ importers:
         specifier: ^5.40.0
         version: 5.81.2(@tanstack/react-query@5.81.2(react@18.2.0))(react@18.2.0)
       '@types/react':
-        specifier: ^18.0.22
-        version: 18.3.23
+        specifier: 18.2.0
+        version: 18.2.0
       '@types/react-dom':
-        specifier: ^18.0.7
-        version: 18.3.7(@types/react@18.3.23)
+        specifier: 18.2.0
+        version: 18.2.0
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -2122,16 +2122,8 @@ packages:
   '@types/react-dom@18.2.0':
     resolution: {integrity: sha512-8yQrvS6sMpSwIovhPOwfyNf2Wz6v/B62LFSVYQ85+Rq3tLsBIG7rP5geMxaijTUxSkrO6RzN/IRuIAADYQsleA==}
 
-  '@types/react-dom@18.3.7':
-    resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
-    peerDependencies:
-      '@types/react': ^18.0.0
-
   '@types/react@18.2.0':
     resolution: {integrity: sha512-0FLj93y5USLHdnhIhABk83rm8XEGA7kH3cr+YUlvxoUGp1xNt/DINUMvqPxLyOQMzLmZe8i4RTHbvb8MC7NmrA==}
-
-  '@types/react@18.3.23':
-    resolution: {integrity: sha512-/LDXMQh55EzZQ0uVAZmKKhfENivEvWz6E+EYzh+/MCjMhNsotd+ZHhBGIjFDTi6+fz0OhQQQLbTgdQIxxCsC0w==}
 
   '@types/scheduler@0.26.0':
     resolution: {integrity: sha512-WFHp9YUJQ6CKshqoC37iOlHnQSmxNc795UhB26CyBBttrN9svdIrUjl/NjnNmfcwtncN0h/0PPAFWv9ovP8mLA==}
@@ -2379,6 +2371,8 @@ packages:
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
+    peerDependencies:
+      acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
 
   acorn-loose@6.1.0:
     resolution: {integrity: sha512-FHhXoiF0Uch3IqsrnPpWwCtiv5PYvipTpT1k9lDMgQVVYc9iDuSl5zdJV358aI8twfHCYMFBRVYvAVki9wC/ng==}
@@ -5556,6 +5550,8 @@ packages:
   tsutils@3.21.0:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
+    peerDependencies:
+      typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -7846,19 +7842,10 @@ snapshots:
     dependencies:
       '@types/react': 18.2.0
 
-  '@types/react-dom@18.3.7(@types/react@18.3.23)':
-    dependencies:
-      '@types/react': 18.3.23
-
   '@types/react@18.2.0':
     dependencies:
       '@types/prop-types': 15.7.15
       '@types/scheduler': 0.26.0
-      csstype: 3.0.11
-
-  '@types/react@18.3.23':
-    dependencies:
-      '@types/prop-types': 15.7.15
       csstype: 3.0.11
 
   '@types/scheduler@0.26.0': {}
@@ -7884,7 +7871,7 @@ snapshots:
   '@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.53.0)(typescript@4.9.5))(eslint@8.53.0)(typescript@4.9.5)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@5.8.3)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/type-utils': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
       '@typescript-eslint/utils': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
@@ -7894,7 +7881,7 @@ snapshots:
       ignore: 5.2.4
       natural-compare-lite: 1.4.0
       semver: 7.7.2
-      tsutils: 3.21.0
+      tsutils: 3.21.0(typescript@4.9.5)
     optionalDependencies:
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -7917,7 +7904,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@5.62.0(eslint@8.53.0)(typescript@5.8.3)':
+  '@typescript-eslint/parser@5.62.0(eslint@8.53.0)(typescript@4.9.5)':
     dependencies:
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/types': 5.62.0
@@ -7925,7 +7912,7 @@ snapshots:
       debug: 4.4.1(supports-color@9.4.0)
       eslint: 8.53.0
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
 
@@ -7970,7 +7957,7 @@ snapshots:
       '@typescript-eslint/utils': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
       debug: 4.4.1(supports-color@9.4.0)
       eslint: 8.53.0
-      tsutils: 3.21.0
+      tsutils: 3.21.0(typescript@4.9.5)
     optionalDependencies:
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -7999,7 +7986,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.7.2
-      tsutils: 3.21.0
+      tsutils: 3.21.0(typescript@4.9.5)
     optionalDependencies:
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -8199,7 +8186,7 @@ snapshots:
       - utf-8-validate
       - vite
 
-  '@xybot/cli@1.4.9-beta.3(postcss@8.5.4)(react@19.1.0)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))':
+  '@xybot/cli@1.4.9-beta.3(postcss@8.5.4)(react@19.1.0)(typescript@4.9.5)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))':
     dependencies:
       '@ast-grep/napi': 0.16.1
       '@xybot/bury': 0.1.4(react@19.1.0)(vite@6.3.5(@types/node@22.15.30)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))
@@ -8216,7 +8203,7 @@ snapshots:
       fs-extra: 11.1.1
       get-port: 5.1.1
       jsdom: 20.0.3
-      openapi-typescript: 7.6.0(typescript@5.8.3)
+      openapi-typescript: 7.6.0(typescript@4.9.5)
       prettier: 3.6.0
       prompts: 2.4.2
       ts-morph: 20.0.0
@@ -8276,7 +8263,7 @@ snapshots:
       '@babel/preset-react': 7.27.1(@babel/core@7.27.4)
       '@babel/preset-typescript': 7.27.1(@babel/core@7.27.4)
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.53.0)(typescript@4.9.5))(eslint@8.53.0)(typescript@4.9.5)
-      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@5.8.3)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
       chalk: 4.1.2
       eslint: 8.53.0
       eslint-config-prettier: 8.10.0(eslint@8.53.0)
@@ -8332,7 +8319,9 @@ snapshots:
       acorn: 8.14.1
       acorn-walk: 8.2.0
 
-  acorn-jsx@5.3.2: {}
+  acorn-jsx@5.3.2(acorn@8.14.1):
+    dependencies:
+      acorn: 8.14.1
 
   acorn-loose@6.1.0:
     dependencies:
@@ -9432,7 +9421,7 @@ snapshots:
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@5.8.3)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
       eslint: 8.53.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
@@ -9466,7 +9455,7 @@ snapshots:
       string.prototype.trimend: 1.0.9
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@5.8.3)
+      '@typescript-eslint/parser': 5.62.0(eslint@8.53.0)(typescript@4.9.5)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -9625,13 +9614,13 @@ snapshots:
   espree@10.3.0:
     dependencies:
       acorn: 8.14.1
-      acorn-jsx: 5.3.2
+      acorn-jsx: 5.3.2(acorn@8.14.1)
       eslint-visitor-keys: 4.2.0
 
   espree@9.6.1:
     dependencies:
       acorn: 8.14.1
-      acorn-jsx: 5.3.2
+      acorn-jsx: 5.3.2(acorn@8.14.1)
       eslint-visitor-keys: 3.4.3
 
   esprima@4.0.1: {}
@@ -10786,6 +10775,16 @@ snapshots:
       openapi-typescript-helpers: 0.0.13
 
   openapi-typescript-helpers@0.0.13: {}
+
+  openapi-typescript@7.6.0(typescript@4.9.5):
+    dependencies:
+      '@redocly/openapi-core': 1.34.3(supports-color@9.4.0)
+      ansi-colors: 4.1.3
+      change-case: 5.4.4
+      parse-json: 8.3.0
+      supports-color: 9.4.0
+      typescript: 4.9.5
+      yargs-parser: 21.1.1
 
   openapi-typescript@7.6.0(typescript@5.8.3):
     dependencies:
@@ -12148,9 +12147,10 @@ snapshots:
       - tsx
       - yaml
 
-  tsutils@3.21.0:
+  tsutils@3.21.0(typescript@4.9.5):
     dependencies:
       tslib: 1.14.1
+      typescript: 4.9.5
 
   type-check@0.4.0:
     dependencies:

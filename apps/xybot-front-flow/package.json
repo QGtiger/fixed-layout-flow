@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.40.0",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
     "@types/uuid": "^10.0.0",
     "@types/xhook": "1.5.3",
     "@vitejs/plugin-react-swc": "^3.5.0",
