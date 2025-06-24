@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "build:prod": "pnpm --filter @fixedflow/layout build",
-    "build": "pnpm --filter fixedlayoutflow build"
+    "build": "pnpm -r build"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }
