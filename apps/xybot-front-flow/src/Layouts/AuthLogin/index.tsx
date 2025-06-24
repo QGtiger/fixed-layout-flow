@@ -1,8 +1,8 @@
-import { getAccessToken } from '@/api';
-import { UserModel } from '@/models/UserModel';
-import { useMount } from 'ahooks';
-import { Spin } from 'antd';
-import { PropsWithChildren } from 'react';
+import { getAccessToken } from "@/api";
+import { CircleLoader } from "@/components/CircleLoader";
+import { UserModel } from "@/models/UserModel";
+import { useMount } from "ahooks";
+import { PropsWithChildren } from "react";
 
 export const AuthLoginLayout = ({ children }: PropsWithChildren<{}>) => {
   const {
@@ -19,7 +19,7 @@ export const AuthLoginLayout = ({ children }: PropsWithChildren<{}>) => {
   });
 
   if (!token || !uuid) {
-    return <Spin spinning fullscreen />;
+    return <CircleLoader />;
   }
   return children;
 };

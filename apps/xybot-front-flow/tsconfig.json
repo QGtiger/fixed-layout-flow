@@ -23,9 +23,9 @@
     "paths": {
       "@/*": ["src/*"],
       "xybot": ["src/.xybot"]
-    },
+    }
   },
-  
-  "include": ["src","src/.xybot/"],
+
+  "include": ["src", "src/.xybot/"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

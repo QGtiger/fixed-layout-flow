@@ -1,11 +1,11 @@
-// import useNav from '@/hooks/useNav';
-import { Button, Result } from 'antd';
-import { useEffect } from 'react';
+import { Button, Result } from "antd";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CommonNotFound() {
-  // const { navEntry } = useNav();
+  const nav = useNavigate();
   useEffect(() => {
-    document.title = '404';
+    document.title = "404";
   }, []);
   return (
     <Result
@@ -16,7 +16,7 @@ export default function CommonNotFound() {
       extra={
         <Button
           onClick={() => {
-            // navEntry();
+            nav("/"); // 使用 useNavigate 导航到首页
           }}
         >
           返回首页

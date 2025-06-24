@@ -1,5 +1,6 @@
-import { createCustomModel } from '@/common/createModel';
-import { useBoolean } from 'ahooks';
+import { createCustomModel } from "@/common/createModel";
+import { useBoolean } from "ahooks";
+import { useLayoutEffect } from "react";
 
 export const ConsoleModel = createCustomModel(() => {
   const [hideConsoleMenu, hideConsoleMenuAction] = useBoolean(false);
@@ -9,3 +10,13 @@ export const ConsoleModel = createCustomModel(() => {
     hideConsoleMenuAction,
   };
 });
+
+export function useHideConsoleMenu() {
+  const { hideConsoleMenuAction } = ConsoleModel.useModel();
+  useLayoutEffect(() => {
+    hideConsoleMenuAction.setTrue();
+    return () => {
+      hideConsoleMenuAction.setFalse();
+    };
+  }, []);
+}
