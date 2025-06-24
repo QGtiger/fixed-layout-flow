@@ -19,6 +19,7 @@
     "@xybot/bury": "0.1.4",
     "@xybot/i18n": "0.1.0-beta.19",
     "antd": "^5.26.0",
+    "axios": "^1.6.2",
     "kiwi-intl": "1.2.6-beta.0",
     "lodash.throttle": "4.1.1",
     "msw": "2.4.13",

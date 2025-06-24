@@ -138,6 +138,9 @@ importers:
       antd:
         specifier: ^5.26.0
         version: 5.26.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      axios:
+        specifier: ^1.6.2
+        version: 1.6.2
       kiwi-intl:
         specifier: 1.2.6-beta.0
         version: 1.2.6-beta.0
@@ -10254,7 +10257,7 @@ snapshots:
 
   is-symbol@1.0.4:
     dependencies:
-      has-symbols: 1.1.0
+      has-symbols: 1.0.2
 
   is-symbol@1.1.1:
     dependencies:
