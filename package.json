@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build:prod": "pnpm --filter @fixedflow/layout build",
-    "build": "pnpm  -r build"
+    "build": "pnpm --filter fixedlayoutflow build"
   },
   "keywords": [],
   "author": "",

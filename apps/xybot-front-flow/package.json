@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "xybot dev",
-    "build": "tsc && xybot build"
+    "build": " xybot build"
   },
   "files": [
     "dist/",
