@@ -1,5 +1,5 @@
 import { getAccessToken } from "@/api";
-import { CircleLoader } from "@/components/CircleLoader";
+import { GeometricLoader } from "@/components/GeometricLoader";
 import { UserModel } from "@/models/UserModel";
 import { useMount } from "ahooks";
 import { PropsWithChildren } from "react";
@@ -19,7 +19,7 @@ export const AuthLoginLayout = ({ children }: PropsWithChildren<{}>) => {
   });
 
   if (!token || !uuid) {
-    return <CircleLoader />;
+    return <GeometricLoader />;
   }
   return children;
 };

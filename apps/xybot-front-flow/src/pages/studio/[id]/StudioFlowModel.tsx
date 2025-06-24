@@ -28,37 +28,28 @@ export const StudioFlowModel = createCustomModel(() => {
     throw new Error("Flow ID is required");
   }
 
-  const { loading, runAsync: queryFlowDetail } = useRequest(
-    async () => {
-      if (isDraftFlow(id)) {
-        // Handle draft flow logic here
-        console.log("This is a draft flow");
-      } else {
-        return request<{
-          meta: string;
-        }>({
-          method: "POST",
-          url: "/api/flow/v1/flows/getFlowDetail",
-          data: {
-            flowId: id,
-            env: "dev",
-          },
-        }).then(({ data }) => {
-          if (data) {
-            const r = JSON.parse(data.meta);
-            viewModel.nodes = r.nodes || [];
-          }
-        });
-      }
-    },
-    {
-      manual: true,
+  const { loading } = useRequest(async () => {
+    if (isDraftFlow(id)) {
+      // Handle draft flow logic here
+      console.log("This is a draft flow");
+    } else {
+      return request<{
+        meta: string;
+      }>({
+        method: "POST",
+        url: "/api/flow/v1/flows/getFlowDetail",
+        data: {
+          flowId: id,
+          env: "dev",
+        },
+      }).then(({ data }) => {
+        if (data) {
+          const r = JSON.parse(data.meta);
+          viewModel.nodes = r.nodes || [];
+        }
+      });
     }
-  );
-
-  useEffect(() => {
-    queryFlowDetail();
-  }, [id]);
+  });
 
   const { nodes: worlflows } = viewModel;
 

@@ -1,7 +1,7 @@
-import { CircleLoader } from "@/components/CircleLoader";
 import { StudioFlowModel } from "./StudioFlowModel";
 import { Block, FixedFlowLayout } from "@fixedflow/layout";
 import "@fixedflow/layout/styles.css";
+import { GeometricLoader } from "@/components/GeometricLoader";
 
 function CustomNodeRenderer({ data }: Block<WorkflowNode>) {
   return (
@@ -46,7 +46,7 @@ export default function StudioDetail() {
   console.log("blocks", blocks, loading);
 
   if (loading) {
-    return <CircleLoader />;
+    return <GeometricLoader />;
   }
 
   return (
