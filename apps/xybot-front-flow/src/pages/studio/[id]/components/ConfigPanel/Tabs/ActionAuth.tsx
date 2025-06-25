@@ -3,9 +3,11 @@ import { useRequest } from "ahooks";
 import { StudioFlowModel } from "../../../StudioFlowModel";
 import { MinimalLoader } from "@/components/MinimalLoader";
 import classNames from "classnames";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import Badge from "@/components/Badge";
 import ScrollContent from "@/components/ScrollContent";
+import { Button } from "antd";
+import { ConfigPanelModel } from "../model";
 
 interface AuthItem {
   /**
@@ -93,7 +95,9 @@ function AuthItem({ active, item }: { active?: boolean; item: AuthItem }) {
 
 export default function ActionAuth({ authId }: { authId?: string }) {
   const { selectedNode } = StudioFlowModel.useModel();
-  const { data: authList } = useRequest(() => {
+  const { connectorDetail } = ConfigPanelModel.useModel();
+  const { data: authList } = useRequest(async () => {
+    if (!connectorDetail?.needAuth) return;
     return request<AuthItem[]>({
       url: "/api/tool/ipaas/auth/queryAuthedList",
       method: "POST",
@@ -151,6 +155,9 @@ export default function ActionAuth({ authId }: { authId?: string }) {
           ))}
         </div>
       </ScrollContent>
+      <Button block type="primary" className="py-2" icon={<PlusOutlined />}>
+        添加账号
+      </Button>
     </div>
   );
 }
