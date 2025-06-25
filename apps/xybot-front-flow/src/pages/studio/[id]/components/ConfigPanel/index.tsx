@@ -8,7 +8,7 @@ import { CloseOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import classNames from "classnames";
 import { ConfigPanelModel } from "./model";
 import { MinimalLoader } from "@/components/MinimalLoader";
-import Tab from "./Tab";
+import Tab from "./Tabs";
 
 function Panel() {
   const { selectedNode, setSelectedId } = StudioFlowModel.useModel();
@@ -79,7 +79,7 @@ function Panel() {
           <div
             className={`relative flex h-[100%] w-full flex-col items-center gap-[20px] overflow-hidden  px-[20px] py-[24px] shadow-[8px_0px_16px_#0a182d1a] ${""}`}
           >
-            <div className="relative flex w-full flex-[0_0_auto] items-center self-stretch">
+            <div className="relative flex w-full flex-shrink-0 items-center self-stretch">
               <img
                 className="relative h-[44px] w-[44px]"
                 alt="Logo"
@@ -136,7 +136,7 @@ function Panel() {
               </div>
             </div>
             <div className="relative ml-[-1.00px] mr-[-1.00px] h-[1.5px] w-full self-stretch bg-gray-200" />
-            <div className="relative flex w-full flex-[0_0_auto] grow flex-col gap-[7px] self-stretch">
+            <div className="relative flex w-full flex-grow-1 flex-col gap-[7px] self-stretch overflow-hidden">
               {/* <Tab key={`${connector?.code}-${nodeData.sequence}`} /> */}
               {loading ? <MinimalLoader /> : <Tab />}
             </div>

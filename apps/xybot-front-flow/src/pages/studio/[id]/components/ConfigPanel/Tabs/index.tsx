@@ -1,18 +1,23 @@
 import { Fragment } from "react";
-import { ConfigPanelModel } from "./model";
+import { ConfigPanelModel } from "../model";
 import { Tooltip } from "antd";
 import classNames from "classnames";
 import TabCompletedIcon from "@/assets/icon_tab_completed.svg?react";
 import TabNextIcon from "@/assets/icon_tab_next.svg?react";
+import { ActionList } from "./ActionList";
+import { StudioFlowModel } from "../../../StudioFlowModel";
+import ScrollContent from "@/components/ScrollContent";
 
 export default function Tab() {
   const { tabs, activeTab, setActiveTab, panelDesc } =
     ConfigPanelModel.useModel();
+  const { actionList } = ConfigPanelModel.useModel();
+  const { selectedNode } = StudioFlowModel.useModel();
 
   return (
     <div className="flex h-full flex-col">
       {tabs.length ? (
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col gap-4">
           <div className="relative inline-flex flex-[0_0_auto] items-center gap-[12px]">
             {tabs.map((tab, index) => {
               const { disabled } = tab;
@@ -22,9 +27,9 @@ export default function Tab() {
                   <Tooltip title={disabled ? "请先完成前面的步骤" : ""}>
                     <div
                       className={classNames(
-                        "relative inline-flex flex-[0_0_auto] cursor-pointer items-center gap-[2px]",
+                        "relative inline-flex flex-[0_0_auto] cursor-pointer items-center gap-[2px] border-0 border-b-[1.5px] border-transparent border-solid",
                         {
-                          active: isTabActive,
+                          "  border-gray-500": isTabActive,
                         },
                         disabled
                           ? " !cursor-not-allowed text-[#75829880]"
@@ -36,7 +41,7 @@ export default function Tab() {
                     >
                       <div
                         className={classNames(
-                          "relative mt-[-1.00px] w-fit max-w-[80px] overflow-hidden overflow-ellipsis whitespace-nowrap text-[14px] leading-[20px] tracking-[0]"
+                          "relative mt-[-1.00px] w-fit max-w-[80px] overflow-hidden overflow-ellipsis whitespace-nowrap text-[14px] leading-[26px] tracking-[0]"
                         )}
                       >
                         {tab.name}
@@ -58,6 +63,16 @@ export default function Tab() {
               );
             })}
           </div>
+          <ScrollContent className="h-1 flex-1  scroll-content">
+            {activeTab === "action" && (
+              <div className="h-full overflow-auto">
+                <ActionList
+                  actionList={actionList}
+                  activeCode={selectedNode?.actionCode}
+                />
+              </div>
+            )}
+          </ScrollContent>
         </div>
       ) : (
         panelDesc

@@ -88,7 +88,17 @@ export const ConfigPanelModel = createCustomModel(() => {
         viewModel.tabs = tabs;
         const formIndex = tabs.findIndex((item) => item.key === "form");
         const unCompletedIndex = tabs.findIndex((item) => !item.completed);
-        const i = unCompletedIndex > formIndex ? formIndex : unCompletedIndex;
+        let i = 0;
+        if (formIndex == -1) {
+          // 没有配置的话
+          i = unCompletedIndex;
+        } else if (unCompletedIndex === -1) {
+          // 没有未完成的 tab
+          i = formIndex;
+        } else {
+          // 存在配置的话，
+          i = unCompletedIndex > formIndex ? formIndex : unCompletedIndex;
+        }
         viewModel.activeTab = tabs.at(i)?.key || "action";
       }
 
@@ -109,6 +119,7 @@ export const ConfigPanelModel = createCustomModel(() => {
     connectorDetail: data,
     loading,
     isTriggerNode,
+    actionList: (isTriggerNode ? data?.triggers : data?.actions) || [],
     ...viewModel,
     setActiveTab: (key: TabProps["key"]) => {
       viewModel.activeTab = key;

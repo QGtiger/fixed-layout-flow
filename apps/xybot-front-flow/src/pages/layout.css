@@ -2,6 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .scroll-content {
+    overflow: auto;
+  }
+
+  /* WebKit 滚动条基础样式 */
+  .scroll-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* 滚动条滑块在 hover 时的样式 */
+  .scroll-content:hover::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    border-style: dashed;
+    border-color: transparent;
+    border-width: 2px;
+    background-color: #b9bfca;
+    background-clip: padding-box;
+  }
+
+  /* 滑块本身 hover 的细微样式 */
+  .scroll-content:hover::-webkit-scrollbar-thumb:hover {
+    background: #b9bfca;
+  }
+
+  /* 隐藏滚动条 */
+  .scroll-bar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 * {
   padding: 0;
   margin: 0;

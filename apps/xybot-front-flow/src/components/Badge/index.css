@@ -1,0 +1,21 @@
+.custom-badge {
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid transparent;
+  border-right: 12px solid #3170fa;
+  border-top: 12px solid #3170fa;
+  border-top-right-radius: 3px;
+  height: 0;
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 0;
+}
+
+.custom-badge .selected-icon {
+  color: #fff;
+  font-size: 12px;
+  line-height: 12px;
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
