@@ -3,6 +3,7 @@ import { Block, FixedFlowLayout } from "@fixedflow/layout";
 import "@fixedflow/layout/styles.css";
 import { GeometricLoader } from "@/components/GeometricLoader";
 import CustomNode from "./components/CustomNode";
+import ConfigPanel from "./components/ConfigPanel";
 
 function CustomNodeRenderer({ data }: Block<WorkflowNode>) {
   if (!data) return null;
@@ -26,7 +27,7 @@ export default function StudioDetail() {
   }
 
   return (
-    <div className=" h-full bg-[#f2f3f5]">
+    <div className=" h-full bg-[#f2f3f5] relative overflow-hidden">
       <FixedFlowLayout
         initialBlocks={blocks}
         pathRuleInsertIndex={-1}
@@ -38,6 +39,8 @@ export default function StudioDetail() {
           strokeWidth: 2,
         }}
       />
+
+      <ConfigPanel />
     </div>
   );
 }
