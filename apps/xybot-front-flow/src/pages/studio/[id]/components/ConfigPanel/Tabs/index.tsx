@@ -7,6 +7,7 @@ import TabNextIcon from "@/assets/icon_tab_next.svg?react";
 import { ActionList } from "./ActionList";
 import { StudioFlowModel } from "../../../StudioFlowModel";
 import ScrollContent from "@/components/ScrollContent";
+import ActionAuth from "./ActionAuth";
 
 export default function Tab() {
   const { tabs, activeTab, setActiveTab, panelDesc } =
@@ -63,15 +64,28 @@ export default function Tab() {
               );
             })}
           </div>
-          <ScrollContent className="h-1 flex-1  scroll-content">
-            {activeTab === "action" && (
-              <div className="h-full overflow-auto">
-                <ActionList
-                  actionList={actionList}
-                  activeCode={selectedNode?.actionCode}
-                />
-              </div>
-            )}
+          <ScrollContent
+            className="h-1 flex-1  scroll-content relative"
+            scrollClassName="h-full"
+          >
+            <div
+              className={classNames("h-full", {
+                " hidden": activeTab !== "action",
+              })}
+            >
+              <ActionList
+                actionList={actionList}
+                activeCode={selectedNode?.actionCode}
+              />
+            </div>
+
+            <div
+              className={classNames("h-full", {
+                " hidden": activeTab !== "auth",
+              })}
+            >
+              <ActionAuth authId={selectedNode?.authId} />
+            </div>
           </ScrollContent>
         </div>
       ) : (
