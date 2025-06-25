@@ -1,14 +1,18 @@
-import { delay, motion, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { StudioFlowModel } from "../../StudioFlowModel";
 import { useEffect } from "react";
 import { Resizable } from "re-resizable";
-import { useBoolean, useSafeState } from "ahooks";
+import { useSafeState } from "ahooks";
 import { Popover } from "antd";
 import { CloseOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import classNames from "classnames";
+import { ConfigPanelModel } from "./model";
+import { MinimalLoader } from "@/components/MinimalLoader";
+import Tab from "./Tab";
 
-export default function ConfigPanel() {
+function Panel() {
   const { selectedNode, setSelectedId } = StudioFlowModel.useModel();
+  const { loading } = ConfigPanelModel.useModel();
   const controls = useAnimation();
   const showPanel = !!selectedNode;
   const [safeSelectedNode, setSafeSelectedNode] = useSafeState(selectedNode!);
@@ -17,16 +21,8 @@ export default function ConfigPanel() {
     selectedNode && setSafeSelectedNode(selectedNode!);
   }, [selectedNode]);
 
-  const {
-    iconUrl,
-    sequence,
-    connectorName,
-    description,
-    // @ts-expect-error 先这样吧
-    documentLink,
-    actionName,
-    parent,
-  } = safeSelectedNode || {};
+  const { iconUrl, sequence, connectorName, description, actionName, parent } =
+    safeSelectedNode || {};
 
   useEffect(() => {
     if (showPanel) {
@@ -115,7 +111,7 @@ export default function ConfigPanel() {
                   </div>
 
                   <div className="flex  items-center gap-[8px]">
-                    {documentLink && (
+                    {/* {documentLink && (
                       <div className="w-[72px] h-[22px] flex-col justify-center items-end inline-flex">
                         <a
                           href={documentLink}
@@ -125,7 +121,7 @@ export default function ConfigPanel() {
                           帮助文档
                         </a>
                       </div>
-                    )}
+                    )} */}
                     <CloseOutlined
                       className=" text-secondary-grey cursor-pointer"
                       onClick={() => {
@@ -142,10 +138,19 @@ export default function ConfigPanel() {
             <div className="relative ml-[-1.00px] mr-[-1.00px] h-[1.5px] w-full self-stretch bg-gray-200" />
             <div className="relative flex w-full flex-[0_0_auto] grow flex-col gap-[7px] self-stretch">
               {/* <Tab key={`${connector?.code}-${nodeData.sequence}`} /> */}
+              {loading ? <MinimalLoader /> : <Tab />}
             </div>
           </div>
         </div>
       </Resizable>
     </motion.div>
+  );
+}
+
+export default function ConfigPanel() {
+  return (
+    <ConfigPanelModel.Provider>
+      <Panel />
+    </ConfigPanelModel.Provider>
   );
 }

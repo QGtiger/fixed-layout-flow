@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import { createHtmlPlugin } from "vite-plugin-html";
 import { CodeInspectorPlugin } from "code-inspector-plugin";
 import path from "path";
+import svgr from "vite-plugin-svgr";
 
 const YD = () => {
   if (process.env.NODE_ENV === "production") {
@@ -21,6 +22,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: "/",
     plugins: [
+      svgr(),
       react(),
       createHtmlPlugin({
         entry: "/src/.xybot/main.tsx",
