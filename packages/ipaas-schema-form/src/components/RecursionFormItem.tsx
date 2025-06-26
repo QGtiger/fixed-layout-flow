@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { excuteScriptByValidateRules } from "../utils/excuteScript";
 import { IPaasDynamicFormItem } from "@/type";
 import { getLocals, replaceHtmlATagsWithMarkdown } from "@/utils";
-import { IpaasSchemaStore, useEditor } from "@/store";
+import { useEditor, useIpaasSchemaStore } from "@/store";
 
 const customLinkRenderer = ({ href, children }: any) => {
   return (
@@ -34,7 +34,7 @@ function WrapperFieldComponent(props: {
   const { formItemState, ...otherProps } = props;
   const { type, payload } = props.formItemState;
   const FieldComponent = useEditor(type);
-  const { editorLayoutWithDesc } = IpaasSchemaStore();
+  const { editorLayoutWithDesc } = useIpaasSchemaStore();
   const _config = {
     ...DefaultConfig,
     ...payload.editor.config,

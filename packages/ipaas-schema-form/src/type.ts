@@ -1,3 +1,10 @@
+export type FormItemValueType = {
+  label?: string;
+  value: any;
+  type?: string;
+  expression?: string;
+};
+
 export type IPaasDynamicFormItem = {
   type: IPaasFormFieldEditorKind;
   payload: IPaasFormSchema;
