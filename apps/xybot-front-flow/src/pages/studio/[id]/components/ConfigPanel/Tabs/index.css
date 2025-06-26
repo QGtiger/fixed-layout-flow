@@ -1,0 +1,17 @@
+#custom-form .ant-form-item-required::before {
+  display: none !important;
+}
+
+#custom-form .ant-form-item-required::after {
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: "*";
+  visibility: visible;
+}
+
+#custom-form .ant-form-item-label {
+  color: #09090b;
+  font-weight: 600;
+}

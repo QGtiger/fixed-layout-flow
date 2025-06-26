@@ -1,0 +1,28 @@
+export default {
+  "zh-CN": {
+    copySuc: "复制成功",
+    copy: "复制",
+    uploadImpError: "上传文件接口未配置",
+    uploadFileSizeError: "上传文件大小不能超过20MB",
+    drag_and_drop: "拖拽文件到此处上传",
+    uploading: "上传中...",
+    file_url: "文件地址",
+    emptyErrorMsg: "不能为空",
+    invalidErrorMsg: "格式不正确",
+    plzInput: "请输入",
+    plzSelect: "请选择",
+  },
+  "en-US": {
+    copySuc: "Copy Successful",
+    copy: "Copy",
+    uploadImpError: "Upload File Interface Not Configured",
+    uploadFileSizeError: "Upload File Size Cannot Exceed 20MB",
+    drag_and_drop: "Drag and drop files here to upload",
+    uploading: "Uploading...",
+    file_url: "File URL",
+    emptyErrorMsg: "Cannot be empty",
+    invalidErrorMsg: "Invalid format",
+    plzInput: "Please input",
+    plzSelect: "Please select",
+  },
+};

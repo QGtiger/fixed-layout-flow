@@ -8,6 +8,9 @@ import { ActionList } from "./ActionList";
 import { StudioFlowModel } from "../../../StudioFlowModel";
 import ScrollContent from "@/components/ScrollContent";
 import ActionAuth from "./ActionAuth";
+import ActionForm from "./ActionForm";
+
+import "./index.css";
 
 export default function Tab() {
   const { tabs, activeTab, setActiveTab, panelDesc } =
@@ -85,6 +88,14 @@ export default function Tab() {
               })}
             >
               <ActionAuth authId={selectedNode?.authId} />
+            </div>
+
+            <div
+              className={classNames("h-full", {
+                " hidden": activeTab !== "form",
+              })}
+            >
+              <ActionForm />
             </div>
           </ScrollContent>
         </div>
