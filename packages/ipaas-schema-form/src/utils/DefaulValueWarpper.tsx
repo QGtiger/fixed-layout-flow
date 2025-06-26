@@ -6,7 +6,7 @@ function isHasValue(value: any) {
   return true;
 }
 
-export default function DefaultValueWarpper(Componet: ComponentType) {
+export default function DefaultValueWarpper(Componet: ComponentType<any>) {
   return function WrappedComponent(props: any) {
     useEffect(() => {
       // 有数据不走默认值

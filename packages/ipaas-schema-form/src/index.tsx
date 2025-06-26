@@ -15,7 +15,14 @@ export function IpaasSchemaForm(
     schema: IPaasFormSchema[];
   } & IpaasSchemaStoreConfig
 ) {
-  const { schema, ...restProps } = props;
+  const {
+    schema,
+    editorLayoutWithDesc,
+    editorMap,
+    commonEditorWarpper,
+    dynamicScriptExcuteWithOptions,
+    ...restProps
+  } = props;
   const [form] = Form.useForm();
   const storeRef = useRef<IpaasSchemaStoreType>();
 
