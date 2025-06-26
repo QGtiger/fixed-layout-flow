@@ -64,7 +64,7 @@ function GroupItem(props: {
               <div className="relative mt-[-1.00px] w-fit text-[14px] font-semibold leading-[normal] tracking-[0] text-primary-black [font-family:'PingFang_SC-Semibold',Helvetica]">
                 {action.name}
               </div>
-              <div className="relative self-stretch text-[12px] font-normal leading-[normal] tracking-[0] text-secondary-grey [font-family:'PingFang_SC-Regular',Helvetica]">
+              <div className="relative self-stretch text-[12px] font-normal leading-[normal] tracking-[0] text-gray-500 [font-family:'PingFang_SC-Regular',Helvetica]">
                 {action.description}
               </div>
 

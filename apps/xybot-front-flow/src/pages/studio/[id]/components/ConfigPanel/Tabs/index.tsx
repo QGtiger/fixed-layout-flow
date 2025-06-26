@@ -24,16 +24,16 @@ export default function Tab() {
               const { disabled } = tab;
               const isTabActive = activeTab === tab.key;
               return (
-                <Fragment key={index}>
+                <Fragment key={tab.key}>
                   <Tooltip title={disabled ? "请先完成前面的步骤" : ""}>
                     <div
                       className={classNames(
                         "relative inline-flex flex-[0_0_auto] cursor-pointer items-center gap-[2px] border-0 border-b-[1.5px] border-transparent border-solid",
                         {
-                          "  border-gray-500": isTabActive,
+                          "  !border-gray-500": isTabActive,
                         },
                         disabled
-                          ? " !cursor-not-allowed text-[#75829880]"
+                          ? " !cursor-not-allowed !text-[#75829880]"
                           : "text-primary-black"
                       )}
                       onClick={() => {
