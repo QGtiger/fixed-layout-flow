@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 export default function CustomSelect(
   props: {
     value: any;
+    name: string;
     selectcache?: {
       value: any;
       label: string;
@@ -21,6 +22,7 @@ export default function CustomSelect(
     dynamicScript,
     selectcache,
     options: propsOptions,
+    name,
     ...otherProps
   } = props;
   const { dynamicDebounce, dynamicScriptExcuteWithOptions } =
@@ -49,7 +51,9 @@ export default function CustomSelect(
         if (!dynamicScript || !dynamicScriptExcuteWithOptions) return;
         const res = await dynamicScriptExcuteWithOptions({
           script: dynamicScript,
-          extParams: {},
+          extParams: {
+            [name]: sk,
+          },
         });
         setOptions(res);
       }
@@ -70,12 +74,12 @@ export default function CustomSelect(
   );
 
   const preDepValuesRef = useRef<any[]>([]);
-  const depValues = Form.useWatch(depItems);
+  const depValues = Form.useWatch(depItems || ["__gg__"]);
 
   useEffect(() => {
     if (JSON.stringify(depValues) !== JSON.stringify(preDepValuesRef.current)) {
       shouldRefreshOptions.current = true;
-      preDepValuesRef.current = depValues || [];
+      preDepValuesRef.current = depValues;
     }
   });
 

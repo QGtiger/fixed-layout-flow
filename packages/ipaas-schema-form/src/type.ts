@@ -20,7 +20,6 @@ export type IPaasCommonFormFieldProps<T = string> = {
   onChange: (value: T) => void;
   placeholder?: string;
   name: string;
-  schemaInfo: IPaasFormSchema;
 };
 
 export type IPaasFormSchema = {

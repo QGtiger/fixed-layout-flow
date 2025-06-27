@@ -6,6 +6,8 @@ import { useCreation } from "ahooks";
 import CustomSelect from "./components/material/CustomSelect";
 import CustomMultiSelect from "./components/material/CustomMultiSelect";
 import CustomDatetimePicker from "./components/material/CustomDatetimePicker";
+import { IPaasFormSchema } from "./type";
+import DynamicForm from "./components/material/DynamicForm";
 
 interface IpaasSchemaStoreState {
   editorMap: Record<string, ComponentType<any>>;
@@ -29,6 +31,9 @@ interface IpaasSchemaStoreState {
     script: string;
     extParams: Record<string, any>;
   }) => Promise<{ value: any; label: any }[]>;
+  dynamicScriptExcuteWithFormSchema?: (config: {
+    script: string;
+  }) => Promise<IPaasFormSchema[]>;
 
   normalize: (value: any) => any; // 用于规范化值的函数
 }
@@ -75,6 +80,7 @@ export function createIpaasSchemaStore(config: IpaasSchemaStoreConfig) {
           MultiSelect: DefaultValueWarpper(
             ClearExtraAttributeWarpper(CustomMultiSelect)
           ),
+          DynamicActionForm: ClearExtraAttributeWarpper(DynamicForm),
           ...config.editorMap,
         },
         normalize: config.normalize || ((value) => value),

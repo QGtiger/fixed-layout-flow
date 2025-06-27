@@ -7,8 +7,21 @@ import {
   IpaasSchemaStoreConfig,
   IpaasSchemaStoreType,
   StoreContext,
+  useIpaasSchemaStore,
 } from "./store";
 import { useRef } from "react";
+import { formValueNormalize } from "./utils";
+
+function Wrapper({ schema }: { schema: IPaasFormSchema[] }) {
+  const { normalize } = useIpaasSchemaStore();
+  const values = Form.useWatch([]);
+
+  // normalize 一下
+  // {a: {value: 1}} => {a: 1}
+  const formValues = formValueNormalize(values, normalize);
+
+  return <CreateSchemaFormItem schema={schema} formValues={formValues} />;
+}
 
 export function IpaasSchemaForm(
   props: FormProps & {
@@ -21,6 +34,7 @@ export function IpaasSchemaForm(
     editorMap,
     commonEditorWarpper,
     dynamicScriptExcuteWithOptions,
+    dynamicScriptExcuteWithFormSchema,
     normalize,
     ...restProps
   } = props;
@@ -35,7 +49,7 @@ export function IpaasSchemaForm(
     <StoreContext.Provider value={storeRef.current}>
       <div className="ipaas-schema-form ">
         <Form form={form} layout="vertical" {...restProps}>
-          <CreateSchemaFormItem schema={schema} />
+          <Wrapper schema={schema} />
         </Form>
       </div>
     </StoreContext.Provider>

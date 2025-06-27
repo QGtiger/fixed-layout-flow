@@ -12,18 +12,13 @@ import { formValueNormalize } from "@/utils";
 function GroupItem({
   subSchema,
   groupName,
+  formValues,
 }: {
   subSchema: IPaasFormSchema[];
   groupName: string;
+  formValues: Record<string, any>;
 }) {
   const [open, openAction] = useBoolean(true);
-  const { normalize } = useIpaasSchemaStore();
-
-  const values = Form.useWatch([]);
-
-  // normalize 一下
-  // {a: {value: 1}} => {a: 1}
-  const formValues = formValueNormalize(values, normalize);
 
   const cursorFormItem = findCusrorItem(subSchema, formValues, 0);
 
@@ -57,8 +52,10 @@ function GroupItem({
 
 export default function CreateSchemaFormItem({
   schema,
+  formValues,
 }: {
   schema: IPaasFormSchema[];
+  formValues: Record<string, any>;
 }) {
   const listByGroup = useMemo(() => {
     const groupMap = new Map<string, IPaasFormSchema[]>();
@@ -90,6 +87,7 @@ export default function CreateSchemaFormItem({
             key={groupName}
             subSchema={subSchema}
             groupName={groupName}
+            formValues={formValues}
           />
         );
       })}
