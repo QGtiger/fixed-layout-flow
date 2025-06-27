@@ -2,18 +2,32 @@ import { useIpaasSchemaStore } from "@/store";
 import { IPaasFormFieldEditorConfig } from "@/type";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDebounceFn, useRequest } from "ahooks";
-import { Divider, Form, Input, Select, Skeleton } from "antd";
+import { Divider, Form, Input, Select, SelectProps, Skeleton } from "antd";
 import { useEffect, useRef, useState } from "react";
 
 export default function CustomSelect(
-  props: { value: any; label?: string } & IPaasFormFieldEditorConfig["Select"]
+  props: {
+    value: any;
+    selectCache?: {
+      value: any;
+      label: string;
+    }[];
+  } & IPaasFormFieldEditorConfig["Select"] &
+    SelectProps
 ) {
-  const { depItems, isDynamic, dynamicScript, label: selectLabel } = props;
+  const {
+    depItems,
+    isDynamic,
+    dynamicScript,
+    selectCache: selectCache,
+    ...otherProps
+  } = props;
   const { dynamicDebounce, dynamicScriptExcuteWithOptions } =
     useIpaasSchemaStore();
   const [options, setOptions] = useState([] as any[]);
+  const shouldRefreshOptions = useRef(true);
 
-  const { run, loading } = useRequest(
+  const { run: searchOptions, loading } = useRequest(
     async () => {
       if (isDynamic === false) return;
       if (!dynamicScript || !dynamicScriptExcuteWithOptions) return;
@@ -22,10 +36,19 @@ export default function CustomSelect(
         extParams: {},
       });
       setOptions(res);
+      shouldRefreshOptions.current = false;
     },
     {
-      debounceWait: dynamicDebounce,
       manual: true,
+    }
+  );
+
+  const { run: debounceRun } = useDebounceFn(
+    () => {
+      searchOptions();
+    },
+    {
+      wait: dynamicDebounce,
     }
   );
 
@@ -34,21 +57,21 @@ export default function CustomSelect(
 
   useEffect(() => {
     if (JSON.stringify(depValues) !== JSON.stringify(preDepValuesRef.current)) {
-      run();
+      shouldRefreshOptions.current = true;
       preDepValuesRef.current = depValues || [];
     }
   });
 
   return (
     <Select
-      value={props.value}
       labelRender={(labelInvalue) => {
         const { label, value } = labelInvalue;
 
         if (label) {
-          return value;
+          return label;
         }
-        return selectLabel;
+        const item = selectCache?.find((it) => it.value === value);
+        return item?.label || value;
       }}
       options={options}
       popupRender={(menu) => {
@@ -59,7 +82,8 @@ export default function CustomSelect(
                 className="!p-0"
                 variant="borderless"
                 prefix={<SearchOutlined />}
-                onChange={run}
+                onChange={debounceRun}
+                // onKeyDown={(e) => e.stopPropagation()}
               />
             </div>
             <Divider style={{ margin: "0px 0" }} />
@@ -69,6 +93,12 @@ export default function CustomSelect(
           </div>
         );
       }}
+      onOpenChange={(open) => {
+        if (open && shouldRefreshOptions.current) {
+          searchOptions();
+        }
+      }}
+      {...otherProps}
     ></Select>
   );
 }

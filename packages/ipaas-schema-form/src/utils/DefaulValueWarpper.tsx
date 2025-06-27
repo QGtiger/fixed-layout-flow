@@ -13,7 +13,6 @@ export default function DefaultValueWarpper(Componet: ComponentType<any>) {
       if (isHasValue(props.value)) return;
       const _defaultValue = props.defaultValue;
       if (isHasValue(_defaultValue)) {
-        console.log("DefaultValueWarpper", _defaultValue);
         props.onChange?.(_defaultValue);
       }
     }, []);

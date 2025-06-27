@@ -1,9 +1,10 @@
 import { Input } from "antd";
-import { ComponentType, createContext, useContext } from "react";
+import React, { ComponentType, createContext, useContext } from "react";
 import { createStore, useStore } from "zustand";
 import DefaultValueWarpper from "./utils/DefaulValueWarpper";
 import { useCreation } from "ahooks";
 import CustomSelect from "./components/material/CustomSelect";
+import CustomMultiSelect from "./components/material/CustomMultiSelect";
 
 interface IpaasSchemaStoreState {
   editorMap: Record<string, ComponentType<any>>;
@@ -41,14 +42,24 @@ export type IpaasSchemaStoreType = ReturnType<typeof createIpaasSchemaStore>;
 
 export const StoreContext = createContext<IpaasSchemaStoreType>({} as any);
 
+function ClearExtraAttributeWarpper(Comp: ComponentType<any>) {
+  return function ClearExtraAttributeComp(props: any) {
+    const { selectCache, ...restProps } = props;
+    return React.createElement(Comp, {
+      ...restProps,
+    });
+  };
+}
+
 export function createIpaasSchemaStore(config: IpaasSchemaStoreConfig) {
   const store = createStore<IpaasSchemaStoreState & IpaasSchemaStoreActions>(
     (set, get) => {
       return {
         ...config,
         editorMap: {
-          Input: DefaultValueWarpper(Input),
+          Input: DefaultValueWarpper(ClearExtraAttributeWarpper(Input)),
           Select: DefaultValueWarpper(CustomSelect),
+          MultiSelect: DefaultValueWarpper(CustomMultiSelect),
           ...config.editorMap,
         },
         normalize: config.normalize || ((value) => value),

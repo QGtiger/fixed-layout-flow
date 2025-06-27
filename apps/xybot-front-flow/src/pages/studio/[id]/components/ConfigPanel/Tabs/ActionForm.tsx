@@ -82,6 +82,29 @@ const testSchema: IPaasFormSchema[] = [
       },
     },
   },
+
+  {
+    code: "multi_select",
+    name: "测试多选",
+    type: "array",
+    description: "这是一个测试多选框",
+    required: true,
+    group: "高级配置",
+    editor: {
+      kind: "MultiSelect",
+      config: {
+        placeholder: "请输入测试内容",
+        isDynamic: true,
+        dynamicScript: `function main() {
+        return [
+          { label: "选项1", value: "option1" },
+          { label: "选项2", value: "option2" },
+          { label: "选项3", value: "option3" },]
+        }`,
+        depItems: ["test_input_3"],
+      },
+    },
+  },
 ];
 
 export type FormItemValueType = {
@@ -89,6 +112,10 @@ export type FormItemValueType = {
   value: any;
   type?: string;
   expression?: string;
+  selectCache?: {
+    value: any;
+    label: string;
+  }[];
 };
 
 function FormItemWarpper(Componet: ComponentType<any>) {
@@ -101,13 +128,16 @@ function FormItemWarpper(Componet: ComponentType<any>) {
       <Componet
         {...props}
         value={props.value?.value}
-        label={props.value?.label}
-        onChange={(v: any) => {
-          console.log("FormItemWarpperComp onChange", v);
-          if (typeof v === "object") {
+        selectCache={props.value?.selectCache}
+        onChange={(v: any, option: any) => {
+          if (typeof v === "object" && v.target) {
             v = v.target?.value;
           }
-          props.onChange?.({ ...props.value, value: v });
+          props.onChange?.({
+            ...props.value,
+            value: v,
+            selectCache: [].concat(option),
+          });
         }}
       />
     );
@@ -123,7 +153,7 @@ export default function ActionForm() {
         schema={testSchema}
         form={form}
         commonEditorWarpper={FormItemWarpper}
-        normalize={(v) => v.value} // 只返回 value 字段
+        normalize={(v) => v?.value} // 只返回 value 字段
         initialValues={{
           test_input: {
             value: "你大爷的",
@@ -132,8 +162,26 @@ export default function ActionForm() {
           },
           test_input_4: {
             value: "你大爷的",
-            label: "你大爷的label",
             type: "string",
+            selectCache: [
+              {
+                value: "你大爷的",
+                label: "你大爷的label",
+              },
+            ],
+          },
+          multi_select: {
+            value: ["option1", "option2"],
+            selectCache: [
+              {
+                label: "选项1",
+                value: "option1",
+              },
+              {
+                label: "选项2",
+                value: "option2",
+              },
+            ],
           },
         }}
         dynamicScriptExcuteWithOptions={async (config: {
@@ -141,6 +189,7 @@ export default function ActionForm() {
           extParams: Record<string, any>;
         }) => {
           console.log("dynamicScriptExcuteWithOptions config", config);
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           return [
             { label: "选项1", value: "option1" },
             { label: "选项2", value: "option2" },
