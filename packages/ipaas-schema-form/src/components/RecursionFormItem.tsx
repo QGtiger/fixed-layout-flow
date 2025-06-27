@@ -50,7 +50,7 @@ function WrapperFieldComponent(props: {
       {_editorLayoutWithDesc(
         <FieldComponent name={payload.code} {...otherProps} {..._config} />,
         payload.description && (
-          <div className="desc text-[#888f9d]">
+          <div className="desc text-[#888f9d] text-xs">
             <ReactMarkdown
               components={{
                 a: customLinkRenderer,

@@ -1,7 +1,6 @@
 import { IPaasFormSchema } from "@/type";
 import { findCusrorItem } from "@/utils/findCursorItem";
-// import RecursionFormItem from ".";
-import { Fragment, useEffect, useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import classNames from "classnames";
 import { useBoolean } from "ahooks";
 import { CaretRightOutlined } from "@ant-design/icons";
@@ -18,12 +17,13 @@ function GroupItem({
   groupName: string;
 }) {
   const [open, openAction] = useBoolean(true);
-  const formIns = Form.useFormInstance();
   const { normalize } = useIpaasSchemaStore();
+
+  const values = Form.useWatch([]);
 
   // normalize 一下
   // {a: {value: 1}} => {a: 1}
-  const formValues = formValueNormalize(formIns.getFieldsValue(), normalize);
+  const formValues = formValueNormalize(values, normalize);
 
   const cursorFormItem = findCusrorItem(subSchema, formValues, 0);
 

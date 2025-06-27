@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 export default function CustomSelect(
   props: {
     value: any;
-    selectCache?: {
+    selectcache?: {
       value: any;
       label: string;
     }[];
@@ -19,23 +19,40 @@ export default function CustomSelect(
     depItems,
     isDynamic,
     dynamicScript,
-    selectCache: selectCache,
+    selectcache,
+    options: propsOptions,
     ...otherProps
   } = props;
   const { dynamicDebounce, dynamicScriptExcuteWithOptions } =
     useIpaasSchemaStore();
-  const [options, setOptions] = useState([] as any[]);
-  const shouldRefreshOptions = useRef(true);
+  const [options, setOptions] = useState(propsOptions || ([] as any[]));
+  const shouldRefreshOptions = useRef(!!isDynamic);
+  const [sk, setSk] = useState("");
 
   const { run: searchOptions, loading } = useRequest(
     async () => {
-      if (isDynamic === false) return;
-      if (!dynamicScript || !dynamicScriptExcuteWithOptions) return;
-      const res = await dynamicScriptExcuteWithOptions({
-        script: dynamicScript,
-        extParams: {},
-      });
-      setOptions(res);
+      if (isDynamic === false) {
+        if (!propsOptions) return;
+        // 不是动态的话，走静态模糊匹配
+        const _opts = !sk
+          ? propsOptions
+          : propsOptions?.filter((item) => {
+              return (
+                // @ts-expect-error
+                item?.label?.toLowerCase?.().includes(sk.toLowerCase()) ||
+                // @ts-expect-error
+                item?.value?.toLowerCase?.().includes(sk.toLowerCase())
+              );
+            });
+        setOptions(_opts || []);
+      } else {
+        if (!dynamicScript || !dynamicScriptExcuteWithOptions) return;
+        const res = await dynamicScriptExcuteWithOptions({
+          script: dynamicScript,
+          extParams: {},
+        });
+        setOptions(res);
+      }
       shouldRefreshOptions.current = false;
     },
     {
@@ -70,20 +87,24 @@ export default function CustomSelect(
         if (label) {
           return label;
         }
-        const item = selectCache?.find((it) => it.value === value);
+        const item = selectcache?.find((it) => it.value === value);
         return item?.label || value;
       }}
-      options={options}
       popupRender={(menu) => {
         return (
           <div className="flex flex-col gap-2 p-2">
             <div className="s">
               <Input
+                value={sk}
                 className="!p-0"
                 variant="borderless"
                 prefix={<SearchOutlined />}
-                onChange={debounceRun}
-                // onKeyDown={(e) => e.stopPropagation()}
+                onChange={(e) => {
+                  setSk(e.target.value);
+                  debounceRun();
+                }}
+                onKeyDown={(e) => e.stopPropagation()}
+                placeholder="搜索选项"
               />
             </div>
             <Divider style={{ margin: "0px 0" }} />
@@ -99,6 +120,7 @@ export default function CustomSelect(
         }
       }}
       {...otherProps}
+      options={options}
     ></Select>
   );
 }

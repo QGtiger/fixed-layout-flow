@@ -115,11 +115,14 @@ export const ConfigPanelModel = createCustomModel(() => {
     }
   }, [connectorCode, version]);
 
+  const actionList = (isTriggerNode ? data?.triggers : data?.actions) || [];
+
   return {
     connectorDetail: data,
     loading,
     isTriggerNode,
-    actionList: (isTriggerNode ? data?.triggers : data?.actions) || [],
+    actionList,
+    actionItem: actionList.find((item) => item.code === actionCode),
     ...viewModel,
     setActiveTab: (key: TabProps["key"]) => {
       viewModel.activeTab = key;

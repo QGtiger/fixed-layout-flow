@@ -1,10 +1,11 @@
-import { Input } from "antd";
+import { Input, InputNumber } from "antd";
 import React, { ComponentType, createContext, useContext } from "react";
 import { createStore, useStore } from "zustand";
 import DefaultValueWarpper from "./utils/DefaulValueWarpper";
 import { useCreation } from "ahooks";
 import CustomSelect from "./components/material/CustomSelect";
 import CustomMultiSelect from "./components/material/CustomMultiSelect";
+import CustomDatetimePicker from "./components/material/CustomDatetimePicker";
 
 interface IpaasSchemaStoreState {
   editorMap: Record<string, ComponentType<any>>;
@@ -44,7 +45,7 @@ export const StoreContext = createContext<IpaasSchemaStoreType>({} as any);
 
 function ClearExtraAttributeWarpper(Comp: ComponentType<any>) {
   return function ClearExtraAttributeComp(props: any) {
-    const { selectCache, ...restProps } = props;
+    const { selectcache, ...restProps } = props;
     return React.createElement(Comp, {
       ...restProps,
     });
@@ -58,6 +59,18 @@ export function createIpaasSchemaStore(config: IpaasSchemaStoreConfig) {
         ...config,
         editorMap: {
           Input: DefaultValueWarpper(ClearExtraAttributeWarpper(Input)),
+          InputNumber: DefaultValueWarpper(
+            ClearExtraAttributeWarpper((props: any) => {
+              return React.createElement(InputNumber, {
+                style: { width: "100%" },
+                ...props,
+              });
+            })
+          ),
+          Textarea: DefaultValueWarpper(
+            ClearExtraAttributeWarpper(Input.TextArea)
+          ),
+          DatetimePicker: ClearExtraAttributeWarpper(CustomDatetimePicker),
           Select: DefaultValueWarpper(CustomSelect),
           MultiSelect: DefaultValueWarpper(CustomMultiSelect),
           ...config.editorMap,
@@ -84,10 +97,11 @@ export function useEditor(type: string): ComponentType<any> {
   const { editorMap, commonEditorWarpper } = useStore(store);
 
   return useCreation(() => {
+    const T = editorMap[type] || editorMap.Input;
     if (commonEditorWarpper) {
-      return commonEditorWarpper(editorMap[type] || Input);
+      return commonEditorWarpper(T);
     } else {
-      return editorMap[type] || Input;
+      return T;
     }
   }, [type, editorMap, commonEditorWarpper]);
 }

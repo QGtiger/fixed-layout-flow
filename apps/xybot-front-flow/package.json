@@ -26,6 +26,7 @@
     "antd": "^5.26.0",
     "axios": "^1.6.2",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.16.0",
     "kiwi-intl": "1.2.6-beta.0",
     "lodash.throttle": "4.1.1",

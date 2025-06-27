@@ -1,7 +1,9 @@
 import { IPaasFormSchema, IpaasSchemaForm } from "@xybot/ipaas-schema-form";
 import "@xybot/ipaas-schema-form/styles.css";
-import { Button, Form } from "antd";
+import { Button, Checkbox, DatePicker, Form, TimePicker } from "antd";
 import { ComponentType } from "react";
+import { ConfigPanelModel } from "../model";
+import dayjs from "dayjs";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -112,7 +114,7 @@ export type FormItemValueType = {
   value: any;
   type?: string;
   expression?: string;
-  selectCache?: {
+  selectcache?: {
     value: any;
     label: string;
   }[];
@@ -123,12 +125,11 @@ function FormItemWarpper(Componet: ComponentType<any>) {
     value: FormItemValueType;
     onChange: (value: FormItemValueType) => void;
   }) {
-    console.log("FormItemWarpperComp props", props);
     return (
       <Componet
         {...props}
         value={props.value?.value}
-        selectCache={props.value?.selectCache}
+        selectcache={props.value?.selectcache}
         onChange={(v: any, option: any) => {
           if (typeof v === "object" && v.target) {
             v = v.target?.value;
@@ -136,7 +137,7 @@ function FormItemWarpper(Componet: ComponentType<any>) {
           props.onChange?.({
             ...props.value,
             value: v,
-            selectCache: [].concat(option),
+            selectcache: option ? [].concat(option) : undefined,
           });
         }}
       />
@@ -144,46 +145,84 @@ function FormItemWarpper(Componet: ComponentType<any>) {
   };
 }
 
+const ExtraEditorMap: Record<string, ComponentType<any>> = {
+  TimePicker: (props: any) => {
+    const format = "HH:mm";
+    return (
+      <TimePicker
+        className="w-full"
+        {...props}
+        format={format}
+        value={props.value ? dayjs(props.value, format) : null}
+        onChange={(time) => {
+          props.onChange(time?.format(format));
+        }}
+      />
+    );
+  },
+  RangePicker: (props: any) => {
+    const value = [
+      props.value?.[0] ? dayjs(props.value[0]) : "",
+      props.value?.[1] ? dayjs(props.value[1]) : "",
+    ] as any;
+    return (
+      <DatePicker.RangePicker
+        className="w-full"
+        value={value}
+        onChange={(e, dateString) => {
+          props.onChange(dateString);
+        }}
+      />
+    );
+  },
+  CheckboxGroup: Checkbox.Group,
+};
+
 export default function ActionForm() {
   const [form] = Form.useForm();
+  const { actionItem } = ConfigPanelModel.useModel();
+
+  if (!actionItem) return;
+
   return (
     <div className="flex flex-col">
       <IpaasSchemaForm
         id="custom-form"
-        schema={testSchema}
+        editorMap={ExtraEditorMap}
+        schema={actionItem.viewMeta.inputs || []}
         form={form}
         commonEditorWarpper={FormItemWarpper}
         normalize={(v) => v?.value} // 只返回 value 字段
-        initialValues={{
-          test_input: {
-            value: "你大爷的",
-            label: "222",
-            type: "string",
-          },
-          test_input_4: {
-            value: "你大爷的",
-            type: "string",
-            selectCache: [
-              {
-                value: "你大爷的",
-                label: "你大爷的label",
-              },
-            ],
-          },
-          multi_select: {
-            value: ["option1", "option2"],
-            selectCache: [
-              {
-                label: "选项1",
-                value: "option1",
-              },
-              {
-                label: "选项2",
-                value: "option2",
-              },
-            ],
-          },
-        }}
+        // initialValues={{
+        //   test_input: {
+        //     value: "你大爷的",
+        //     label: "222",
+        //     type: "string",
+        //   },
+        //   test_input_4: {
+        //     value: "你大爷的",
+        //     type: "string",
+        //     selectCache: [
+        //       {
+        //         value: "你大爷的",
+        //         label: "你大爷的label",
+        //       },
+        //     ],
+        //   },
+        //   multi_select: {
+        //     value: ["option1", "option2"],
+        //     selectCache: [
+        //       {
+        //         label: "选项1",
+        //         value: "option1",
+        //       },
+        //       {
+        //         label: "选项2",
+        //         value: "option2",
+        //       },
+        //     ],
+        //   },
+        // }}
         dynamicScriptExcuteWithOptions={async (config: {
           script: string;
           extParams: Record<string, any>;
