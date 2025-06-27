@@ -21,6 +21,7 @@ export function IpaasSchemaForm(
     editorMap,
     commonEditorWarpper,
     dynamicScriptExcuteWithOptions,
+    normalize,
     ...restProps
   } = props;
   const [form] = Form.useForm();

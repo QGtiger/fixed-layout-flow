@@ -3,7 +3,11 @@ import { ReactNode, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { excuteScriptByValidateRules } from "../utils/excuteScript";
 import { IPaasDynamicFormItem } from "@/type";
-import { getLocals, replaceHtmlATagsWithMarkdown } from "@/utils";
+import {
+  formValueNormalize,
+  getLocals,
+  replaceHtmlATagsWithMarkdown,
+} from "@/utils";
 import { useEditor, useIpaasSchemaStore } from "@/store";
 
 const customLinkRenderer = ({ href, children }: any) => {
@@ -67,6 +71,7 @@ export default function RecursionFormItem({
   formItemState: IPaasDynamicFormItem;
 }) {
   const { payload, next } = formItemState;
+  const { normalize } = useIpaasSchemaStore();
 
   const nextFieldItem = useMemo(() => {
     let current: IPaasDynamicFormItem | null = formItemState;
@@ -94,8 +99,12 @@ export default function RecursionFormItem({
         required={payload.required}
         rules={[
           ({ getFieldsValue }) => ({
-            validator(_, value) {
-              const formValues = getFieldsValue();
+            validator(_, v) {
+              const formValues = formValueNormalize(
+                getFieldsValue(),
+                normalize
+              );
+              const value = normalize?.(v);
               return new Promise<void>((r, j) => {
                 let errorMessages = "";
                 // 必填校验

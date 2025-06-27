@@ -2,6 +2,27 @@ import { IPaasFormSchema } from "@/type";
 import { createTempLocales } from "@xybot/i18n";
 import localLangs from "./localLangs";
 
+export function formValueNormalize(
+  value: any,
+  normalize?: (value: any) => any
+): any {
+  if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+    // 如果是对象，递归 normalize
+    return Object.entries(value).reduce(
+      (acc, [key, val]) => {
+        acc[key] = formValueNormalize(
+          normalize ? normalize(val) : val,
+          normalize
+        );
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+  }
+  // 如果是基本类型，直接返回
+  return value;
+}
+
 export function replaceHtmlATagsWithMarkdown(str: string) {
   str = str.replace(/'/g, `"`);
   // 正则表达式匹配<a>标签

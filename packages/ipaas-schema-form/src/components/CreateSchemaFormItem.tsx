@@ -7,6 +7,8 @@ import { useBoolean } from "ahooks";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Form } from "antd";
 import RecursionFormItem from "./RecursionFormItem";
+import { useIpaasSchemaStore } from "@/store";
+import { formValueNormalize } from "@/utils";
 
 function GroupItem({
   subSchema,
@@ -17,10 +19,13 @@ function GroupItem({
 }) {
   const [open, openAction] = useBoolean(true);
   const formIns = Form.useFormInstance();
+  const { normalize } = useIpaasSchemaStore();
 
-  console.log("formIns.getFieldsValue()", formIns.getFieldsValue());
+  // normalize 一下
+  // {a: {value: 1}} => {a: 1}
+  const formValues = formValueNormalize(formIns.getFieldsValue(), normalize);
 
-  const cursorFormItem = findCusrorItem(subSchema, formIns.getFieldsValue(), 0);
+  const cursorFormItem = findCusrorItem(subSchema, formValues, 0);
 
   return (
     <div className="flex flex-col">

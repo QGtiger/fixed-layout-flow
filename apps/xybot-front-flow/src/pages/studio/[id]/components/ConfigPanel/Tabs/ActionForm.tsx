@@ -19,6 +19,13 @@ const testSchema: IPaasFormSchema[] = [
         placeholder: "请输入测试内容",
       },
     },
+    validateRules: `function main(value, formData) {
+    console.log("validateRules value", value);
+    console.log("validateRules formData", formData);
+    if (!value.startsWith("你大爷的")) {
+      throw new Error("输入内容必须以'你大爷的'开头");
+    }
+    }`,
   },
   {
     code: "test_input_2",
@@ -98,7 +105,7 @@ function FormItemWarpper(Componet: ComponentType<any>) {
         onChange={(v: any) => {
           console.log("FormItemWarpperComp onChange", v);
           if (typeof v === "object") {
-            v = v.target?.value || v;
+            v = v.target?.value;
           }
           props.onChange?.({ ...props.value, value: v });
         }}
@@ -116,6 +123,7 @@ export default function ActionForm() {
         schema={testSchema}
         form={form}
         commonEditorWarpper={FormItemWarpper}
+        normalize={(v) => v.value} // 只返回 value 字段
         initialValues={{
           test_input: {
             value: "你大爷的",

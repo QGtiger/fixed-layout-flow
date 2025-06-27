@@ -27,6 +27,8 @@ interface IpaasSchemaStoreState {
     script: string;
     extParams: Record<string, any>;
   }) => Promise<{ value: any; label: any }[]>;
+
+  normalize: (value: any) => any; // 用于规范化值的函数
 }
 
 interface IpaasSchemaStoreActions {
@@ -49,6 +51,7 @@ export function createIpaasSchemaStore(config: IpaasSchemaStoreConfig) {
           Select: DefaultValueWarpper(CustomSelect),
           ...config.editorMap,
         },
+        normalize: config.normalize || ((value) => value),
         dynamicDebounce: config.dynamicDebounce || 300, // 默认动态debounce时间
         editorLayoutWithDesc: config.editorLayoutWithDesc,
         injectEditorMap: (editorMap) => {
