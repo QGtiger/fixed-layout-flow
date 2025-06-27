@@ -45,7 +45,7 @@ export const StoreContext = createContext<IpaasSchemaStoreType>({} as any);
 
 function ClearExtraAttributeWarpper(Comp: ComponentType<any>) {
   return function ClearExtraAttributeComp(props: any) {
-    const { selectcache, ...restProps } = props;
+    const { selectcache, defaultValue, ...restProps } = props;
     return React.createElement(Comp, {
       ...restProps,
     });
@@ -71,8 +71,10 @@ export function createIpaasSchemaStore(config: IpaasSchemaStoreConfig) {
             ClearExtraAttributeWarpper(Input.TextArea)
           ),
           DatetimePicker: ClearExtraAttributeWarpper(CustomDatetimePicker),
-          Select: DefaultValueWarpper(CustomSelect),
-          MultiSelect: DefaultValueWarpper(CustomMultiSelect),
+          Select: DefaultValueWarpper(ClearExtraAttributeWarpper(CustomSelect)),
+          MultiSelect: DefaultValueWarpper(
+            ClearExtraAttributeWarpper(CustomMultiSelect)
+          ),
           ...config.editorMap,
         },
         normalize: config.normalize || ((value) => value),
