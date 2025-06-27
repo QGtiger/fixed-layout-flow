@@ -136,8 +136,9 @@ function Panel() {
               </div>
             </div>
             <div className="relative ml-[-1.00px] mr-[-1.00px] h-[1.5px] w-full self-stretch bg-gray-200 flex-shrink-0" />
-            <div className="relative flex w-full flex-grow-1 flex-col gap-[7px] self-stretch overflow-hidden">
+            <div className="relative flex w-full flex-col gap-[7px] self-stretch overflow-hidden h-1 flex-1">
               {/* <Tab key={`${connector?.code}-${nodeData.sequence}`} /> */}
+              {/* <MinimalLoader /> */}
               {loading ? <MinimalLoader /> : <Tab />}
             </div>
           </div>
