@@ -2,6 +2,8 @@ import { CloseOutlined, FormOutlined } from "@ant-design/icons";
 import { useBoolean } from "ahooks";
 import { App, Button, ConfigProvider, Drawer } from "antd";
 import { deepClone, uploadFileByFlow } from "@/utils";
+import { FormDesignerEditor } from "@xybot/formex-designer";
+import "@xybot/formex-designer/styles.css";
 
 export default function CustomFormexDesigner({
   onClose,
@@ -40,7 +42,14 @@ export default function CustomFormexDesigner({
         destroyOnClose
       >
         <div className=" relative">
-          222
+          <FormDesignerEditor
+            initialSchema={value}
+            onChange={(s) => {
+              onChange?.(deepClone(s));
+            }}
+            title="表单设计器"
+            onFileUpload={uploadFileByFlow}
+          />
           <div
             className=" absolute right-5 top-5"
             style={{

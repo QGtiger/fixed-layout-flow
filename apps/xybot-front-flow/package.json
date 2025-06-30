@@ -20,6 +20,7 @@
     "@types/node": "^20.10.7",
     "@xbot-fe/Design": "2.2.0-beta.3",
     "@xybot/build-in-connectors": "workspace:^",
+    "@xybot/formex-designer": "workspace:^",
     "@xybot/bury": "0.1.4",
     "@xybot/i18n": "0.1.0-beta.23",
     "@xybot/ipaas-schema-form": "workspace:^",
