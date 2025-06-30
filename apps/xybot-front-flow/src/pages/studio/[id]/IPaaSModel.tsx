@@ -2,9 +2,11 @@ import { request } from "@/api/request";
 import { createCustomModel } from "@/common/createModel";
 import { useRequest } from "ahooks";
 import { useCallback, useRef } from "react";
+import { buildInConnectorMap } from "./buildInConnector";
 
 export const IPaaSModel = createCustomModel(() => {
-  const connectorMapRef = useRef<Record<string, IPaaSConnectorDetail>>({});
+  const connectorMapRef =
+    useRef<Record<string, IPaaSConnectorDetail>>(buildInConnectorMap);
 
   const { data, loading } = useRequest(() => {
     return request<IPaaSConnector[]>({

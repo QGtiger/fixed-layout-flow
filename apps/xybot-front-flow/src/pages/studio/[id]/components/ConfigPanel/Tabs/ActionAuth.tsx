@@ -8,6 +8,7 @@ import Badge from "@/components/Badge";
 import ScrollContent from "@/components/ScrollContent";
 import { Button } from "antd";
 import { ConfigPanelModel } from "../model";
+import { useEffect } from "react";
 
 interface AuthItem {
   /**
@@ -112,23 +113,32 @@ export default function ActionAuth({ authId }: { authId?: string }) {
     });
   });
 
-  const { data: authDetail } = useRequest(async () => {
-    if (!authId) return;
-    return request<AuthItem>({
-      url: "/api/tool/ipaas/auth/getAuthRecordById",
-      params: {
-        authId,
-      },
-    }).then(({ data }: any) => {
-      return {
-        authName: data.name,
-        authId: data.id,
-        status: data.status,
-        owner: data.owner,
-        ...data,
-      } as AuthItem;
-    });
-  });
+  const { data: authDetail, refresh } = useRequest(
+    async () => {
+      if (!authId) return;
+      return request<AuthItem>({
+        url: "/api/tool/ipaas/auth/getAuthRecordById",
+        params: {
+          authId,
+        },
+      }).then(({ data }: any) => {
+        return {
+          authName: data.name,
+          authId: data.id,
+          status: data.status,
+          owner: data.owner,
+          ...data,
+        } as AuthItem;
+      });
+    },
+    {
+      manual: true,
+    }
+  );
+
+  useEffect(() => {
+    refresh();
+  }, [authId]);
 
   if (!authList) {
     return (

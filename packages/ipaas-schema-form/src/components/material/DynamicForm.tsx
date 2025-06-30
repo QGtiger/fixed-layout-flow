@@ -20,6 +20,7 @@ export default function DynamicForm(
   const {
     runAsync,
     data: subSchema,
+    loading,
     cancel,
   } = useRequest(
     async () => {
@@ -72,7 +73,7 @@ export default function DynamicForm(
     }
   });
 
-  if (!subSchema) {
+  if (!subSchema || loading) {
     return <div className="rounded-md bg-[#f2f3f5] p-2">Loading...</div>;
   }
 

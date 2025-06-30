@@ -6,6 +6,7 @@ import { ConfigPanelModel } from "../model";
 import dayjs from "dayjs";
 import { request } from "@/api/request";
 import { StudioFlowModel } from "../../../StudioFlowModel";
+import ConditionEditor from "./components/ConditionEditor";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -179,6 +180,7 @@ const ExtraEditorMap: Record<string, ComponentType<any>> = {
     );
   },
   CheckboxGroup: Checkbox.Group,
+  ConditionEditor,
 };
 
 function formValueNormalize(value: any): any {
@@ -205,11 +207,11 @@ export default function ActionForm() {
   const { actionItem } = ConfigPanelModel.useModel();
   const { selectedNode } = StudioFlowModel.useModel();
 
-  if (!actionItem || !selectedNode) return;
+  if (!actionItem || !selectedNode) return <span></span>;
   const { connectorCode, version, authId } = selectedNode;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-1">
       <IpaasSchemaForm
         id="custom-form"
         editorMap={ExtraEditorMap}
@@ -303,7 +305,8 @@ export default function ActionForm() {
         onClick={() => {
           console.log(
             "form.getFieldsValue()",
-            form.getFieldValue(["robotUuid", ["value"]])
+            form.getFieldValue(["robotUuid", ["value"]]),
+            form.getFieldsValue()
           );
           form.validateFields();
         }}

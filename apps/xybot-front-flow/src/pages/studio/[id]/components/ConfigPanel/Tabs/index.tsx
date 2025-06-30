@@ -82,21 +82,17 @@ export default function Tab() {
               />
             </div>
 
-            <div
-              className={classNames("h-full", {
-                " hidden": activeTab !== "auth",
-              })}
-            >
-              <ActionAuth authId={selectedNode?.authId} />
-            </div>
+            {activeTab == "auth" && (
+              <div className={classNames("h-full")}>
+                <ActionAuth authId={selectedNode?.authId} />
+              </div>
+            )}
 
-            <div
-              className={classNames("h-full", {
-                " hidden": activeTab !== "form",
-              })}
-            >
-              <ActionForm />
-            </div>
+            {activeTab == "form" && (
+              <div className={classNames("h-full")}>
+                <ActionForm key={selectedNode?.id} />
+              </div>
+            )}
           </ScrollContent>
         </div>
       ) : (

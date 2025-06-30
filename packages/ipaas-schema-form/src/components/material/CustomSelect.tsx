@@ -33,7 +33,7 @@ export default function CustomSelect(
 
   const { run: searchOptions, loading } = useRequest(
     async () => {
-      if (isDynamic === false) {
+      if (!dynamicScript || isDynamic === false) {
         if (!propsOptions) return;
         // 不是动态的话，走静态模糊匹配
         const _opts = !sk

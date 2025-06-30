@@ -40,7 +40,7 @@ function GroupItem({
         </div>
       )}
       <div
-        className={classNames("overflow-hidden mt-2", {
+        className={classNames(" mt-2", {
           "max-h-0": !open,
         })}
       >

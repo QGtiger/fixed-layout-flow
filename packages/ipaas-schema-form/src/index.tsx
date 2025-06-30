@@ -57,3 +57,5 @@ export function IpaasSchemaForm(
 }
 
 export * from "./type";
+
+export { useEditor, useIpaasSchemaStore } from "./store";
