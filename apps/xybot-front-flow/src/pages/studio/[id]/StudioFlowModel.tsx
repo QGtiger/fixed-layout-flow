@@ -4,6 +4,7 @@ import { useCreation, useReactive, useRequest } from "ahooks";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import type { FixedFlowBlocks } from "@fixedflow/layout";
+import { UpgradeFlowMeta } from "./utils";
 
 /**
  * 生成flowName
@@ -45,7 +46,8 @@ export const StudioFlowModel = createCustomModel(() => {
         },
       }).then(({ data }) => {
         if (data) {
-          const r = JSON.parse(data.meta);
+          // 老协议需要进行升级
+          const r = UpgradeFlowMeta(JSON.parse(data.meta));
           viewModel.nodes = r.nodes || [];
         }
       });

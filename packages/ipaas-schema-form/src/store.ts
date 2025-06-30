@@ -53,7 +53,7 @@ export const StoreContext = createContext<IpaasSchemaStoreType>({} as any);
 
 function ClearExtraAttributeWarpper(Comp: ComponentType<any>) {
   return function ClearExtraAttributeComp(props: any) {
-    const { selectcache, defaultValue, ...restProps } = props;
+    const { defaultValue, ...restProps } = props;
     return React.createElement(Comp, {
       ...restProps,
     });

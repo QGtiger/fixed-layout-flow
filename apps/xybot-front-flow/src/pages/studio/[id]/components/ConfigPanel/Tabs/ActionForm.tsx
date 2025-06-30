@@ -14,6 +14,8 @@ import ConditionEditor from "./components/ConditionEditor";
 import { getOrigin } from "@/utils/path";
 import { useParams } from "react-router-dom";
 import CustomFormexDesigner from "./components/FormexDesigner";
+import { useCreation } from "ahooks";
+import { deepClone } from "@/utils";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -127,23 +129,11 @@ function replaceTemplateText(text: string, data: any) {
   });
 }
 
-export type FormItemValueType = {
-  label?: string;
-  value: any;
-  type?: string;
-  expression?: string;
-  selectcache?: {
-    value: any;
-    label: string;
-  }[];
-};
-
 function FormItemWarpper(Componet: ComponentType<any>) {
   return function FormItemWarpperComp(props: {
     value: FormItemValueType;
     onChange: (value: FormItemValueType) => void;
   }) {
-    console.log("FormItemWarpper props", props);
     return (
       <Componet
         {...props}
@@ -240,7 +230,7 @@ export default function ActionForm() {
   const { id } = useParams<{ id: string }>();
 
   if (!actionItem || !selectedNode || !id) return <span></span>;
-  const { connectorCode, version, authId } = selectedNode;
+  const { connectorCode, version, authId, inputs } = selectedNode;
 
   const finalInputs: IPaasFormSchema[] = actionItem.viewMeta.inputs || [];
   finalInputs.forEach((it) => {
@@ -255,6 +245,8 @@ export default function ActionForm() {
     }
   });
 
+  console.log("inputsValues", inputs);
+
   return (
     <div className="flex flex-col px-1">
       <IpaasSchemaForm
@@ -264,36 +256,7 @@ export default function ActionForm() {
         form={form}
         commonEditorWarpper={FormItemWarpper}
         normalize={normalize} // 只返回 value 字段
-        // initialValues={{
-        //   test_input: {
-        //     value: "你大爷的",
-        //     label: "222",
-        //     type: "string",
-        //   },
-        //   test_input_4: {
-        //     value: "你大爷的",
-        //     type: "string",
-        //     selectCache: [
-        //       {
-        //         value: "你大爷的",
-        //         label: "你大爷的label",
-        //       },
-        //     ],
-        //   },
-        //   multi_select: {
-        //     value: ["option1", "option2"],
-        //     selectCache: [
-        //       {
-        //         label: "选项1",
-        //         value: "option1",
-        //       },
-        //       {
-        //         label: "选项2",
-        //         value: "option2",
-        //       },
-        //     ],
-        //   },
-        // }}
+        initialValues={inputs}
         // dynamicScriptExcuteWithOptions={async (config: {
         //   script: string;
         //   extParams: Record<string, any>;
