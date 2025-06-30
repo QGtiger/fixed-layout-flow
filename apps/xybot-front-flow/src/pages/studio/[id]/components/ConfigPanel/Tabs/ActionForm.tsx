@@ -1,12 +1,19 @@
-import { IPaasFormSchema, IpaasSchemaForm } from "@xybot/ipaas-schema-form";
+import {
+  IPaasFormSchema,
+  IpaasSchemaForm,
+  CustomInputWithCopy,
+} from "@xybot/ipaas-schema-form";
 import "@xybot/ipaas-schema-form/styles.css";
-import { Button, Checkbox, DatePicker, Form, TimePicker } from "antd";
-import { ComponentType } from "react";
+import { Button, Checkbox, DatePicker, Form, Input, TimePicker } from "antd";
+import { ComponentType, useEffect } from "react";
 import { ConfigPanelModel } from "../model";
 import dayjs from "dayjs";
 import { request } from "@/api/request";
 import { StudioFlowModel } from "../../../StudioFlowModel";
 import ConditionEditor from "./components/ConditionEditor";
+import { getOrigin } from "@/utils/path";
+import { useParams } from "react-router-dom";
+import CustomFormexDesigner from "./components/FormexDesigner";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -113,6 +120,13 @@ const testSchema: IPaasFormSchema[] = [
   },
 ];
 
+function replaceTemplateText(text: string, data: any) {
+  if (!text) return "";
+  return text.replace(/{{(.*?)}}/g, (match, key) => {
+    return data[key.trim()] || "";
+  });
+}
+
 export type FormItemValueType = {
   label?: string;
   value: any;
@@ -129,6 +143,7 @@ function FormItemWarpper(Componet: ComponentType<any>) {
     value: FormItemValueType;
     onChange: (value: FormItemValueType) => void;
   }) {
+    console.log("FormItemWarpper props", props);
     return (
       <Componet
         {...props}
@@ -164,6 +179,21 @@ const ExtraEditorMap: Record<string, ComponentType<any>> = {
       />
     );
   },
+  ScheduleDatetimePicker: (props: any) => {
+    return (
+      <DatePicker
+        showTime
+        format={{
+          format: "YYYY-MM-DD HH:mm",
+        }}
+        className="w-full"
+        value={props.value ? dayjs(props.value) : ""}
+        onChange={(date, dateString) => {
+          props.onChange(dateString);
+        }}
+      />
+    );
+  },
   RangePicker: (props: any) => {
     const value = [
       props.value?.[0] ? dayjs(props.value[0]) : "",
@@ -181,6 +211,7 @@ const ExtraEditorMap: Record<string, ComponentType<any>> = {
   },
   CheckboxGroup: Checkbox.Group,
   ConditionEditor,
+  FormexDesigner: CustomFormexDesigner,
 };
 
 function formValueNormalize(value: any): any {
@@ -206,9 +237,23 @@ export default function ActionForm() {
   const [form] = Form.useForm();
   const { actionItem } = ConfigPanelModel.useModel();
   const { selectedNode } = StudioFlowModel.useModel();
+  const { id } = useParams<{ id: string }>();
 
-  if (!actionItem || !selectedNode) return <span></span>;
+  if (!actionItem || !selectedNode || !id) return <span></span>;
   const { connectorCode, version, authId } = selectedNode;
+
+  const finalInputs: IPaasFormSchema[] = actionItem.viewMeta.inputs || [];
+  finalInputs.forEach((it) => {
+    if (it.editor?.kind === "InputWithCopy") {
+      it.editor.config.defaultValue = replaceTemplateText(
+        it.editor.config.defaultValue,
+        {
+          flowId: id,
+          host: getOrigin(),
+        }
+      );
+    }
+  });
 
   return (
     <div className="flex flex-col px-1">

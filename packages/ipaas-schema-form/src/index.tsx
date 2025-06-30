@@ -59,3 +59,5 @@ export function IpaasSchemaForm(
 export * from "./type";
 
 export { useEditor, useIpaasSchemaStore } from "./store";
+
+export { default as CustomInputWithCopy } from "./components/material/CustomInputWithCopy";

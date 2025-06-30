@@ -8,10 +8,13 @@ import CustomMultiSelect from "./components/material/CustomMultiSelect";
 import CustomDatetimePicker from "./components/material/CustomDatetimePicker";
 import { IPaasFormSchema } from "./type";
 import DynamicForm from "./components/material/DynamicForm";
+import CustomUpload from "./components/material/CustomUpload";
+import CustomInputWithCopy from "./components/material/CustomInputWithCopy";
 
 interface IpaasSchemaStoreState {
   editorMap: Record<string, ComponentType<any>>;
   dynamicDebounce: number;
+  uploadFile?: (file: File) => Promise<string>;
   editorLayoutWithDesc?: (
     node1: React.ReactNode,
     node2: React.ReactNode
@@ -81,6 +84,10 @@ export function createIpaasSchemaStore(config: IpaasSchemaStoreConfig) {
             ClearExtraAttributeWarpper(CustomMultiSelect)
           ),
           DynamicActionForm: ClearExtraAttributeWarpper(DynamicForm),
+          Upload: ClearExtraAttributeWarpper(CustomUpload),
+          InputWithCopy: DefaultValueWarpper(
+            ClearExtraAttributeWarpper(CustomInputWithCopy)
+          ),
           ...config.editorMap,
         },
         normalize: config.normalize || ((value) => value),
