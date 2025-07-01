@@ -12,7 +12,7 @@ import Tab from "./Tabs";
 
 function Panel() {
   const { selectedNode, setSelectedId } = StudioFlowModel.useModel();
-  const { loading } = ConfigPanelModel.useModel();
+  const { loading, connectorDetail } = ConfigPanelModel.useModel();
   const controls = useAnimation();
   const showPanel = !!selectedNode;
   const [safeSelectedNode, setSafeSelectedNode] = useSafeState(selectedNode!);
@@ -23,6 +23,7 @@ function Panel() {
 
   const { iconUrl, sequence, connectorName, description, actionName, parent } =
     safeSelectedNode || {};
+  const { documentLink } = connectorDetail || {};
 
   useEffect(() => {
     if (showPanel) {
@@ -111,7 +112,7 @@ function Panel() {
                   </div>
 
                   <div className="flex  items-center gap-[8px]">
-                    {/* {documentLink && (
+                    {documentLink && (
                       <div className="w-[72px] h-[22px] flex-col justify-center items-end inline-flex">
                         <a
                           href={documentLink}
@@ -121,7 +122,7 @@ function Panel() {
                           帮助文档
                         </a>
                       </div>
-                    )} */}
+                    )}
                     <CloseOutlined
                       className=" text-secondary-grey cursor-pointer"
                       onClick={() => {

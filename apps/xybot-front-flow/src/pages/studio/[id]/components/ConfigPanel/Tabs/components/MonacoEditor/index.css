@@ -1,0 +1,24 @@
+.monaco-editor-wrapper {
+  width: 100%;
+  font-size: 12px;
+  border: 1px solid #ecedef;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  padding: 8px;
+}
+
+.monaco-editor-wrapper .monaco-editor {
+  outline-color: white;
+}
+
+.read-only .monaco-editor-overlaymessage {
+  display: none !important;
+}
+
+.open-code-icon {
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.monaco-editor-modal .flow-modal-footer {
+  border-top: none;
+}

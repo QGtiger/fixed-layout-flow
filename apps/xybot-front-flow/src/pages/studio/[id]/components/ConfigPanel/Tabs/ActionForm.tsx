@@ -26,6 +26,7 @@ import { useBoolean, useCreation } from "ahooks";
 import { deepClone } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
+import MonacoEditor from "./components/MonacoEditor";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -144,6 +145,7 @@ const noExpressionKinds = [
   "CheckboxGroup",
   "FormexDesigner",
   "ConditionEditor",
+  "CodeEditor",
 ];
 
 function FormItemWarpper(Componet: ComponentType<any>) {
@@ -271,6 +273,7 @@ const ExtraEditorMap: Record<string, ComponentType<any>> = {
   CheckboxGroup: Checkbox.Group,
   ConditionEditor,
   FormexDesigner: CustomFormexDesigner,
+  CodeEditor: MonacoEditor,
 };
 
 function formValueNormalize(value: any): any {
