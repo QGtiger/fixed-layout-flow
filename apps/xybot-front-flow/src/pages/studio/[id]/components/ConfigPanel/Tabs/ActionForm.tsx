@@ -4,7 +4,15 @@ import {
   CustomInputWithCopy,
 } from "@xybot/ipaas-schema-form";
 import "@xybot/ipaas-schema-form/styles.css";
-import { Button, Checkbox, DatePicker, Form, Input, TimePicker } from "antd";
+import {
+  Button,
+  Checkbox,
+  DatePicker,
+  Form,
+  Input,
+  Segmented,
+  TimePicker,
+} from "antd";
 import { ComponentType, useEffect } from "react";
 import { ConfigPanelModel } from "../model";
 import dayjs from "dayjs";
@@ -14,8 +22,10 @@ import ConditionEditor from "./components/ConditionEditor";
 import { getOrigin } from "@/utils/path";
 import { useParams } from "react-router-dom";
 import CustomFormexDesigner from "./components/FormexDesigner";
-import { useCreation } from "ahooks";
+import { useBoolean, useCreation } from "ahooks";
 import { deepClone } from "@/utils";
+import classNames from "classnames";
+import { motion } from "framer-motion";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -129,27 +139,86 @@ function replaceTemplateText(text: string, data: any) {
   });
 }
 
+const noExpressionKinds = [
+  "DynamicActionForm",
+  "CheckboxGroup",
+  "FormexDesigner",
+  "ConditionEditor",
+];
+
 function FormItemWarpper(Componet: ComponentType<any>) {
   return function FormItemWarpperComp(props: {
     value: FormItemValueType;
+    editorkind: string;
     onChange: (value: FormItemValueType) => void;
   }) {
+    const { value: expValue } = props;
+    const { value, isExpression = false, selectcache } = expValue || {};
+    const [showExp, showExpAction] = useBoolean(false);
+    const [hoverExp, hoverExpAction] = useBoolean(false);
+
+    const noExpress = noExpressionKinds.includes(props.editorkind);
+
+    const show = (showExp || hoverExp) && !noExpress;
+
     return (
-      <Componet
-        {...props}
-        value={props.value?.value}
-        selectcache={props.value?.selectcache}
-        onChange={(v: any, option: any) => {
-          if (typeof v === "object" && v.target) {
-            v = v.target?.value;
-          }
-          props.onChange?.({
-            ...props.value,
-            value: v,
-            selectcache: option ? [].concat(option) : undefined,
-          });
-        }}
-      />
+      <div
+        className=" relative"
+        onMouseOver={hoverExpAction.setTrue}
+        onMouseLeave={hoverExpAction.setFalse}
+      >
+        {isExpression ? (
+          <div>Code Mirror 表达式编辑器</div>
+        ) : (
+          <Componet
+            {...props}
+            value={value}
+            selectcache={selectcache}
+            onChange={(v: any, option: any) => {
+              if (typeof v === "object" && v.target) {
+                v = v.target?.value;
+              }
+              props.onChange?.({
+                ...expValue,
+                value: v,
+                selectcache: option ? [].concat(option) : undefined,
+              });
+            }}
+            onBlur={showExpAction.setFalse}
+            onFocus={showExpAction.setTrue}
+          />
+        )}
+        {!noExpress && (
+          <motion.div
+            initial={{ opacity: 0, y: -18 }}
+            animate={{ opacity: show ? 1 : 0, y: show ? -23 : -18 }}
+            transition={{ duration: 0.2 }}
+            className={classNames(" absolute right-0 -top-0.5")}
+          >
+            <Segmented
+              size="small"
+              className=" bg-gray-300 text-xs"
+              value={isExpression}
+              onChange={(v) => {
+                props.onChange?.({
+                  ...expValue,
+                  isExpression: v,
+                });
+              }}
+              options={[
+                {
+                  value: false,
+                  label: "常规",
+                },
+                {
+                  value: true,
+                  label: "高级",
+                },
+              ]}
+            />
+          </motion.div>
+        )}
+      </div>
     );
   };
 }
@@ -257,6 +326,17 @@ export default function ActionForm() {
         commonEditorWarpper={FormItemWarpper}
         normalize={normalize} // 只返回 value 字段
         initialValues={inputs}
+        validatefield={({ form, name, value, validate }) => {
+          return new Promise<void>(async (resolve, reject) => {
+            const v: FormItemValueType = value;
+            if (v.isExpression) {
+              resolve();
+            } else {
+              validate(v).then(resolve, reject);
+            }
+          });
+        }}
+        // validateTrigger={["onBlur"]}
         // dynamicScriptExcuteWithOptions={async (config: {
         //   script: string;
         //   extParams: Record<string, any>;

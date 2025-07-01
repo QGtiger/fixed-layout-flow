@@ -58,9 +58,15 @@ export function UpgradeFlowMeta(meta: FlowMeta) {
           obj,
           cb: (obj, key, value, path) => {
             const pathStr = path.join(".");
+            const isExpression = /{{\s*([^\s}}]+)\s*}}/g.test(value);
             const o: FormItemValueType = {
               value,
+              isExpression,
             };
+            if (isExpression) {
+              delete o.value; // 如果是表达式，则不需要 value
+              o.expression = value;
+            }
             if (viewHash && viewHash[pathStr]) {
               // 如果有 viewHash，使用 viewHash 的值
               const hash = viewHash[pathStr];

@@ -3,6 +3,7 @@ type FormItemValueType = {
   value: any;
   type?: string;
   expression?: string;
+  isExpression?: boolean;
   selectcache?: {
     value: any;
     label: string;

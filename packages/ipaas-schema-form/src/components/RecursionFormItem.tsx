@@ -48,7 +48,12 @@ function WrapperFieldComponent(props: {
   return (
     <div className="relative">
       {_editorLayoutWithDesc(
-        <FieldComponent name={payload.code} {...otherProps} {..._config} />,
+        <FieldComponent
+          name={payload.code}
+          editorkind={payload.editor.kind}
+          {...otherProps}
+          {..._config}
+        />,
         payload.description && (
           <div className="desc text-[#888f9d] text-xs">
             <ReactMarkdown
@@ -71,7 +76,7 @@ export default function RecursionFormItem({
   formItemState: IPaasDynamicFormItem;
 }) {
   const { payload, next } = formItemState;
-  const { normalize } = useIpaasSchemaStore();
+  const { normalize, validatefield } = useIpaasSchemaStore();
 
   const nextFieldItem = useMemo(() => {
     let current: IPaasDynamicFormItem | null = formItemState;
@@ -98,39 +103,52 @@ export default function RecursionFormItem({
         name={payload.code}
         required={payload.required}
         rules={[
-          ({ getFieldsValue }) => ({
+          (form) => ({
             validator(_, v) {
-              const formValues = formValueNormalize(
-                getFieldsValue(),
-                normalize
-              );
-              const value = normalize?.(v);
-              return new Promise<void>((r, j) => {
-                let errorMessages = "";
-                // 必填校验
-                if (payload.required) {
-                  if (value === undefined || value === null || value === "") {
-                    errorMessages = getLocals().emptyErrorMsg;
+              function originValidateField(v: any) {
+                const { getFieldsValue } = form;
+                const formValues = formValueNormalize(
+                  getFieldsValue(),
+                  normalize
+                );
+                const value = normalize?.(v);
+                return new Promise<void>((r, j) => {
+                  let errorMessages = "";
+                  // 必填校验
+                  if (payload.required) {
+                    if (value === undefined || value === null || value === "") {
+                      errorMessages = getLocals().emptyErrorMsg;
+                    }
                   }
-                }
 
-                if (payload.validateRules) {
-                  const [suc, errorMsg = getLocals().invalidErrorMsg] =
-                    excuteScriptByValidateRules(
-                      payload.validateRules,
-                      value,
-                      formValues
-                    );
-                  if (!suc) {
-                    errorMessages = errorMsg;
+                  if (payload.validateRules) {
+                    const [suc, errorMsg = getLocals().invalidErrorMsg] =
+                      excuteScriptByValidateRules(
+                        payload.validateRules,
+                        value,
+                        formValues
+                      );
+                    if (!suc) {
+                      errorMessages = errorMsg;
+                    }
                   }
-                }
-                if (errorMessages) {
-                  j(new Error(errorMessages));
-                } else {
-                  r();
-                }
-              });
+                  if (errorMessages) {
+                    j(new Error(errorMessages));
+                  } else {
+                    r();
+                  }
+                });
+              }
+
+              return (
+                validatefield?.({
+                  // @ts-expect-error
+                  form,
+                  name: payload.code,
+                  value: v,
+                  validate: originValidateField,
+                }) || originValidateField(v)
+              );
             },
           }),
         ]}

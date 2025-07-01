@@ -1,4 +1,4 @@
-import { Input, InputNumber } from "antd";
+import { FormInstance, Input, InputNumber } from "antd";
 import React, { ComponentType, createContext, useContext } from "react";
 import { createStore, useStore } from "zustand";
 import DefaultValueWarpper from "./utils/DefaulValueWarpper";
@@ -24,6 +24,8 @@ interface IpaasSchemaStoreState {
     Component: ComponentType<{
       value: any;
       onChange: (value: any) => void;
+      editorkind?: string;
+      name?: string;
     }>
   ) => ComponentType<{
     value: any;
@@ -39,6 +41,13 @@ interface IpaasSchemaStoreState {
   }) => Promise<IPaasFormSchema[]>;
 
   normalize: (value: any) => any; // 用于规范化值的函数
+
+  validatefield?: (cfg: {
+    form: FormInstance;
+    name: string | string[];
+    value: any;
+    validate: (v: any) => Promise<void>;
+  }) => Promise<void>;
 }
 
 interface IpaasSchemaStoreActions {

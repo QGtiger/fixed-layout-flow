@@ -137,7 +137,11 @@ export default function ActionAuth({ authId }: { authId?: string }) {
   );
 
   useEffect(() => {
-    refresh();
+    if (connectorDetail?.code) {
+      if (connectorDetail.code === selectedNode?.connectorCode) {
+        refresh();
+      }
+    }
   }, [authId]);
 
   if (!authList) {
