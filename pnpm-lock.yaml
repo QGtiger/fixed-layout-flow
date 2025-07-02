@@ -127,9 +127,21 @@ importers:
       '@ant-design/icons':
         specifier: ^6.0.0
         version: 6.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@codemirror/autocomplete':
+        specifier: ^6.18.6
+        version: 6.18.6
+      '@codemirror/lang-javascript':
+        specifier: ^6.2.4
+        version: 6.2.4
+      '@codemirror/language':
+        specifier: ^6.11.1
+        version: 6.11.1
       '@fixedflow/layout':
         specifier: workspace:^
         version: link:../../packages/layout
+      '@lezer/common':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -142,6 +154,12 @@ importers:
       '@types/node':
         specifier: ^20.10.7
         version: 20.19.1
+      '@uiw/codemirror-theme-github':
+        specifier: ^4.23.13
+        version: 4.23.13(@codemirror/language@6.11.1)(@codemirror/state@6.5.2)(@codemirror/view@6.37.2)
+      '@uiw/react-codemirror':
+        specifier: ^4.23.13
+        version: 4.23.13(@babel/runtime@7.27.6)(@codemirror/autocomplete@6.18.6)(@codemirror/language@6.11.1)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.37.2)(codemirror@6.0.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@xbot-fe/Design':
         specifier: 2.2.0-beta.3
         version: 2.2.0-beta.3(antd@5.26.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -155,8 +173,8 @@ importers:
         specifier: workspace:^
         version: link:../../packages/formex-designer
       '@xybot/i18n':
-        specifier: 0.1.0-beta.23
-        version: 0.1.0-beta.23(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))
+        specifier: 0.1.1
+        version: 0.1.1(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))
       '@xybot/ipaas-schema-form':
         specifier: workspace:^
         version: link:../../packages/ipaas-schema-form
@@ -172,6 +190,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      codemirror-lang-n8n-expression:
+        specifier: ^0.3.0
+        version: 0.3.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -205,6 +226,9 @@ importers:
       react-router-dom:
         specifier: ^6.11.2
         version: 6.30.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      tern:
+        specifier: ^0.24.3
+        version: 0.24.3
       ua-parser-js:
         specifier: 2.0.0
         version: 2.0.0
@@ -214,6 +238,9 @@ importers:
       xhook:
         specifier: 1.6.2
         version: 1.6.2
+      xss:
+        specifier: ^1.0.15
+        version: 1.0.15
     devDependencies:
       '@tanstack/react-query-devtools':
         specifier: ^5.40.0
@@ -224,6 +251,9 @@ importers:
       '@types/react-dom':
         specifier: 18.2.0
         version: 18.2.0
+      '@types/tern':
+        specifier: ^0.23.9
+        version: 0.23.9
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -2627,8 +2657,8 @@ packages:
       react: '>=17.0.2'
       vite: ^5.0.8
 
-  '@xybot/i18n@0.1.0-beta.23':
-    resolution: {integrity: sha512-Oy+HzsFQbJSaOnBvgC63BWhVOYS7gSXNCpvoRGnx+cuAi1pBS8aCDJOv0poyt+u5Zjp5fYST2Z6EeWQeAcjFBQ==, tarball: https://packages.aliyun.com/604c1a6bf11bae7ca07d6ad3/npm/npm-registry/@xybot/i18n/-/@xybot/i18n-0.1.0-beta.23.tgz}
+  '@xybot/i18n@0.1.1':
+    resolution: {integrity: sha512-HzfUz/S9w6qZyZub9acIZzdFkIYODDVXugqjQxhCAcz/bbPQMtvlgPKCxpSNW7aVIKnEblVvJL+/0Q9VVcSenQ==, tarball: https://packages.aliyun.com/604c1a6bf11bae7ca07d6ad3/npm/npm-registry/@xybot/i18n/-/@xybot/i18n-0.1.1.tgz}
     peerDependencies:
       react: '>=17.0.2'
       vite: ^5.0.8
@@ -3134,6 +3164,9 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
+
+  cssfilter@0.0.10:
+    resolution: {integrity: sha512-FAaLDaplstoRsDR8XGYH51znUN0UY7nMc6Z9/fvE8EXGwvJE9hu7W2vHwx1+bd6gCYnln9nLbzxFTrcO9YQDZw==}
 
   cssom@0.3.8:
     resolution: {integrity: sha512-b0tGHbfegbhPJpxpiBPU2sCkigAqtM9O121le6bbOlgyV+NyGyCmVfJ6QW9eRjz8CpNfWEOYBIMIGRYkLwsIYg==}
@@ -6518,6 +6551,11 @@ packages:
   xmlchars@2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
 
+  xss@1.0.15:
+    resolution: {integrity: sha512-FVdlVVC67WOIPvfOwhoMETV72f6GbW7aOabBC3WxN/oUdoEMDyLz4OgRv5/gck2ZeNqEQu+Tb0kloovXOfpYVg==}
+    engines: {node: '>= 0.10.0'}
+    hasBin: true
+
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
@@ -8970,7 +9008,7 @@ snapshots:
     dependencies:
       '@ast-grep/napi': 0.16.1
       '@xybot/bury': 0.1.4(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))
-      '@xybot/i18n': 0.1.0-beta.23(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))
+      '@xybot/i18n': 0.1.1(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))
       '@xybot/init-config': 1.2.2
       '@xybot/standard': 1.0.0(postcss@8.5.4)
       axios: 1.6.2
@@ -9005,7 +9043,7 @@ snapshots:
     dependencies:
       '@ast-grep/napi': 0.16.1
       '@xybot/bury': 0.1.4(react@19.1.0)(vite@6.3.5(@types/node@24.0.7)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))
-      '@xybot/i18n': 0.1.0-beta.23(react@19.1.0)(vite@6.3.5(@types/node@24.0.7)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))
+      '@xybot/i18n': 0.1.1(react@19.1.0)(vite@6.3.5(@types/node@24.0.7)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))
       '@xybot/init-config': 1.2.2
       '@xybot/standard': 1.0.0(postcss@8.5.4)
       axios: 1.6.2
@@ -9049,7 +9087,7 @@ snapshots:
       uuid: 11.1.0
       vite: 6.3.5(@types/node@24.0.4)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0)
 
-  '@xybot/i18n@0.1.0-beta.23(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))':
+  '@xybot/i18n@0.1.1(react@18.2.0)(vite@5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0))':
     dependencies:
       esbuild: 0.19.12
       fs-extra: 11.1.1
@@ -9062,7 +9100,7 @@ snapshots:
       uuid: 11.1.0
       vite: 5.4.19(@types/node@20.19.1)(less@4.1.3)(terser@5.24.0)
 
-  '@xybot/i18n@0.1.0-beta.23(react@19.1.0)(vite@6.3.5(@types/node@24.0.7)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))':
+  '@xybot/i18n@0.1.1(react@19.1.0)(vite@6.3.5(@types/node@24.0.7)(jiti@1.21.7)(less@4.1.3)(terser@5.24.0)(yaml@2.8.0))':
     dependencies:
       esbuild: 0.19.12
       fs-extra: 11.1.1
@@ -9860,6 +9898,8 @@ snapshots:
   css-what@6.1.0: {}
 
   cssesc@3.0.0: {}
+
+  cssfilter@0.0.10: {}
 
   cssom@0.3.8: {}
 
@@ -14372,6 +14412,11 @@ snapshots:
   xml-name-validator@4.0.0: {}
 
   xmlchars@2.2.0: {}
+
+  xss@1.0.15:
+    dependencies:
+      commander: 2.20.3
+      cssfilter: 0.0.10
 
   y18n@5.0.8: {}
 

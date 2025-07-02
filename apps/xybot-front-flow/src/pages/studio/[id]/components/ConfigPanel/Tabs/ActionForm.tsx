@@ -27,6 +27,7 @@ import { deepClone } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import MonacoEditor from "./components/MonacoEditor";
+import CMEditor from "./components/CMEditor";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -170,7 +171,7 @@ function FormItemWarpper(Componet: ComponentType<any>) {
         onMouseLeave={hoverExpAction.setFalse}
       >
         {isExpression ? (
-          <div>Code Mirror 表达式编辑器</div>
+          <CMEditor />
         ) : (
           <Componet
             {...props}
@@ -193,7 +194,7 @@ function FormItemWarpper(Componet: ComponentType<any>) {
         {!noExpress && (
           <motion.div
             initial={{ opacity: 0, y: -18 }}
-            animate={{ opacity: show ? 1 : 0, y: show ? -23 : -18 }}
+            animate={{ opacity: show ? 1 : 0, y: show ? `-100%` : -18 }}
             transition={{ duration: 0.2 }}
             className={classNames(" absolute right-0 -top-0.5")}
           >
@@ -317,8 +318,6 @@ export default function ActionForm() {
     }
   });
 
-  console.log("inputsValues", inputs);
-
   return (
     <div className="flex flex-col px-1">
       <IpaasSchemaForm
@@ -326,6 +325,7 @@ export default function ActionForm() {
         editorMap={ExtraEditorMap}
         schema={actionItem.viewMeta.inputs || []}
         form={form}
+        // @ts-expect-error
         commonEditorWarpper={FormItemWarpper}
         normalize={normalize} // 只返回 value 字段
         initialValues={inputs}

@@ -1,0 +1,421 @@
+.code-node-editor .cm-editor .cm-tooltip-autocomplete > ul[role="listbox"] {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.cm-editor .cm-tooltip-autocomplete {
+  background-color: hsl(220, 50%, 100%) !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
+  border: none;
+}
+.cm-editor .cm-tooltip-autocomplete .cm-tooltip {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cm-editor .cm-tooltip-autocomplete > ul[role="listbox"] {
+  font-family: var(--font-family-monospace);
+  max-height: min(220px, 20vh);
+  max-width: 240px;
+  min-width: 200px;
+  border: 1px solid hsl(220, 25%, 88%);
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.cm-editor
+  .cm-tooltip-autocomplete
+  > ul[role="listbox"]:has(+ .cm-completionInfo-left) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.cm-editor
+  .cm-tooltip-autocomplete
+  > ul[role="listbox"]:has(+ .cm-completionInfo) {
+  height: min(220px, 20vh);
+}
+.cm-editor .cm-tooltip-autocomplete > ul[role="listbox"] li[role="option"] {
+  color: var(--color-text-base);
+  display: flex;
+  line-height: var(--font-line-height-xloose);
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-5xs) var(--spacing-2xs);
+  gap: var(--spacing-2xs);
+  scroll-padding: 40px;
+  scroll-margin: 40px;
+}
+.cm-editor
+  .cm-tooltip-autocomplete
+  > ul[role="listbox"]
+  li
+  .cm-completionLabel {
+  font-size: var(--font-size-2xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cm-editor
+  .cm-tooltip-autocomplete
+  > ul[role="listbox"]
+  li
+  .cm-completionDetail {
+  color: var(--color-text-light);
+  font-size: var(--font-size-3xs);
+  margin-left: 0;
+  font-style: normal;
+}
+.cm-editor .cm-tooltip-autocomplete > ul[role="listbox"] li[aria-selected] {
+  background-color: var(--color-background-base);
+  color: var(--color-autocomplete-item-selected);
+}
+.cm-editor .cm-tooltip-autocomplete > ul[role="listbox"] > .cm-section-header {
+  padding: var(--spacing-4xs) var(--spacing-3xs);
+  border-bottom: 1px solid var(--color-foreground-light);
+  background-color: hsl(220, 50%, 100%);
+  position: sticky;
+  top: 0;
+}
+.cm-editor
+  .cm-tooltip-autocomplete
+  > ul[role="listbox"]
+  > .cm-section-header:not(:first-child) {
+  margin-top: var(--spacing-2xs);
+}
+.cm-editor .cm-tooltip-autocomplete > ul[role="listbox"] .cm-section-title {
+  color: var(--color-text-dark);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-3xs);
+  text-transform: uppercase;
+  padding: var(--spacing-5xs) var(--spacing-4xs);
+}
+.cm-editor .cm-tooltip.cm-completionInfo:not(:has(div)),
+.cm-editor .cm-tooltip.cm-cursorInfo:not(:has(div)),
+.cm-editor .cm-tooltip-hover:not(:has(div)) {
+  padding: var(--spacing-xs);
+}
+.cm-editor .cm-tooltip.cm-completionInfo:has(.cm-tooltip-lint),
+.cm-editor .cm-tooltip.cm-cursorInfo:has(.cm-tooltip-lint),
+.cm-editor .cm-tooltip-hover:has(.cm-tooltip-lint) {
+  padding: 0;
+  overflow: hidden;
+}
+.cm-editor .cm-tooltip.cm-completionInfo:has(.cm-tooltip-lint) .cm-diagnostic,
+.cm-editor .cm-tooltip.cm-cursorInfo:has(.cm-tooltip-lint) .cm-diagnostic,
+.cm-editor .cm-tooltip-hover:has(.cm-tooltip-lint) .cm-diagnostic {
+  border-left: none;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-container,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-container,
+.cm-editor .cm-tooltip-hover .autocomplete-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) 0;
+  height: 100%;
+  overflow-y: auto;
+}
+.cm-editor .cm-tooltip.cm-completionInfo strong.autocomplete-info-arg,
+.cm-editor .cm-tooltip.cm-completionInfo strong.autocomplete-info-arg-name,
+.cm-editor .cm-tooltip.cm-cursorInfo strong.autocomplete-info-arg,
+.cm-editor .cm-tooltip.cm-cursorInfo strong.autocomplete-info-arg-name,
+.cm-editor .cm-tooltip-hover strong.autocomplete-info-arg,
+.cm-editor .cm-tooltip-hover strong.autocomplete-info-arg-name {
+  font-weight: var(--font-weight-regular);
+  text-decoration: underline;
+  color: var(--color-text-dark);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-description,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-description,
+.cm-editor .cm-tooltip-hover .autocomplete-info-description {
+  padding: 0 var(--spacing-xs);
+  color: var(--color-text-base);
+  font-size: var(--font-size-2xs);
+}
+.cm-editor
+  .cm-tooltip.cm-completionInfo
+  .autocomplete-info-description
+  .autocomplete-info-example,
+.cm-editor
+  .cm-tooltip.cm-cursorInfo
+  .autocomplete-info-description
+  .autocomplete-info-example,
+.cm-editor
+  .cm-tooltip-hover
+  .autocomplete-info-description
+  .autocomplete-info-example {
+  border-radius: 4px;
+  border: 1px solid var(--color-foreground-light);
+  color: var(--color-text-base);
+  margin-top: var(--spacing-xs);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-description code,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-description code,
+.cm-editor .cm-tooltip-hover .autocomplete-info-description code {
+  padding: 0;
+  color: var(--color-text-base);
+  font-size: var(--font-size-2xs);
+  font-family: var(--font-family);
+  background-color: transparent;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-description p,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-description p,
+.cm-editor .cm-tooltip-hover .autocomplete-info-description p {
+  line-height: 1.35;
+}
+.cm-editor .cm-tooltip.cm-completionInfo a,
+.cm-editor .cm-tooltip.cm-cursorInfo a,
+.cm-editor .cm-tooltip-hover a {
+  color: var(--color-text-dark);
+}
+.cm-editor .cm-tooltip.cm-completionInfo a:hover,
+.cm-editor .cm-tooltip.cm-completionInfo a:active,
+.cm-editor .cm-tooltip.cm-cursorInfo a:hover,
+.cm-editor .cm-tooltip.cm-cursorInfo a:active,
+.cm-editor .cm-tooltip-hover a:hover,
+.cm-editor .cm-tooltip-hover a:active {
+  text-decoration: underline;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-header,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-header,
+.cm-editor .cm-tooltip-hover .autocomplete-info-header {
+  padding: 0 var(--spacing-xs);
+  color: var(--color-text-base);
+  font-size: var(--font-size-2xs);
+  font-family: var(--font-family-monospace);
+  line-height: var(--font-line-height-compact);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-name,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-name,
+.cm-editor .cm-tooltip-hover .autocomplete-info-name {
+  color: var(--color-autocomplete-item-selected);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-arg,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-arg,
+.cm-editor .cm-tooltip-hover .autocomplete-info-arg {
+  color: var(--color-text-base);
+  font-weight: var(--font-weight-regular);
+  padding: 0;
+  display: inline-block;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-return,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-return,
+.cm-editor .cm-tooltip-hover .autocomplete-info-return {
+  display: inline-block;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-args,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-args,
+.cm-editor .cm-tooltip-hover .autocomplete-info-args {
+  padding: 0 var(--spacing-xs);
+  list-style: none;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-args li,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-args li,
+.cm-editor .cm-tooltip-hover .autocomplete-info-args li {
+  text-indent: calc(var(--spacing-2xs) * -1);
+  margin-left: var(--spacing-2xs);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-args li + li,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-args li + li,
+.cm-editor .cm-tooltip-hover .autocomplete-info-args li + li {
+  margin-top: var(--spacing-4xs);
+}
+.cm-editor
+  .cm-tooltip.cm-completionInfo
+  .autocomplete-info-args
+  .autocomplete-info-args,
+.cm-editor
+  .cm-tooltip.cm-cursorInfo
+  .autocomplete-info-args
+  .autocomplete-info-args,
+.cm-editor .cm-tooltip-hover .autocomplete-info-args .autocomplete-info-args {
+  margin-top: var(--spacing-4xs);
+  padding-left: var(--spacing-s);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-arg-name,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-arg-name,
+.cm-editor .cm-tooltip-hover .autocomplete-info-arg-name {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-base);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-arg-description,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-arg-description,
+.cm-editor .cm-tooltip-hover .autocomplete-info-arg-description {
+  color: var(--color-text-base);
+  margin-left: var(--spacing-4xs);
+  font-size: var(--font-size-2xs);
+}
+.cm-editor
+  .cm-tooltip.cm-completionInfo
+  .autocomplete-info-arg-description
+  code,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-arg-description code,
+.cm-editor .cm-tooltip-hover .autocomplete-info-arg-description code {
+  padding: 0;
+  color: var(--color-text-base);
+  font-size: var(--font-size-2xs);
+  font-family: var(--font-family);
+  background-color: transparent;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-examples pre,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-examples pre,
+.cm-editor .cm-tooltip-hover .autocomplete-info-examples pre {
+  line-height: 1;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-examples code,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-examples code,
+.cm-editor .cm-tooltip-hover .autocomplete-info-examples code {
+  background: inherit;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-examples-list,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-examples-list,
+.cm-editor .cm-tooltip-hover .autocomplete-info-examples-list {
+  margin: var(--spacing-xs) var(--spacing-xs) 0 var(--spacing-xs);
+  border-radius: 4px;
+  border: 1px solid var(--color-foreground-light);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-example,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-example,
+.cm-editor .cm-tooltip-hover .autocomplete-info-example {
+  color: var(--color-text-base);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-example code,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-example code,
+.cm-editor .cm-tooltip-hover .autocomplete-info-example code {
+  color: var(--color-text-base);
+  display: block;
+  padding: var(--spacing-3xs) var(--spacing-2xs);
+  font-size: 0.688rem;
+  font-family: var(--font-family-monospace);
+  line-height: var(--font-line-height-compact);
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-example-comment,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-example-comment,
+.cm-editor .cm-tooltip-hover .autocomplete-info-example-comment {
+  color: var(--color-text-light);
+}
+.cm-editor
+  .cm-tooltip.cm-completionInfo
+  .autocomplete-info-example
+  + .autocomplete-info-example,
+.cm-editor
+  .cm-tooltip.cm-cursorInfo
+  .autocomplete-info-example
+  + .autocomplete-info-example,
+.cm-editor
+  .cm-tooltip-hover
+  .autocomplete-info-example
+  + .autocomplete-info-example {
+  margin-top: var(--spacing-4xs);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .autocomplete-info-section-title,
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-section-title,
+.cm-editor .cm-tooltip-hover .autocomplete-info-section-title {
+  margin: var(--spacing-3xs) 0;
+  padding: 0 var(--spacing-xs) var(--spacing-3xs) var(--spacing-xs);
+  border-bottom: 1px solid var(--color-autocomplete-section-header-border);
+  text-transform: uppercase;
+  color: var(--color-text-dark);
+  font-size: var(--font-size-3xs);
+  font-weight: var(--font-weight-bold);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .ts-keyword,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-punctuation,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-keyword,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-punctuation,
+.cm-editor .cm-tooltip-hover .ts-keyword,
+.cm-editor .cm-tooltip-hover .ts-punctuation {
+  color: var(--color-code-tags-keyword);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .ts-stringLiteral,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-primitive,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-stringLiteral,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-primitive,
+.cm-editor .cm-tooltip-hover .ts-stringLiteral,
+.cm-editor .cm-tooltip-hover .ts-primitive {
+  color: var(--color-code-tags-primitive);
+}
+.cm-editor .cm-tooltip.cm-completionInfo .ts-localName,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-parameterName,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-methodName,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-localName,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-parameterName,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-methodName,
+.cm-editor .cm-tooltip-hover .ts-localName,
+.cm-editor .cm-tooltip-hover .ts-parameterName,
+.cm-editor .cm-tooltip-hover .ts-methodName {
+  color: #005cc5;
+}
+.cm-editor .cm-tooltip.cm-completionInfo .ts-typeName,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-interfaceName,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-className,
+.cm-editor .cm-tooltip.cm-completionInfo .ts-aliasName,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-typeName,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-interfaceName,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-className,
+.cm-editor .cm-tooltip.cm-cursorInfo .ts-aliasName,
+.cm-editor .cm-tooltip-hover .ts-typeName,
+.cm-editor .cm-tooltip-hover .ts-interfaceName,
+.cm-editor .cm-tooltip-hover .ts-className,
+.cm-editor .cm-tooltip-hover .ts-aliasName {
+  color: #6f42c1;
+}
+.cm-editor .cm-tooltip.cm-completionInfo {
+  background-color: var(--prim-gray-0);
+  border: 1px solid hsl(220, 25%, 88%);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
+  clip-path: inset(-12px -12px -12px 0);
+  border-left: none;
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  line-height: 1.35;
+  padding: 0;
+  top: 0 !important;
+  left: 100% !important;
+  right: auto !important;
+  max-width: 280px !important;
+  height: 100%;
+}
+.cm-editor .cm-tooltip.cm-completionInfo.cm-completionInfo-left-narrow,
+.cm-editor .cm-tooltip.cm-completionInfo.cm-completionInfo-right-narrow {
+  display: none;
+}
+.cm-editor .cm-tooltip.cm-completionInfo.cm-completionInfo-left {
+  left: auto !important;
+  right: 100% !important;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-left: 1px solid hsl(220, 25%, 88%);
+  border-right: none;
+}
+.cm-editor .cm-tooltip.cm-completionInfo.cm-completionInfo-right {
+  background-color: hsl(220, 50%, 97.5%);
+  min-width: 200px;
+}
+.cm-editor .cm-tooltip.cm-cursorInfo,
+.cm-editor .cm-tooltip-hover {
+  background-color: hsl(220, 50%, 97.5%);
+  border: 1px solid hsl(220, 25%, 88%);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.07);
+  border-radius: 4px;
+  line-height: 1.35;
+  padding: 0;
+  max-width: 280px;
+}
+.cm-editor .cm-tooltip.cm-cursorInfo .cm-tooltip-section:not(:first-child),
+.cm-editor .cm-tooltip-hover .cm-tooltip-section:not(:first-child) {
+  border-top: 1px solid hsl(220, 25%, 88%);
+}
+.cm-editor .cm-tooltip.cm-cursorInfo .autocomplete-info-container,
+.cm-editor .cm-tooltip-hover .autocomplete-info-container {
+  height: auto;
+  max-height: min(220px, 20vh);
+}

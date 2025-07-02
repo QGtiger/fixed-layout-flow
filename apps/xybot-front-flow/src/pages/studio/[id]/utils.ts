@@ -85,6 +85,7 @@ export function UpgradeFlowMeta(meta: FlowMeta) {
           },
         });
       }
+      node.connectorName = `${node.sequence}.${node.connectorName}`;
       return node;
     });
   }

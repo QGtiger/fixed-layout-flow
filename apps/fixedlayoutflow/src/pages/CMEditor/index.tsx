@@ -1,5 +1,5 @@
 import { autocompletion } from "@codemirror/autocomplete";
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { EditorState } from "@uiw/react-codemirror";
 import { TernServerInstance } from "./extensions/autocompletion";
 import { n8nExpression } from "codemirror-lang-n8n-expression";
 import { useState } from "react";
@@ -14,6 +14,10 @@ export default function CMEditor() {
       value={value}
       onChange={setValue}
       extensions={[
+        // 单行文本
+        EditorState.transactionFilter.of((tr) => {
+          return tr.newDoc.lines > 1 ? [] : [tr];
+        }),
         autocompletion({
           override: [
             (context) => {
