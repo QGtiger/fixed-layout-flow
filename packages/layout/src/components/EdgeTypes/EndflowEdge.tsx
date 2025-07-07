@@ -82,7 +82,7 @@ export function EndflowEdge(props: CustomEdgeProps) {
   const { getNode } = useReactFlow();
   const sourceNode = getNode(source);
   const targetNode = getNode(target);
-  const { addCustomNode, onAddBlockByData } = useFixedLayoutStore();
+  const { addNode, onAddBlockByData } = useFixedLayoutStore();
 
   const styles = useStrokeStyle({
     sourceId: source,
@@ -117,14 +117,11 @@ export function EndflowEdge(props: CustomEdgeProps) {
         >
           <CommonAddButton
             onClick={async () => {
-              const _data = await onAddBlockByData?.({
-                type: "custom",
-              });
-
-              addCustomNode({
-                parentId: data.parentId,
-                data: _data,
-              });
+              onAddBlockByData &&
+                addNode({
+                  parentId: data.parentId,
+                  data: await onAddBlockByData?.(),
+                });
             }}
           />
         </div>

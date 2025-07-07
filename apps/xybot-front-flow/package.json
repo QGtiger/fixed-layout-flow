@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "xybot dev",
-    "build": "xybot build"
+    "build": "xybot build",
+    "vite:dev": "vite"
   },
   "files": [
     "dist/",

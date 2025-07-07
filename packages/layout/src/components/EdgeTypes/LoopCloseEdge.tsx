@@ -51,7 +51,7 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
     sourceId: source,
     targetId: target,
   });
-  const { addCustomNode, onAddBlockByData } = useFixedLayoutStore();
+  const { addNode, onAddBlockByData } = useFixedLayoutStore();
 
   if (targetVw === 0) return null;
 
@@ -90,12 +90,11 @@ export default function LoopCloseEdge(props: CustomEdgeProps) {
         >
           <CommonAddButton
             onClick={async () => {
-              addCustomNode({
-                parentId: data.parentId,
-                data: await onAddBlockByData?.({
-                  type: "custom",
-                }),
-              });
+              onAddBlockByData &&
+                addNode({
+                  parentId: data.parentId,
+                  data: await onAddBlockByData?.(),
+                });
             }}
           />
         </div>

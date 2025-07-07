@@ -1,6 +1,7 @@
 import { getAccessToken, setAccessToken } from "@/api";
 import { request } from "@/api/request";
 import { createCustomModel } from "@/common/createModel";
+import { initMdConfig } from "@/utils/md";
 import { useMount, useReactive, useRequest } from "ahooks";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -14,6 +15,7 @@ interface UserInfo {
   name: string;
   enterpriseUuid: string;
   nickName: string;
+  enterpriseRoleCode?: string; // 企业角色代码
 }
 
 export const UserModel = createCustomModel(() => {
@@ -50,6 +52,8 @@ export const UserModel = createCustomModel(() => {
 
         if (data) {
           Object.assign(userViewModel, data);
+          // @ts-expect-error
+          initMdConfig(data);
         }
       }
       return userViewModel;

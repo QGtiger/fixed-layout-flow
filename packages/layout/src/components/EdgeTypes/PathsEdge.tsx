@@ -57,7 +57,7 @@ export default memo(function PathsEdge(props: CustomEdgeProps) {
     targetX,
     targetY,
   });
-  const { addPathRuleNode, onAddBlockByData } = useFixedLayoutStore();
+  const { addPathRuleNode } = useFixedLayoutStore();
 
   const styles = useStrokeStyle({
     sourceId: source,
@@ -81,12 +81,8 @@ export default memo(function PathsEdge(props: CustomEdgeProps) {
         >
           <CommonAddButton
             onClick={async () => {
-              const _d = await onAddBlockByData?.({
-                type: "pathRule",
-              });
               addPathRuleNode({
                 parentId: source,
-                data: _d,
               });
             }}
             label="添加分支"

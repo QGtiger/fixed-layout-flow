@@ -41,14 +41,11 @@ export default function LoopInnerEdge(props: CustomEdgeProps) {
         >
           <CommonAddButton
             onClick={async () => {
-              const _data = await onAddBlockByData?.({
-                type: "custom",
-              });
-
-              addCustomNodeByInnerLoop({
-                parentId: data.parentId,
-                data: _data,
-              });
+              onAddBlockByData &&
+                addCustomNodeByInnerLoop({
+                  parentId: data.parentId,
+                  data: await onAddBlockByData?.(),
+                });
             }}
           />
         </div>

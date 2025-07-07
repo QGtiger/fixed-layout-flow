@@ -1,11 +1,5 @@
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  EdgeProps,
-  getStraightPath,
-  useReactFlow,
-} from "@xyflow/react";
+import { BaseEdge, getStraightPath } from "@xyflow/react";
 import CommonAddButton from "./components/CommonAddButton";
 import { CustomEdgeProps } from "@/type";
 import useStrokeStyle from "@/hooks/useStorkeStyle";
@@ -28,7 +22,7 @@ export default function CustomEdge(props: CustomEdgeProps) {
     targetX,
     targetY,
   });
-  const { onAddBlockByData, addCustomNode } = useFixedLayoutStore();
+  const { addNode, onAddBlockByData } = useFixedLayoutStore();
 
   const styles = useStrokeStyle({
     sourceId: source,
@@ -54,12 +48,11 @@ export default function CustomEdge(props: CustomEdgeProps) {
         >
           <CommonAddButton
             onClick={async () => {
-              addCustomNode({
-                parentId: data.parentId,
-                data: await onAddBlockByData?.({
-                  type: "custom",
-                }),
-              });
+              onAddBlockByData &&
+                addNode({
+                  parentId: data.parentId,
+                  data: await onAddBlockByData(),
+                });
             }}
           />
         </div>

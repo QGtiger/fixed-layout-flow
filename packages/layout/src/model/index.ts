@@ -4,6 +4,7 @@ import { Edge, Node } from "@xyflow/react";
 import { createContext, CSSProperties } from "react";
 import { createStore } from "zustand";
 import { queueEffectFn } from "./queueTickFn";
+import { nanoid } from "nanoid";
 
 export interface FixedLayoutModelConfig {
   initialBlocks: FixedFlowBlocks;
@@ -12,6 +13,8 @@ export interface FixedLayoutModelConfig {
     | ((sourceNode: CustomNode, targetNode: CustomNode) => CSSProperties);
   viewMode?: boolean;
   pathRuleInsertIndex?: number;
+  defaultPathRuleList: BlockData[];
+  pathRuleData: BlockData;
 
   /**
    * 自定义节点渲染器
@@ -20,9 +23,7 @@ export interface FixedLayoutModelConfig {
    */
   nodeRenderer?: (block: Block) => React.ReactNode;
   placeholderRenderer?: (block: Block) => React.ReactNode;
-  onAddBlockByData?: (opts: {
-    type: "pathRule" | "custom";
-  }) => Promise<BlockData>;
+  onAddBlockByData?: () => Promise<BlockWithoutId>;
 }
 
 export type FixedLayoutModelState = {
@@ -31,16 +32,22 @@ export type FixedLayoutModelState = {
   layoutEngine: FixFlowLayoutEngine;
 } & FixedLayoutModelConfig;
 
+type BlockWithoutId = Omit<Block, "id">;
+
 export interface FixedLayoutModelActions {
   render: () => void;
-  addCustomNode(opt: { parentId: string; data?: BlockData }): void;
-  addPathRuleNode(opt: { parentId: string; data?: BlockData }): void;
-  addCustomNodeByInnerLoop(opt: { parentId: string; data?: BlockData }): void;
-  resetRootNode: (opt: { data?: BlockData }) => void;
+  addPathRuleNode(opt: { parentId: string }): void;
+  addCustomNodeByInnerLoop(opt: {
+    parentId: string;
+    data?: BlockWithoutId;
+  }): void;
+  resetRootNode: (opt: { data?: BlockWithoutId }) => void;
   getEdgeStrokeStyle: (
     sourceNode: CustomNode,
     targetNode: CustomNode
   ) => CSSProperties;
+
+  addNode: (opts: { parentId: string; data: BlockWithoutId }) => void;
 }
 
 export type FixedLayoutStoreType = ReturnType<
@@ -75,19 +82,21 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
           stroke: "#cccccc",
           strokeWidth: 1,
         },
-        addCustomNode(opt) {
+        addNode({ parentId, data }) {
           if (viewMode) return;
-          engineIns.addCustomFlowBlockById({
-            id: opt.parentId,
-            data: opt.data,
+          engineIns.addFlowBlockById({
+            id: parentId,
+            block: {
+              id: `${data.type}_${nanoid(5)}`,
+              ...data,
+            },
           });
           render();
         },
-        addPathRuleNode({ parentId, data }) {
+        addPathRuleNode({ parentId }) {
           if (viewMode) return;
           engineIns.addPathRuleFlowBlockById({
             id: parentId,
-            data,
           });
           render();
         },
@@ -104,16 +113,25 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
           );
         },
         addCustomNodeByInnerLoop({ parentId, data }) {
-          if (viewMode) return;
+          if (viewMode || !data) return;
           engineIns.addInnerBlockById({
             id: parentId,
-            data,
+            data: {
+              id: `${data.type}_${nanoid(5)}`,
+              ...data,
+            },
           });
           render();
         },
         resetRootNode: ({ data }) => {
-          if (viewMode) return;
-          engineIns.resetRootBlockById({ data, replace: true });
+          if (viewMode || !data) return;
+          engineIns.resetRootBlockById({
+            data: {
+              id: `${data.type}_${nanoid(5)}`,
+              ...data,
+            },
+            replace: true,
+          });
           render();
         },
       };

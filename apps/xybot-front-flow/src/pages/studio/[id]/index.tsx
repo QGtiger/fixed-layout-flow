@@ -5,9 +5,23 @@ import { GeometricLoader } from "@/components/GeometricLoader";
 import CustomNode from "./components/CustomNode";
 import ConfigPanel from "./components/ConfigPanel";
 
-function CustomNodeRenderer({ data }: Block<WorkflowNode>) {
+import {
+  defaultPathRuleData,
+  generateNodeData,
+  pathRuleData,
+} from "./buildInConnector";
+import AddNodeModal from "./components/AddNodeModal";
+import { IPaaSModel } from "./IPaaSModel";
+import {
+  EndConnector,
+  LoopConnector,
+  PathsConnector,
+} from "@xybot/build-in-connectors";
+import { Modal } from "antd";
+
+function CustomNodeRenderer({ data, id }: Block<WorkflowNode>) {
   if (!data) return null;
-  return <CustomNode {...data} />;
+  return <CustomNode {...data} id={id} />;
 }
 
 function PlaceholderRenderer() {
@@ -20,7 +34,9 @@ function PlaceholderRenderer() {
 
 export default function StudioDetail() {
   const { blocks, loading } = StudioFlowModel.useModel();
+  const { queryIPaaSConnectorDetail } = IPaaSModel.useModel();
   console.log("blocks", blocks, loading);
+  const [modal, modalHolder] = Modal.useModal();
 
   if (loading) {
     return <GeometricLoader />;
@@ -38,9 +54,46 @@ export default function StudioDetail() {
           stroke: "#cccccc",
           strokeWidth: 2,
         }}
+        defaultPathRuleList={[pathRuleData, defaultPathRuleData]}
+        pathRuleData={pathRuleData}
+        onAddBlockByData={() => {
+          return new Promise((r) => {
+            const ins = modal.confirm({
+              title: "添加节点",
+              icon: null,
+              width: 800,
+              content: (
+                <AddNodeModal
+                  onItemClick={async ({ code, version }) => {
+                    const detail = await queryIPaaSConnectorDetail({
+                      code,
+                      version,
+                    });
+                    let type: Block["type"] = "custom";
+                    if (detail.code === LoopConnector.code) {
+                      type = "loop";
+                    } else if (detail.code === EndConnector.code) {
+                      type = "end";
+                    } else if (detail.code === PathsConnector.code) {
+                      type = "paths";
+                    }
+                    ins.destroy();
+                    r({
+                      type,
+                      data: generateNodeData({
+                        connectorDetail: detail,
+                      }),
+                    });
+                  }}
+                />
+              ),
+            });
+          });
+        }}
       />
 
       <ConfigPanel />
+      {modalHolder}
     </div>
   );
 }

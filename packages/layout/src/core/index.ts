@@ -32,27 +32,27 @@ function getEmptyBlock(): Block {
   };
 }
 
-function getCustomBlock(data?: BlockData): Block {
-  return {
-    id: `custom_${nanoid(5)}`,
-    type: "custom" as const,
-    data: data || {},
-  };
-}
-
 export class FixFlowLayoutEngine {
   flowBlocksTree: FlowBlock;
   flowBlocksMap: Map<string, FlowBlock> = new Map();
 
   constructor(
     private blocks: FixedFlowBlocks,
-    private config?: {
+    private config: {
       pathRuleInsertIndex?: number;
+      defaultPathRuleList: BlockData[];
+      pathRuleData: BlockData;
     }
   ) {
     // 初始化布局引擎
     this.flowBlocksTree = this.generateFixedLayoutByBlocks({
       blocks: this.blocks.length ? this.blocks : [getEmptyBlock()],
+    });
+  }
+
+  generatePathRuleList(): Block[] {
+    return this.config.defaultPathRuleList.map((d) => {
+      return getPathRuleBlock(d);
     });
   }
 
@@ -77,17 +77,11 @@ export class FixFlowLayoutEngine {
     return fb;
   }
 
-  /**
-   * 添加自定义流程块
-   * @param opts - 包含 id 和 data 的选项
-   */
-  addCustomFlowBlockById({ id, data }: { id: string; data?: BlockData }) {
+  addFlowBlockById({ id, block }: { id: string; block: Block }) {
     const fb = this.getFlowBlockById(id);
-    const _d = getCustomBlock(data);
-
     fb.setNext(
       this.generateFixedLayoutByBlocks({
-        blocks: [_d],
+        blocks: [block],
       })
     );
   }
@@ -96,12 +90,12 @@ export class FixFlowLayoutEngine {
    * 添加路径流程块
    * @param opts - 包含 id 和 data 的选项
    */
-  addPathRuleFlowBlockById({ id, data }: { id: string; data?: BlockData }) {
+  addPathRuleFlowBlockById({ id }: { id: string }) {
     const fb = this.getFlowBlockById(id);
     if (!isPathsBlock(fb)) {
       throw new Error(`FlowBlock with id ${id} is not a paths block`);
     }
-    const _d = getPathRuleBlock(data);
+    const _d = getPathRuleBlock(this.config.pathRuleData);
 
     (fb as FlowPathsBlock).addChild(
       this.generateFixedLayoutByBlocks({
@@ -111,18 +105,17 @@ export class FixFlowLayoutEngine {
     );
   }
 
-  addInnerBlockById({ id, data }: { id: string; data?: BlockData }) {
+  addInnerBlockById({ id, data }: { id: string; data: Block }) {
     const fb = this.getFlowBlockById(id);
     if (!(fb instanceof FlowLoopBlock)) {
       throw new Error(`FlowBlock with id ${id} is not a loop block`);
     }
-    const _d = getCustomBlock(data);
     const innerBlock = fb.innerBlock;
     const isReplace =
       innerBlock?.blockData && isPlaceholderBlock(innerBlock?.blockData);
     fb.setInnerBlock(
       this.generateFixedLayoutByBlocks({
-        blocks: [_d],
+        blocks: [data],
       }),
       isReplace
     );
@@ -132,11 +125,11 @@ export class FixFlowLayoutEngine {
     replace = true,
     data,
   }: {
-    data?: BlockData;
+    data: Block;
     replace?: boolean;
   }) {
     const fb = this.generateFixedLayoutByBlocks({
-      blocks: [getCustomBlock(data)],
+      blocks: [data],
     });
     fb.setNext(this.flowBlocksTree);
     if (replace) {
@@ -159,15 +152,12 @@ export class FixFlowLayoutEngine {
       const block = blocks[i];
       const { data, id, type } = block;
       let flowblock: FlowBlock | undefined = undefined;
-      if (type === "custom" || type === "placeholder") {
+      if (type === "custom" || type === "placeholder" || type === "end") {
         flowblock = new FlowBlock(id, block);
       } else if (type === "paths") {
         const fb: FlowPathsBlock = (flowblock = new FlowPathsBlock(id, block));
 
-        const childrenBlocks = block.blocks || [
-          getPathRuleBlock(),
-          getPathRuleBlock(),
-        ];
+        const childrenBlocks = block.blocks || this.generatePathRuleList();
 
         childrenBlocks.forEach((b) => {
           // 递归生成子流程块

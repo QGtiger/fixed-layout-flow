@@ -1,7 +1,7 @@
 import { memo, useRef } from "react";
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 import useFixedLayoutStore from "@/hooks/useFixedLayoutStore";
-import { CustomNode, CustomNodeProps } from "@/type";
+import { CustomNodeProps } from "@/type";
 import useFlowNodeResize from "./useFlowNodeResize";
 
 const PlaceholderNode = (props: CustomNodeProps) => {
@@ -10,15 +10,14 @@ const PlaceholderNode = (props: CustomNodeProps) => {
   const {
     placeholderRenderer,
     onAddBlockByData,
-    addCustomNode,
     addCustomNodeByInnerLoop,
     resetRootNode,
+    addNode,
   } = useFixedLayoutStore();
 
   const onAdd = async () => {
-    const _d = await onAddBlockByData?.({
-      type: "custom",
-    });
+    if (!onAddBlockByData) return;
+    const _d = await onAddBlockByData?.();
     if (!data.parentId) {
       resetRootNode({ data: _d });
       return;
@@ -29,7 +28,7 @@ const PlaceholderNode = (props: CustomNodeProps) => {
         data: _d,
       });
     } else {
-      addCustomNode({
+      addNode({
         parentId: data.parentId,
         data: _d,
       });

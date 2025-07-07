@@ -1,18 +1,27 @@
 import { request } from "@/api/request";
 import { createCustomModel } from "@/common/createModel";
-import { useRequest } from "ahooks";
+import { useReactive, useRequest } from "ahooks";
 import { useCallback, useRef } from "react";
 import { buildInConnectorMap } from "./buildInConnector";
 
 export const IPaaSModel = createCustomModel(() => {
   const connectorMapRef =
     useRef<Record<string, IPaaSConnectorDetail>>(buildInConnectorMap);
+  const viewModel = useReactive({
+    actionList: [] as IPaaSConnector[],
+    triggerList: [] as IPaaSConnector[],
+  });
 
   const { data, loading } = useRequest(() => {
     return request<IPaaSConnector[]>({
       url: "/api/flow/v1/connector/listConnector",
       method: "POST",
-    }).then((r) => r.data || []);
+    }).then(({ data = [] }) => {
+      viewModel.actionList = data.filter((it) => it.hasActions);
+
+      viewModel.triggerList = data.filter((it) => it.hasTriggers);
+      return data;
+    });
   });
 
   const queryIPaaSConnectorDetail = useCallback(
@@ -72,5 +81,6 @@ export const IPaaSModel = createCustomModel(() => {
     iPaaSConnectors: data || [],
     loading,
     queryIPaaSConnectorDetail,
+    ...viewModel,
   };
 });

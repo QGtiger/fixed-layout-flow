@@ -59,8 +59,7 @@ function FixedFlow() {
 }
 
 export function FixedFlowLayout(props: FixedLayoutModelConfig) {
-  const { initialBlocks } = props;
-  const storeRef = useRef<FixedLayoutStoreType>(null);
+  const storeRef = useRef<FixedLayoutStoreType>();
 
   if (!storeRef.current) {
     storeRef.current = createFixedLayoutModelStore(props);
