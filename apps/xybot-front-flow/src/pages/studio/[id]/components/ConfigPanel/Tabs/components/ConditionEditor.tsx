@@ -98,9 +98,11 @@ const ConditionEditor = (props: any) => {
                                   rules={[
                                     {
                                       validator(rule, value, callback) {
-                                        const _v = normalize(value);
-                                        if (!_v) {
-                                          callback("请输入左侧表达式");
+                                        if (!value?.isExpression) {
+                                          const _v = normalize(value);
+                                          if (!_v) {
+                                            callback("请输入左侧表达式");
+                                          }
                                         }
                                       },
                                     },

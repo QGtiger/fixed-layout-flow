@@ -322,10 +322,10 @@ export default function ActionForm() {
   });
 
   return (
-    <div className="flex flex-col px-1 h-full gap-2">
+    <div className="flex flex-col  h-full gap-2">
       <ScrollContent
-        className="h-1 flex-1  scroll-content relative"
-        scrollClassName="h-full"
+        className="h-1 flex-1  scroll-content relative "
+        scrollClassName="h-full px-1"
       >
         <IpaasSchemaForm
           id="custom-form"
