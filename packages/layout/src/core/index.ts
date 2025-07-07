@@ -77,9 +77,13 @@ export class FixFlowLayoutEngine {
     return fb;
   }
 
+  getFlowBlockByIdWithoutThrow(id: string): FlowBlock | undefined {
+    return this.flowBlocksMap.get(id);
+  }
+
   addFlowBlockById({ id, block }: { id: string; block: Block }) {
     const fb = this.getFlowBlockById(id);
-    fb.setNext(
+    return fb.setNext(
       this.generateFixedLayoutByBlocks({
         blocks: [block],
       })
@@ -97,7 +101,7 @@ export class FixFlowLayoutEngine {
     }
     const _d = getPathRuleBlock(this.config.pathRuleData);
 
-    (fb as FlowPathsBlock).addChild(
+    return (fb as FlowPathsBlock).addChild(
       this.generateFixedLayoutByBlocks({
         blocks: [_d],
       }),
@@ -113,7 +117,7 @@ export class FixFlowLayoutEngine {
     const innerBlock = fb.innerBlock;
     const isReplace =
       innerBlock?.blockData && isPlaceholderBlock(innerBlock?.blockData);
-    fb.setInnerBlock(
+    return fb.setInnerBlock(
       this.generateFixedLayoutByBlocks({
         blocks: [data],
       }),
@@ -136,6 +140,8 @@ export class FixFlowLayoutEngine {
       this.flowBlocksTree.drop();
     }
     this.flowBlocksTree = fb;
+
+    return fb;
   }
 
   /**

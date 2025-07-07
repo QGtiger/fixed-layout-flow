@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { PropsWithChildren, useRef } from "react";
 import {
   createFixedLayoutModelStore,
   FixedLayoutModelConfig,
@@ -58,7 +58,9 @@ function FixedFlow() {
   );
 }
 
-export function FixedFlowLayout(props: FixedLayoutModelConfig) {
+export function FixedFlowLayout(
+  props: PropsWithChildren<FixedLayoutModelConfig>
+) {
   const storeRef = useRef<FixedLayoutStoreType>();
 
   if (!storeRef.current) {
@@ -68,9 +70,12 @@ export function FixedFlowLayout(props: FixedLayoutModelConfig) {
     <ReactFlowProvider>
       <StoreContext.Provider value={storeRef.current}>
         <FixedFlow />
+        {props.children}
       </StoreContext.Provider>
     </ReactFlowProvider>
   );
 }
 
 export * from "@/type";
+
+export * from "./hooks/useNode";

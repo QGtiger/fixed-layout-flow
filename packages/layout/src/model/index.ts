@@ -15,6 +15,7 @@ export interface FixedLayoutModelConfig {
   pathRuleInsertIndex?: number;
   defaultPathRuleList: BlockData[];
   pathRuleData: BlockData;
+  onNewBlock?: (block: Block) => void;
 
   /**
    * 自定义节点渲染器
@@ -57,7 +58,7 @@ export type FixedLayoutStoreType = ReturnType<
 export const StoreContext = createContext<FixedLayoutStoreType>({} as any);
 
 export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
-  const { initialBlocks, viewMode } = config;
+  const { initialBlocks, viewMode, onNewBlock } = config;
   const engineIns = new FixFlowLayoutEngine(initialBlocks, config);
   const { nodes, edges } = engineIns.exportReactFlowData();
 
@@ -84,21 +85,24 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
         },
         addNode({ parentId, data }) {
           if (viewMode) return;
-          engineIns.addFlowBlockById({
-            id: parentId,
-            block: {
-              id: `${data.type}_${nanoid(5)}`,
-              ...data,
-            },
-          });
+          onNewBlock?.(
+            engineIns.addFlowBlockById({
+              id: parentId,
+              block: {
+                id: `${data.type}_${nanoid(5)}`,
+                ...data,
+              },
+            }).blockData
+          );
           render();
         },
         addPathRuleNode({ parentId }) {
           if (viewMode) return;
-          engineIns.addPathRuleFlowBlockById({
+          const ins = engineIns.addPathRuleFlowBlockById({
             id: parentId,
           });
           render();
+          onNewBlock?.(ins.blockData);
         },
         getEdgeStrokeStyle: (sourceNode, targetNode) => {
           const { edgeStokeStyle } = get();
@@ -114,24 +118,28 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
         },
         addCustomNodeByInnerLoop({ parentId, data }) {
           if (viewMode || !data) return;
-          engineIns.addInnerBlockById({
-            id: parentId,
-            data: {
-              id: `${data.type}_${nanoid(5)}`,
-              ...data,
-            },
-          });
+          onNewBlock?.(
+            engineIns.addInnerBlockById({
+              id: parentId,
+              data: {
+                id: `${data.type}_${nanoid(5)}`,
+                ...data,
+              },
+            }).blockData
+          );
           render();
         },
         resetRootNode: ({ data }) => {
           if (viewMode || !data) return;
-          engineIns.resetRootBlockById({
-            data: {
-              id: `${data.type}_${nanoid(5)}`,
-              ...data,
-            },
-            replace: true,
-          });
+          onNewBlock?.(
+            engineIns.resetRootBlockById({
+              data: {
+                id: `${data.type}_${nanoid(5)}`,
+                ...data,
+              },
+              replace: true,
+            }).blockData
+          );
           render();
         },
       };

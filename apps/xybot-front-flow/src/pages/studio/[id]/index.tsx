@@ -33,7 +33,7 @@ function PlaceholderRenderer() {
 }
 
 export default function StudioDetail() {
-  const { blocks, loading } = StudioFlowModel.useModel();
+  const { blocks, loading, setSelectedId } = StudioFlowModel.useModel();
   const { queryIPaaSConnectorDetail } = IPaaSModel.useModel();
   console.log("blocks", blocks, loading);
   const [modal, modalHolder] = Modal.useModal();
@@ -90,9 +90,13 @@ export default function StudioDetail() {
             });
           });
         }}
-      />
+        onNewBlock={(block) => {
+          setSelectedId(block.id);
+        }}
+      >
+        <ConfigPanel />
+      </FixedFlowLayout>
 
-      <ConfigPanel />
       {modalHolder}
     </div>
   );

@@ -11,12 +11,16 @@ import ActionAuth from "./ActionAuth";
 import ActionForm from "./ActionForm";
 
 import "./index.css";
+import { useNode } from "@fixedflow/layout";
 
 export default function Tab() {
   const { tabs, activeTab, setActiveTab, panelDesc } =
     ConfigPanelModel.useModel();
   const { actionList } = ConfigPanelModel.useModel();
-  const { selectedNode } = StudioFlowModel.useModel();
+  const { selectedId } = StudioFlowModel.useModel();
+  const { data: selectedNode } = useNode<WorkflowNode>(selectedId);
+
+  console.log(selectedId, selectedNode);
 
   return (
     <div className="flex h-full flex-col">
@@ -90,7 +94,7 @@ export default function Tab() {
 
             {activeTab == "form" && (
               <div className={classNames("h-full")}>
-                <ActionForm key={selectedNode?.id} />
+                <ActionForm key={selectedId} />
               </div>
             )}
           </ScrollContent>

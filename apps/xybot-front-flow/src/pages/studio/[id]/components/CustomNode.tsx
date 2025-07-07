@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { StudioFlowModel } from "../StudioFlowModel";
 
 export default function CustomNode(props: WorkflowNode) {
-  const { setSelectedId, selectedNode } = StudioFlowModel.useModel();
+  const { setSelectedId, selectedId } = StudioFlowModel.useModel();
   return (
     <div
       onClick={() => {
@@ -11,7 +11,7 @@ export default function CustomNode(props: WorkflowNode) {
       className={classNames(
         " flex flex-col bg-white rounded-md shadow-md border overflow-hidden border-gray-300 w-[300px] hover:shadow-lg hover:border-blue-400 transition-all duration-200",
         {
-          " ring-2 ring-blue-400": selectedNode?.id === props.id,
+          " ring-2 ring-blue-400": selectedId === props.id,
         }
       )}
     >

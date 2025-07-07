@@ -9,9 +9,11 @@ import classNames from "classnames";
 import { ConfigPanelModel } from "./model";
 import { MinimalLoader } from "@/components/MinimalLoader";
 import Tab from "./Tabs";
+import { useNode } from "@fixedflow/layout";
 
 function Panel() {
-  const { selectedNode, setSelectedId } = StudioFlowModel.useModel();
+  const { selectedId, setSelectedId } = StudioFlowModel.useModel();
+  const { data: selectedNode } = useNode<WorkflowNode>(selectedId);
   const { loading, connectorDetail } = ConfigPanelModel.useModel();
   const controls = useAnimation();
   const showPanel = !!selectedNode;
@@ -53,7 +55,7 @@ function Panel() {
         height: "calc(100% - 10px)",
       }}
       className={classNames(
-        " mr-2 flex flex-col   absolute right-0 top-0 pt-[36px] h-full",
+        " mr-2 flex flex-col   fixed right-0 top-0 pt-[36px] h-full",
         { " pointer-events-none": !showPanel }
       )}
     >

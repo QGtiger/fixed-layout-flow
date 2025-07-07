@@ -148,20 +148,13 @@ export const StudioFlowModel = createCustomModel(() => {
     };
   }, [worlflows]);
 
-  const selectedNode = useCreation(() => {
-    if (!selectedId) {
-      return undefined;
-    }
-    return nodeController.getNode(selectedId);
-  }, [selectedId, nodeController]);
-
   return {
     loading,
     blocks,
     ...nodeController,
-    selectedNode,
     setSelectedId: (id: string) => {
       viewModel.selectedId = id;
     },
+    ...viewModel,
   };
 });

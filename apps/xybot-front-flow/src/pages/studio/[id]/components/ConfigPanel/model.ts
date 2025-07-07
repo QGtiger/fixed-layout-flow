@@ -3,6 +3,7 @@ import { StudioFlowModel } from "../../StudioFlowModel";
 import { IPaaSModel } from "../../IPaaSModel";
 import { useReactive, useRequest } from "ahooks";
 import { useEffect, useLayoutEffect } from "react";
+import { useNode } from "@fixedflow/layout";
 
 interface TabProps {
   completed: boolean;
@@ -14,9 +15,10 @@ interface TabProps {
 }
 
 export const ConfigPanelModel = createCustomModel(() => {
-  const { selectedNode } = StudioFlowModel.useModel();
+  const { selectedId } = StudioFlowModel.useModel();
+  const { data: selectedNode, hasParent } = useNode<WorkflowNode>(selectedId);
   const { queryIPaaSConnectorDetail } = IPaaSModel.useModel();
-  const isTriggerNode = !selectedNode?.parent;
+  const isTriggerNode = !hasParent;
 
   const { actionCode, description } = selectedNode || {};
 

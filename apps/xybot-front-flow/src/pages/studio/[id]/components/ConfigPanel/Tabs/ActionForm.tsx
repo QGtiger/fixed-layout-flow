@@ -28,6 +28,8 @@ import classNames from "classnames";
 import { motion } from "framer-motion";
 import MonacoEditor from "./components/MonacoEditor";
 import CMEditor from "./components/CMEditor";
+import { useNode } from "@fixedflow/layout";
+import ScrollContent from "@/components/ScrollContent";
 
 const testSchema: IPaasFormSchema[] = [
   {
@@ -299,7 +301,8 @@ function normalize(v: any) {
 export default function ActionForm() {
   const [form] = Form.useForm();
   const { actionItem } = ConfigPanelModel.useModel();
-  const { selectedNode } = StudioFlowModel.useModel();
+  const { selectedId } = StudioFlowModel.useModel();
+  const { data: selectedNode } = useNode<WorkflowNode>(selectedId);
   const { id } = useParams<{ id: string }>();
 
   if (!actionItem || !selectedNode || !id) return <span></span>;
@@ -319,78 +322,86 @@ export default function ActionForm() {
   });
 
   return (
-    <div className="flex flex-col px-1">
-      <IpaasSchemaForm
-        id="custom-form"
-        editorMap={ExtraEditorMap}
-        schema={actionItem.viewMeta.inputs || []}
-        form={form}
-        // @ts-expect-error
-        commonEditorWarpper={FormItemWarpper}
-        normalize={normalize} // 只返回 value 字段
-        initialValues={inputs}
-        validatefield={({ form, name, value, validate }) => {
-          return new Promise<void>(async (resolve, reject) => {
-            const v: FormItemValueType = value;
-            if (v.isExpression) {
-              resolve();
-            } else {
-              validate(v).then(resolve, reject);
-            }
-          });
-        }}
-        // validateTrigger={["onBlur"]}
-        // dynamicScriptExcuteWithOptions={async (config: {
-        //   script: string;
-        //   extParams: Record<string, any>;
-        // }) => {
-        //   console.log("dynamicScriptExcuteWithOptions config", config);
-        //   await new Promise((resolve) => setTimeout(resolve, 1000));
-        //   return [
-        //     { label: "选项1", value: "option1" },
-        //     { label: "选项2", value: "option2" },
-        //     { label: "选项3", value: "option3" },
-        //   ];
-        // }}
+    <div className="flex flex-col px-1 h-full gap-2">
+      <ScrollContent
+        className="h-1 flex-1  scroll-content relative"
+        scrollClassName="h-full"
+      >
+        <IpaasSchemaForm
+          id="custom-form"
+          editorMap={ExtraEditorMap}
+          schema={actionItem.viewMeta.inputs || []}
+          form={form}
+          // @ts-expect-error
+          commonEditorWarpper={FormItemWarpper}
+          normalize={normalize} // 只返回 value 字段
+          initialValues={inputs}
+          validatefield={({ form, name, value, validate }) => {
+            return new Promise<void>(async (resolve, reject) => {
+              const v: FormItemValueType = value;
+              if (v.isExpression) {
+                resolve();
+              } else {
+                validate(v).then(resolve, reject);
+              }
+            });
+          }}
+          // validateTrigger={["onBlur"]}
+          // dynamicScriptExcuteWithOptions={async (config: {
+          //   script: string;
+          //   extParams: Record<string, any>;
+          // }) => {
+          //   console.log("dynamicScriptExcuteWithOptions config", config);
+          //   await new Promise((resolve) => setTimeout(resolve, 1000));
+          //   return [
+          //     { label: "选项1", value: "option1" },
+          //     { label: "选项2", value: "option2" },
+          //     { label: "选项3", value: "option3" },
+          //   ];
+          // }}
 
-        dynamicScriptExcuteWithOptions={async (config) => {
-          if (!config.script) return [];
-          const formValues = formValueNormalize(form.getFieldsValue());
-          console.log("dynamicScriptExcuteWithOptions formValues", formValues);
-          const { data } = await request({
-            url: "/api/tool/ipaas/dynamicData/execute",
-            method: "POST",
-            data: {
-              connectorCode,
-              connectorVersion: version,
-              authId,
-              script: config.script,
-              inputs: {
-                ...formValues,
-                ...config.extParams, // 传入额外参数
+          dynamicScriptExcuteWithOptions={async (config) => {
+            if (!config.script) return [];
+            const formValues = formValueNormalize(form.getFieldsValue());
+            console.log(
+              "dynamicScriptExcuteWithOptions formValues",
+              formValues
+            );
+            const { data } = await request({
+              url: "/api/tool/ipaas/dynamicData/execute",
+              method: "POST",
+              data: {
+                connectorCode,
+                connectorVersion: version,
+                authId,
+                script: config.script,
+                inputs: {
+                  ...formValues,
+                  ...config.extParams, // 传入额外参数
+                },
               },
-            },
-          });
-          return data?.data || [];
-        }}
-        dynamicScriptExcuteWithFormSchema={async (config) => {
-          if (!config.script) return [];
+            });
+            return data?.data || [];
+          }}
+          dynamicScriptExcuteWithFormSchema={async (config) => {
+            if (!config.script) return [];
 
-          const formValues = formValueNormalize(form.getFieldsValue());
-          const { data } = await request({
-            url: "/api/tool/ipaas/dynamicData/execute",
-            method: "POST",
-            data: {
-              connectorCode,
-              connectorVersion: version,
-              authId,
-              script: config.script,
-              inputs: formValues,
-            },
-          });
-          return data?.data || [];
-        }}
-      />
+            const formValues = formValueNormalize(form.getFieldsValue());
+            const { data } = await request({
+              url: "/api/tool/ipaas/dynamicData/execute",
+              method: "POST",
+              data: {
+                connectorCode,
+                connectorVersion: version,
+                authId,
+                script: config.script,
+                inputs: formValues,
+              },
+            });
+            return data?.data || [];
+          }}
+        />
+      </ScrollContent>
       <Button
         type="primary"
         onClick={() => {
@@ -401,6 +412,7 @@ export default function ActionForm() {
           );
           form.validateFields();
         }}
+        className=" flex-shrink-0"
       >
         完成
       </Button>
