@@ -34,7 +34,6 @@ export default function CustomNode(props: WorkflowNode) {
         <div
           className=" text-gray-700"
           style={{
-            lineHeight: "2",
             wordBreak: "break-all",
             wordWrap: "break-word",
           }}

@@ -23,7 +23,7 @@ import { getOrigin } from "@/utils/path";
 import { useParams } from "react-router-dom";
 import CustomFormexDesigner from "./components/FormexDesigner";
 import { useBoolean, useCreation } from "ahooks";
-import { deepClone } from "@/utils";
+import { deepClone, uploadFileByFlow } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import MonacoEditor from "./components/MonacoEditor";
@@ -332,6 +332,7 @@ export default function ActionForm() {
           editorMap={ExtraEditorMap}
           schema={actionItem.viewMeta.inputs || []}
           form={form}
+          uploadFile={uploadFileByFlow}
           // @ts-expect-error
           commonEditorWarpper={FormItemWarpper}
           normalize={normalize} // 只返回 value 字段
