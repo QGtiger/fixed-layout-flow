@@ -13,4 +13,11 @@ declare module "*.svg?react" {
 interface Window {
   rawWindow: Window;
   __MICRO_APP_ENVIRONMENT__?: boolean;
+
+  YD: {
+    MICRO_APPS: {
+      name: string;
+      url: string;
+    }[];
+  };
 }

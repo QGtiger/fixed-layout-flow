@@ -331,9 +331,15 @@ export default function ActionForm() {
           schema={finalInputs}
           form={form}
           uploadFile={uploadFileByFlow}
-          onValuesChange={() => {
+          onValuesChange={async () => {
             updateNode({
               inputs: form.getFieldsValue(),
+              formStatus: await form
+                ?.validateFields({
+                  validateOnly: true,
+                })
+                .then(() => true)
+                .catch(() => false),
             });
           }}
           // @ts-expect-error

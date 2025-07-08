@@ -8,6 +8,8 @@ import ScrollContent from "@/components/ScrollContent";
 import { Button } from "antd";
 import { ConfigPanelModel } from "../model";
 import { useEffect } from "react";
+import { getOrigin } from "@/utils/path";
+import { createMessage } from "@/utils/customMessage";
 
 interface AuthItem {
   /**
@@ -52,7 +54,17 @@ enum AuthStatus {
   Success = "success",
 }
 
-function AuthItem({ active, item }: { active?: boolean; item: AuthItem }) {
+function AuthItem({
+  active,
+  item,
+  onClick,
+  onEditClick,
+}: {
+  active?: boolean;
+  item: AuthItem;
+  onClick?: () => void;
+  onEditClick?: React.MouseEventHandler;
+}) {
   const disabled = false;
   const { authName, connectorName, owner, status, createTime } = item;
   const success = status === "success";
@@ -68,6 +80,7 @@ function AuthItem({ active, item }: { active?: boolean; item: AuthItem }) {
           "!bg-[#EFF4FF]": active,
         }
       )}
+      onClick={onClick}
     >
       <span className="mb-2 inline-flex items-center justify-start space-x-2">
         <span className="text-sm font-semibold inline-block max-w-[200px]  overflow-hidden text-ellipsis whitespace-nowrap truncate">
@@ -76,7 +89,7 @@ function AuthItem({ active, item }: { active?: boolean; item: AuthItem }) {
 
         {owner && (
           <span>
-            <EditOutlined />{" "}
+            <EditOutlined onClick={onEditClick} />{" "}
           </span>
         )}
         <span
@@ -94,8 +107,9 @@ function AuthItem({ active, item }: { active?: boolean; item: AuthItem }) {
 }
 
 export default function ActionAuth({ authId }: { authId?: string }) {
-  const { connectorDetail, selectedNode } = ConfigPanelModel.useModel();
-  const { data: authList } = useRequest(async () => {
+  const { connectorDetail, selectedNode, updateNode } =
+    ConfigPanelModel.useModel();
+  const { data: authList, run: queryAuthList } = useRequest(async () => {
     if (!connectorDetail?.needAuth) return;
     return request<AuthItem[]>({
       url: "/api/tool/ipaas/auth/queryAuthedList",
@@ -142,6 +156,39 @@ export default function ActionAuth({ authId }: { authId?: string }) {
     }
   }, [authId]);
 
+  useEffect(() => {
+    function messageCb(event: MessageEvent<any>) {
+      // 检查 event.origin 以确保消息来自可信的源
+
+      // 由于可能会接收到两条信息，一条为 ‘iPaaS-authSuccess’ ，一条为 {authId: ""}
+      try {
+        if (typeof event.data === "object") {
+          const { authId } = event.data;
+          if (authId) {
+            // AS 业务实现
+            updateNode({
+              authId,
+            });
+          }
+        } else if (event.data === "iPaaS-authSuccess") {
+          // 授权成功
+          createMessage({
+            type: "success",
+            content: "验证并添加账户成功",
+          });
+          queryAuthList();
+        }
+      } catch (e) {
+        // something error
+      }
+    }
+    window.addEventListener("message", messageCb);
+
+    return () => {
+      window.removeEventListener("message", messageCb);
+    };
+  }, []);
+
   if (!authList) {
     return (
       <div className="relative h-[300px]">
@@ -163,11 +210,40 @@ export default function ActionAuth({ authId }: { authId?: string }) {
       <ScrollContent className="h-1 flex-1  scroll-content relative">
         <div className="flex flex-col gap-2">
           {authList.map((item) => (
-            <AuthItem key={item.authId} item={item} />
+            <AuthItem
+              key={item.authId}
+              item={item}
+              active={authId === item.authId}
+              onClick={() => {
+                if (item.authId !== authId) {
+                  updateNode({
+                    authId: item.authId,
+                  });
+                }
+              }}
+              onEditClick={(e) => {
+                e.stopPropagation();
+                window.open(
+                  `/dispatch/app/ipaas/addAuthAccount?connectorCode=${selectedNode?.connectorCode}&connectorVersion=${selectedNode?.version}&edit=true&authId=${item.authId}`,
+                  "_blank"
+                );
+              }}
+            />
           ))}
         </div>
       </ScrollContent>
-      <Button block type="primary" className="py-2" icon={<PlusOutlined />}>
+      <Button
+        block
+        type="primary"
+        className="py-2"
+        icon={<PlusOutlined />}
+        onClick={() => {
+          window.open(
+            `/dispatch/app/ipaas/addAuthAccount?connectorCode=${selectedNode?.connectorCode}&connectorVersion=${selectedNode?.version}`,
+            "_blank"
+          );
+        }}
+      >
         添加账号
       </Button>
     </div>
