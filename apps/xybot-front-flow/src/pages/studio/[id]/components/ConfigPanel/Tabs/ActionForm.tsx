@@ -22,13 +22,12 @@ import ConditionEditor from "./components/ConditionEditor";
 import { getOrigin } from "@/utils/path";
 import { useParams } from "react-router-dom";
 import CustomFormexDesigner from "./components/FormexDesigner";
-import { useBoolean, useCreation } from "ahooks";
+import { useBoolean, useCreation, useDebounceFn, useUpdate } from "ahooks";
 import { deepClone, uploadFileByFlow } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import MonacoEditor from "./components/MonacoEditor";
 import CMEditor from "./components/CMEditor";
-import { useNode } from "@fixedflow/layout";
 import ScrollContent from "@/components/ScrollContent";
 
 const testSchema: IPaasFormSchema[] = [
@@ -135,13 +134,6 @@ const testSchema: IPaasFormSchema[] = [
     },
   },
 ];
-
-function replaceTemplateText(text: string, data: any) {
-  if (!text) return "";
-  return text.replace(/{{(.*?)}}/g, (match, key) => {
-    return data[key.trim()] || "";
-  });
-}
 
 const noExpressionKinds = [
   "DynamicActionForm",
@@ -298,28 +290,22 @@ function normalize(v: any) {
   return v?.value;
 }
 
-export default function ActionForm() {
+export default function ActionForm({
+  initialValues,
+  connectorCode,
+  version,
+  authId,
+  onValuesChange,
+  schema,
+}: {
+  schema?: IPaasFormSchema[];
+  initialValues?: Record<string, FormItemValueType>;
+  connectorCode?: string;
+  version?: string;
+  authId?: string;
+  onValuesChange?: (values: Record<string, FormItemValueType>) => void;
+}) {
   const [form] = Form.useForm();
-  const { actionItem } = ConfigPanelModel.useModel();
-  const { selectedId } = StudioFlowModel.useModel();
-  const { data: selectedNode } = useNode<WorkflowNode>(selectedId);
-  const { id } = useParams<{ id: string }>();
-
-  if (!actionItem || !selectedNode || !id) return <span></span>;
-  const { connectorCode, version, authId, inputs } = selectedNode;
-
-  const finalInputs: IPaasFormSchema[] = actionItem.viewMeta.inputs || [];
-  finalInputs.forEach((it) => {
-    if (it.editor?.kind === "InputWithCopy") {
-      it.editor.config.defaultValue = replaceTemplateText(
-        it.editor.config.defaultValue,
-        {
-          flowId: id,
-          host: getOrigin(),
-        }
-      );
-    }
-  });
 
   return (
     <div className="flex flex-col  h-full gap-2">
@@ -330,17 +316,20 @@ export default function ActionForm() {
         <IpaasSchemaForm
           id="custom-form"
           editorMap={ExtraEditorMap}
-          schema={actionItem.viewMeta.inputs || []}
+          schema={schema || []}
           form={form}
           uploadFile={uploadFileByFlow}
+          onValuesChange={() => {
+            onValuesChange?.(form.getFieldsValue());
+          }}
           // @ts-expect-error
           commonEditorWarpper={FormItemWarpper}
           normalize={normalize} // 只返回 value 字段
-          initialValues={inputs}
+          initialValues={initialValues}
           validatefield={({ form, name, value, validate }) => {
             return new Promise<void>(async (resolve, reject) => {
               const v: FormItemValueType = value;
-              if (v.isExpression) {
+              if (v?.isExpression) {
                 resolve();
               } else {
                 validate(v).then(resolve, reject);

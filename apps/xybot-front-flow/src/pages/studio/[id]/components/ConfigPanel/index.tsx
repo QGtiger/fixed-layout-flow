@@ -9,12 +9,11 @@ import classNames from "classnames";
 import { ConfigPanelModel } from "./model";
 import { MinimalLoader } from "@/components/MinimalLoader";
 import Tab from "./Tabs";
-import { useNode } from "@fixedflow/layout";
 
 function Panel() {
-  const { selectedId, setSelectedId } = StudioFlowModel.useModel();
-  const { data: selectedNode } = useNode<WorkflowNode>(selectedId);
-  const { loading, connectorDetail } = ConfigPanelModel.useModel();
+  const { setSelectedId } = StudioFlowModel.useModel();
+  const { loading, connectorDetail, selectedNode } =
+    ConfigPanelModel.useModel();
   const controls = useAnimation();
   const showPanel = !!selectedNode;
   const [safeSelectedNode, setSafeSelectedNode] = useSafeState(selectedNode!);

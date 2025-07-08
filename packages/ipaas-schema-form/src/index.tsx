@@ -37,6 +37,7 @@ export function IpaasSchemaForm(
     dynamicScriptExcuteWithFormSchema,
     normalize,
     validatefield,
+    uploadFile,
     ...restProps
   } = props;
   const [form] = Form.useForm();

@@ -1,9 +1,10 @@
 import { createCustomModel } from "@/common/createModel";
 import { StudioFlowModel } from "../../StudioFlowModel";
 import { IPaaSModel } from "../../IPaaSModel";
-import { useReactive, useRequest } from "ahooks";
+import { useReactive, useRequest, useUpdate } from "ahooks";
 import { useEffect, useLayoutEffect } from "react";
-import { useNode } from "@fixedflow/layout";
+import { useSelectedBlock } from "../../hooks";
+import { useNodeBlockDataUpdate } from "@fixedflow/layout";
 
 interface TabProps {
   completed: boolean;
@@ -16,11 +17,20 @@ interface TabProps {
 
 export const ConfigPanelModel = createCustomModel(() => {
   const { selectedId } = StudioFlowModel.useModel();
-  const { data: selectedNode, hasParent } = useNode<WorkflowNode>(selectedId);
   const { queryIPaaSConnectorDetail } = IPaaSModel.useModel();
+
+  const { data: selectedNode, hasParent } = useSelectedBlock();
   const isTriggerNode = !hasParent;
 
-  const { actionCode, description } = selectedNode || {};
+  const {
+    actionCode,
+    description,
+    authId,
+    formStatus,
+    sample,
+    connectorCode,
+    version,
+  } = selectedNode || {};
 
   const viewModel = useReactive({
     tabs: [] as TabProps[],
@@ -30,8 +40,6 @@ export const ConfigPanelModel = createCustomModel(() => {
   const { data, loading, runAsync } = useRequest(
     async ({ code, version }: { code: string; version: string }) => {
       const detail = await queryIPaaSConnectorDetail({ code, version });
-
-      const { actionCode, authId, formStatus, sample } = selectedNode || {};
       const { actions, triggers, needAuth } = detail;
 
       const items = isTriggerNode ? triggers : actions;
@@ -105,16 +113,30 @@ export const ConfigPanelModel = createCustomModel(() => {
   );
 
   useEffect(() => {
-    const { connectorCode, version } = selectedNode || {};
     if (connectorCode && version) {
       runAsync({ code: connectorCode, version });
     }
-  }, [selectedNode]);
+  }, [connectorCode, version, actionCode, authId, formStatus, sample]);
 
   const actionList = (isTriggerNode ? data?.triggers : data?.actions) || [];
+  const update = useUpdate();
+
+  const { updateBlockData } = useNodeBlockDataUpdate({
+    id: selectedId,
+  });
+
+  const updateNode = (data: Partial<WorkflowNode>) => {
+    updateBlockData((oldData) => {
+      return {
+        ...oldData,
+        ...data,
+      };
+    });
+    update();
+  };
 
   return {
-    connectorDetail: data,
+    connectorDetail: data!,
     loading,
     isTriggerNode,
     actionList,
@@ -124,5 +146,7 @@ export const ConfigPanelModel = createCustomModel(() => {
       viewModel.activeTab = key;
     },
     panelDesc: description || data?.description,
+    selectedNode,
+    updateNode,
   };
 });

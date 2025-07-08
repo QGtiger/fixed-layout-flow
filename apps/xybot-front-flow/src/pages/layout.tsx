@@ -67,6 +67,8 @@ export default () => {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [modalApi, modalContextHolder] = Modal.useModal();
 
+  console.log("layout render", location.pathname);
+
   useEffect(() => {
     NotificationRef.current = api;
     MessageRef.current = messageApi;

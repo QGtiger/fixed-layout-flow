@@ -1,9 +1,8 @@
 import { request } from "@/api/request";
 import { createCustomModel } from "@/common/createModel";
 import { useCreation, useReactive, useRequest } from "ahooks";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import type { FixedFlowBlocks } from "@fixedflow/layout";
+import { type FixedFlowBlocks } from "@fixedflow/layout";
 import { UpgradeFlowMeta } from "./utils";
 
 /**
@@ -22,10 +21,14 @@ export function isDraftFlow(flowId: string) {
 
 export const StudioFlowModel = createCustomModel(() => {
   const { id } = useParams<"id">();
+
   const viewModel = useReactive({
     nodes: [] as WorkflowNode[],
     selectedId: "",
   });
+
+  const { nodes: worlflows } = viewModel;
+
   if (!id) {
     throw new Error("Flow ID is required");
   }
@@ -53,8 +56,6 @@ export const StudioFlowModel = createCustomModel(() => {
       });
     }
   });
-
-  const { nodes: worlflows, selectedId } = viewModel;
 
   const blocks: FixedFlowBlocks = useCreation(() => {
     console.log("convert worlflows to blocks", worlflows);
@@ -148,6 +149,16 @@ export const StudioFlowModel = createCustomModel(() => {
     };
   }, [worlflows]);
 
+  const { runAsync: uploadFlowMeta } = useRequest(
+    async () => {
+      console.log("开始保存");
+    },
+    {
+      manual: true,
+      debounceWait: 500,
+    }
+  );
+
   return {
     loading,
     blocks,
@@ -156,5 +167,6 @@ export const StudioFlowModel = createCustomModel(() => {
       viewModel.selectedId = id;
     },
     ...viewModel,
+    uploadFlowMeta,
   };
 });

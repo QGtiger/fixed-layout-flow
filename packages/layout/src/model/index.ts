@@ -5,6 +5,7 @@ import { createContext, CSSProperties } from "react";
 import { createStore } from "zustand";
 import { queueEffectFn } from "./queueTickFn";
 import { nanoid } from "nanoid";
+import { exportBlocks } from "@/core/utils";
 
 export interface FixedLayoutModelConfig {
   initialBlocks: FixedFlowBlocks;
@@ -16,6 +17,9 @@ export interface FixedLayoutModelConfig {
   defaultPathRuleList: BlockData[];
   pathRuleData: BlockData;
   onNewBlock?: (block: Block) => void;
+
+  onHistoryChange?: (blocks: FixedFlowBlocks) => void;
+  historyChangeDebounceTime?: number;
 
   /**
    * 自定义节点渲染器
@@ -49,6 +53,8 @@ export interface FixedLayoutModelActions {
   ) => CSSProperties;
 
   addNode: (opts: { parentId: string; data: BlockWithoutId }) => void;
+
+  historyChange: () => void;
 }
 
 export type FixedLayoutStoreType = ReturnType<
@@ -57,8 +63,24 @@ export type FixedLayoutStoreType = ReturnType<
 
 export const StoreContext = createContext<FixedLayoutStoreType>({} as any);
 
+function debounce(fn: () => void, delay: number) {
+  let timer: NodeJS.Timeout;
+  return () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn();
+    }, delay);
+  };
+}
+
 export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
-  const { initialBlocks, viewMode, onNewBlock } = config;
+  const {
+    initialBlocks,
+    viewMode,
+    onNewBlock,
+    onHistoryChange,
+    historyChangeDebounceTime = 300,
+  } = config;
   const engineIns = new FixFlowLayoutEngine(initialBlocks, config);
   const { nodes, edges } = engineIns.exportReactFlowData();
 
@@ -73,12 +95,24 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
         queueEffectFn(setNodesAndEdges);
       }
 
+      const historyChange = debounce(() => {
+        const blocks = exportBlocks(engineIns.flowBlocksTree);
+        onHistoryChange?.(blocks);
+      }, historyChangeDebounceTime);
+
+      // 结构变更时重新渲染
+      function renderWithStructuralChange() {
+        queueEffectFn(setNodesAndEdges);
+        historyChange();
+      }
+
       return {
         ...config,
         nodes,
         edges,
         render,
         layoutEngine: engineIns,
+        historyChange,
         edgeStokeStyle: config.edgeStokeStyle || {
           stroke: "#cccccc",
           strokeWidth: 1,
@@ -94,15 +128,15 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
               },
             }).blockData
           );
-          render();
+          renderWithStructuralChange();
         },
         addPathRuleNode({ parentId }) {
           if (viewMode) return;
           const ins = engineIns.addPathRuleFlowBlockById({
             id: parentId,
           });
-          render();
           onNewBlock?.(ins.blockData);
+          renderWithStructuralChange();
         },
         getEdgeStrokeStyle: (sourceNode, targetNode) => {
           const { edgeStokeStyle } = get();
@@ -127,7 +161,8 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
               },
             }).blockData
           );
-          render();
+
+          renderWithStructuralChange();
         },
         resetRootNode: ({ data }) => {
           if (viewMode || !data) return;
@@ -140,7 +175,7 @@ export function createFixedLayoutModelStore(config: FixedLayoutModelConfig) {
               replace: true,
             }).blockData
           );
-          render();
+          renderWithStructuralChange();
         },
       };
     }

@@ -1,6 +1,5 @@
 import { request } from "@/api/request";
 import { useRequest } from "ahooks";
-import { StudioFlowModel } from "../../../StudioFlowModel";
 import { MinimalLoader } from "@/components/MinimalLoader";
 import classNames from "classnames";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
@@ -9,7 +8,6 @@ import ScrollContent from "@/components/ScrollContent";
 import { Button } from "antd";
 import { ConfigPanelModel } from "../model";
 import { useEffect } from "react";
-import { useNode } from "@fixedflow/layout";
 
 interface AuthItem {
   /**
@@ -96,9 +94,7 @@ function AuthItem({ active, item }: { active?: boolean; item: AuthItem }) {
 }
 
 export default function ActionAuth({ authId }: { authId?: string }) {
-  const { selectedId } = StudioFlowModel.useModel();
-  const { data: selectedNode } = useNode<WorkflowNode>(selectedId);
-  const { connectorDetail } = ConfigPanelModel.useModel();
+  const { connectorDetail, selectedNode } = ConfigPanelModel.useModel();
   const { data: authList } = useRequest(async () => {
     if (!connectorDetail?.needAuth) return;
     return request<AuthItem[]>({

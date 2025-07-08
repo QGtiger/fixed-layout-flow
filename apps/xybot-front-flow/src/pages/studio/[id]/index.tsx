@@ -35,7 +35,6 @@ function PlaceholderRenderer() {
 export default function StudioDetail() {
   const { blocks, loading, setSelectedId } = StudioFlowModel.useModel();
   const { queryIPaaSConnectorDetail } = IPaaSModel.useModel();
-  console.log("blocks", blocks, loading);
   const [modal, modalHolder] = Modal.useModal();
 
   if (loading) {
@@ -93,6 +92,7 @@ export default function StudioDetail() {
         onNewBlock={(block) => {
           setSelectedId(block.id);
         }}
+        onHistoryChange={console.log}
       >
         <ConfigPanel />
       </FixedFlowLayout>
