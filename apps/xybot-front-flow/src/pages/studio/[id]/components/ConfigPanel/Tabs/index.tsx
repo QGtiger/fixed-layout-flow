@@ -12,41 +12,11 @@ import ActionForm from "./ActionForm";
 
 import "./index.css";
 import { generateNodeData } from "../../../buildInConnector";
-import { IPaasFormSchema } from "@xybot/ipaas-schema-form";
-import { useParams } from "react-router-dom";
-import { getOrigin } from "@/utils/path";
-
-function replaceTemplateText(text: string, data: any) {
-  if (!text) return "";
-  return text.replace(/{{(.*?)}}/g, (match, key) => {
-    return data[key.trim()] || "";
-  });
-}
-
 export default function Tab() {
   const { tabs, activeTab, setActiveTab, panelDesc, connectorDetail } =
     ConfigPanelModel.useModel();
-  const { actionList, selectedNode, updateNode, actionItem } =
-    ConfigPanelModel.useModel();
+  const { actionList, selectedNode, updateNode } = ConfigPanelModel.useModel();
   const { selectedId } = StudioFlowModel.useModel();
-  const { id } = useParams<{ id: string }>();
-
-  const { connectorCode, version, authId, inputs } = selectedNode || {};
-
-  if (!actionItem || !id) return <span></span>;
-
-  const finalInputs: IPaasFormSchema[] = actionItem.viewMeta.inputs || [];
-  finalInputs.forEach((it) => {
-    if (it.editor?.kind === "InputWithCopy") {
-      it.editor.config.defaultValue = replaceTemplateText(
-        it.editor.config.defaultValue,
-        {
-          flowId: id,
-          host: getOrigin(),
-        }
-      );
-    }
-  });
 
   return (
     <div className="flex h-full flex-col">
@@ -126,21 +96,9 @@ export default function Tab() {
               </div>
             )}
 
-            {activeTab == "form" && actionItem.viewMeta.inputs?.length && (
+            {activeTab == "form" && (
               <div className={classNames("h-full")}>
-                <ActionForm
-                  schema={actionItem.viewMeta.inputs}
-                  key={selectedId}
-                  initialValues={inputs}
-                  connectorCode={connectorCode}
-                  version={version}
-                  authId={authId}
-                  onValuesChange={(values: any) => {
-                    updateNode({
-                      inputs: values,
-                    });
-                  }}
-                />
+                <ActionForm key={selectedId} />
               </div>
             )}
           </ScrollContent>
