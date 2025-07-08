@@ -13,6 +13,7 @@ import {
   LanguageSupport,
   foldNodeProp,
   foldInside,
+  syntaxHighlighting,
 } from "@codemirror/language";
 
 import { parserWithMetaData } from "codemirror-lang-n8n-expression";
@@ -25,23 +26,30 @@ import { infoBoxTooltips } from "./extensions/tooltips";
 import { githubLight } from "@uiw/codemirror-theme-github";
 
 import "./index.css";
+import { resolvableHighlightExtension } from "./extensions/completions/resolvableHightlighter";
 
-// const autoInsertDoubleBraces = keymap.of([
-//   {
-//     key: "{",
-//     run: (view) => {
-//       const { state } = view;
-//       const { from } = state.selection.main;
+const autoInsertDoubleBraces = keymap.of([
+  {
+    key: "{",
+    run: (view) => {
+      const { state } = view;
+      const { from } = state.selection.main;
 
-//       view.dispatch({
-//         changes: { from, to: from, insert: "{{  }}" },
-//         selection: { anchor: from + 3 }, // 光标移到中间
-//       });
+      // 判断光标前一个 是否也是 {
+      const beforeChar = state.sliceDoc(from - 1, from);
+      if (beforeChar === "{") {
+        view.dispatch({
+          changes: { from, to: from, insert: "{  }" },
+          selection: { anchor: from + 2 }, // 光标移到中间
+        });
+      } else {
+        return false;
+      }
 
-//       return true;
-//     },
-//   },
-// ]);
+      return true;
+    },
+  },
+]);
 
 const isResolvable = (node: SyntaxNodeRef) => node.type.name === "Resolvable";
 
@@ -50,7 +58,11 @@ const n8nParserWithNestedJsParser = parserWithMetaData.configure({
     if (node.type.isTop) return null;
 
     return node.name === "Resolvable"
-      ? { parser: javascriptLanguage.parser, overlay: isResolvable }
+      ? {
+          parser: javascriptLanguage.parser,
+          overlay: isResolvable,
+          strict: false,
+        }
       : null;
   }),
 });
@@ -67,13 +79,15 @@ export function n8nExpression() {
   return new LanguageSupport(n8nLanguage, [
     n8nLanguage.data.of(expressionCloseBracketsConfig),
     ...completionSources().map((source) => n8nLanguage.data.of(source)),
+
+    // ...resolvableHighlightExtension,
   ]);
 }
 
 const n8nAutocompletion = () =>
   autocompletion({ icons: false, aboveCursor: true, closeOnBlur: false });
 
-export default function CMEditor() {
+export function CMEditor() {
   const [value, setValue] = useState(
     '{{ $json.data.users.map(user => user.name).join(", ") }}'
   );
@@ -81,12 +95,12 @@ export default function CMEditor() {
     <CodeMirror
       theme="light"
       value={value}
-      onChange={setValue}
+      // onChange={setValue}
       className=" border border-gray-300 border-solid rounded-md overflow-hidden px-1 bg-white py-[1px]"
       placeholder="请输入表达式"
       extensions={[
         // githubLight,
-        // autoInsertDoubleBraces,
+        autoInsertDoubleBraces,
         EditorView.lineWrapping,
         n8nExpression(),
         n8nAutocompletion(),
@@ -109,7 +123,7 @@ export default function CMEditor() {
         highlightActiveLine: false,
         highlightSelectionMatches: false,
         bracketMatching: false,
-        closeBrackets: false,
+        // closeBrackets: false,
         foldGutter: false,
         drawSelection: false,
       }}

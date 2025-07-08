@@ -31,7 +31,7 @@ export default function CustomSelect(
   const shouldRefreshOptions = useRef(!!isDynamic);
   const [sk, setSk] = useState("");
 
-  const { run: searchOptions, loading } = useRequest(
+  const { refresh: searchOptions, loading } = useRequest(
     async () => {
       if (!dynamicScript || isDynamic === false) {
         if (!propsOptions) return;

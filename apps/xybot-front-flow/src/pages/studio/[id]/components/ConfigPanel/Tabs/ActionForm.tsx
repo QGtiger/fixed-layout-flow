@@ -27,7 +27,7 @@ import { deepClone, uploadFileByFlow } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import MonacoEditor from "./components/MonacoEditor";
-import CMEditor from "./components/CMEditor";
+import { CMEditor } from "./components/CMEditor";
 import ScrollContent from "@/components/ScrollContent";
 
 const testSchema: IPaasFormSchema[] = [
@@ -332,14 +332,19 @@ export default function ActionForm() {
           form={form}
           uploadFile={uploadFileByFlow}
           onValuesChange={async () => {
+            const status = await form
+              .validateFields({
+                validateOnly: true,
+              })
+              .then(
+                () => true,
+                ({ errorFields }) => {
+                  return !errorFields?.length;
+                }
+              );
             updateNode({
               inputs: form.getFieldsValue(),
-              formStatus: await form
-                ?.validateFields({
-                  validateOnly: true,
-                })
-                .then(() => true)
-                .catch(() => false),
+              formStatus: status,
             });
           }}
           // @ts-expect-error
@@ -395,6 +400,8 @@ export default function ActionForm() {
           }}
           dynamicScriptExcuteWithFormSchema={async (config) => {
             if (!config.script) return [];
+
+            console.log("query");
 
             const formValues = formValueNormalize(form.getFieldsValue());
             const { data } = await request({

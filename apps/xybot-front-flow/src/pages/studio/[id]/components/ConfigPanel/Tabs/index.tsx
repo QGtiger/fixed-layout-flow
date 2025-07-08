@@ -18,6 +18,8 @@ export default function Tab() {
   const { actionList, selectedNode, updateNode } = ConfigPanelModel.useModel();
   const { selectedId } = StudioFlowModel.useModel();
 
+  console.log(activeTab, "activeTab");
+
   return (
     <div className="flex h-full flex-col">
       {tabs.length ? (

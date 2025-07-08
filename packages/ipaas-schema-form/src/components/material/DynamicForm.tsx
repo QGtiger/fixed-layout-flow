@@ -18,7 +18,7 @@ export default function DynamicForm(
     useIpaasSchemaStore();
 
   const {
-    runAsync,
+    refresh,
     data: subSchema,
     loading,
     cancel,
@@ -68,7 +68,7 @@ export default function DynamicForm(
   useEffect(() => {
     if (JSON.stringify(depValues) !== JSON.stringify(preDepValuesRef.current)) {
       cancel();
-      runAsync();
+      refresh();
       preDepValuesRef.current = depValues;
     }
   });
