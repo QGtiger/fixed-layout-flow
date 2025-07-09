@@ -16,7 +16,7 @@ export const highlightExpressions = () => {
   return EditorView.decorations.compute(["selection"], (state) => {
     const builder = new RangeSetBuilder();
     const doc = state.doc.toString();
-    const regex = /{{[^{}]*}}/g;
+    const regex = /\{\{([\s\S]+?)\}\}/g; // 匹配 {{ ... }} 的正则表达式
     let match;
 
     // 1. 始终添加所有表达式的基础装饰

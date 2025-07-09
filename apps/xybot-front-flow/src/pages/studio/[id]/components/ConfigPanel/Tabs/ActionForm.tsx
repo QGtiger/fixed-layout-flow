@@ -150,7 +150,12 @@ function FormItemWarpper(Componet: ComponentType<any>) {
     onChange: (value: FormItemValueType) => void;
   }) {
     const { value: expValue } = props;
-    const { value, isExpression = false, selectcache } = expValue || {};
+    const {
+      value,
+      isExpression = false,
+      selectcache,
+      expression,
+    } = expValue || {};
     const [showExp, showExpAction] = useBoolean(false);
     const [hoverExp, hoverExpAction] = useBoolean(false);
 
@@ -165,7 +170,15 @@ function FormItemWarpper(Componet: ComponentType<any>) {
         onMouseLeave={hoverExpAction.setFalse}
       >
         {isExpression ? (
-          <CMEditor />
+          <CMEditor
+            value={expression}
+            onChange={(v) => {
+              props.onChange?.({
+                ...expValue,
+                expression: v,
+              });
+            }}
+          />
         ) : (
           <Componet
             {...props}

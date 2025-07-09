@@ -18,8 +18,6 @@ function Panel() {
   const showPanel = !!selectedNode;
   const [safeSelectedNode, setSafeSelectedNode] = useSafeState(selectedNode!);
 
-  console.log("loading=====", loading);
-
   useEffect(() => {
     selectedNode && setSafeSelectedNode(selectedNode!);
   }, [selectedNode]);

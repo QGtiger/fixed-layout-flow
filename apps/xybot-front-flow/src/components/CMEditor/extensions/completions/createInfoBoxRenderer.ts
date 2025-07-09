@@ -103,7 +103,7 @@ const renderDescription = ({
   const descriptionBody = document.createElement("div");
   descriptionBody.classList.add("autocomplete-info-description");
   const descriptionText = document.createElement("p");
-  const separator = !description.endsWith(".") && docUrl ? ". " : " ";
+  const separator = !description.endsWith("。") && docUrl ? "。 " : " ";
   descriptionText.innerHTML = sanitizeHtml(
     description.replace(/`(.*?)`/g, "<code>$1</code>") + separator
   );
