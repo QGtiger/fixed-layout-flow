@@ -27,7 +27,7 @@ import { deepClone, uploadFileByFlow } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import MonacoEditor from "./components/MonacoEditor";
-import { CMEditor } from "./components/CMEditor";
+import { CMEditor } from "../../../../../../components/CMEditor";
 import ScrollContent from "@/components/ScrollContent";
 
 const testSchema: IPaasFormSchema[] = [

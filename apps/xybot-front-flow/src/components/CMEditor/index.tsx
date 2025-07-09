@@ -80,7 +80,7 @@ export function n8nExpression() {
     n8nLanguage.data.of(expressionCloseBracketsConfig),
     ...completionSources().map((source) => n8nLanguage.data.of(source)),
 
-    // ...resolvableHighlightExtension,
+    ...resolvableHighlightExtension,
   ]);
 }
 
